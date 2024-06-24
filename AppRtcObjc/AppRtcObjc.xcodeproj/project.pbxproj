@@ -724,7 +724,7 @@
 					"\"$(SRCROOT)/../..\"",
 					"\"$(SRCROOT)/../../..\"",
 				);
-				INFOPLIST_FILE = /Users/olaola/Desktop/ola/videoonlinelowcpu/src/banban/examples/AppRtcObjc/objc/Info.plist;
+				INFOPLIST_FILE = ./objc/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AppBBRtcIOS2;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "App需要您的同意,才能访问媒体资料库";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access needed for video calling";
@@ -772,7 +772,7 @@
 					"\"$(SRCROOT)/../..\"",
 					"\"$(SRCROOT)/../../..\"",
 				);
-				INFOPLIST_FILE = /Users/olaola/Desktop/ola/videoonlinelowcpu/src/banban/examples/AppRtcObjc/objc/Info.plist;
+				INFOPLIST_FILE = ./objc/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AppBBRtcIOS2;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "App需要您的同意,才能访问媒体资料库";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access needed for video calling";
