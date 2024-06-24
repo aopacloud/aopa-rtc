@@ -80,17 +80,17 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\third_party\duilibsource\duilib;.\third_party\duilibsource;.\third_party\aopalib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>.\third_party\aopalib\lib\debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\sdk\win\include;.\third_party\duilibsource;.\third_party\duilibsource\duilib;$(IncludePath)</IncludePath>
+    <LibraryPath>..\sdk\win\x64;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <OutDir>.\output\$(Configuration)\</OutDir>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\third_party\aopalib\include;.\third_party\duilibsource\duilib;.\third_party\duilibsource;$(IncludePath)</IncludePath>
+    <IncludePath>..\sdk\win\include;.\third_party\duilibsource\duilib;.\third_party\duilibsource;$(IncludePath)</IncludePath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>.\third_party\aopalib\lib\release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\sdk\win\x64;$(LibraryPath)</LibraryPath>
     <OutDir>.\output\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -275,7 +275,6 @@
     <ClInclude Include="source\MusicVolumeRealControl.h" />
     <ClInclude Include="source\RelayForm.h" />
     <ClInclude Include="source\RoomForm.h" />
-    <ClInclude Include="source\rtcutil.h" />
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\VideoFrameObserver.h" />
     <ClInclude Include="targetver.h" />

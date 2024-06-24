@@ -360,9 +360,6 @@
     <ClInclude Include="source\RoomForm.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="source\rtcutil.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="source\stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>

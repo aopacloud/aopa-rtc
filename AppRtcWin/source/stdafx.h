@@ -20,6 +20,6 @@
 // ui components
 //#include "ui_components/ui_components.h"
 
-#include "api/BBRtcBase.h"
-#include "api/IBBMediaEngine.h"
-#include "api/IBBRtcEngine.h"
+#include "BBRtcBase.h"
+#include "IBBMediaEngine.h"
+#include "IBBRtcEngine.h"

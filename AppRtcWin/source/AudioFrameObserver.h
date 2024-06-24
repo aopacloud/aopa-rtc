@@ -1,6 +1,6 @@
 #pragma once
 
-#include "api/IBBMediaEngine.h"
+#include "stdafx.h"
 
 class AudioFrameObserver : public bbrtc::media::IAudioFrameObserver {
 public:
