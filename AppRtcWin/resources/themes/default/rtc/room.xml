@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="780,780" caption="0,0,0,35" shadowattached="false">
+ <Box >
+   <HBox width="stretch" height="35" bkcolor="bk_main_wnd_title">
+      <Label name="room_label" text="room12" width="120" valign="center" margin="8" font="system_bold_14"/>
+      <Control />
+      <Button class="btn_wnd_min" name="minbtn" margin="4,6,0,0"/>
+      <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
+    </HBox>
+  <VBox margin="0,35,0,0">
+	  <HBox  >
+     <VHListBox class="list" name="user_list" bkcolor="darkcolor"/>
+    </HBox>
+    <HBox height="30"  bkcolor="wnd_bk_state">
+     <Label name="rtc_state_label" width="200"  margin="4,0,0,0" text="" font="system_14"  valign="center" normaltextcolor="white"/>
+     <Control />
+     <Button  name="vad_button"  margin="5,7,5,0" borderround="16,16,16,16" width="16" height="16" bkcolor="white"/>
+    </HBox>
+    <Control height="1" bkcolor="splitline_level1"/>
+    <HBox height="220" bkcolor="bk_wnd_darkcolor">
+     <VBox  >
+     <HBox height="30" margin="10,10,0,0" >
+      <Label name="record_volume_label" width="65" text="采集音量" font="system_12"  valign="center"/>
+      <Slider class="slider_green" name="record_volume_slider" value="100" min="0" max="100"   valign="center"/>
+      <Label name="record_volume_value_label" width="40" margin="10,0,10,0"  text="100" font="system_14" normaltextcolor="red"  valign="center"/>
+    </HBox>
+    <HBox height="30" margin="10,10,0,0" > 
+      <Label name="play_volume_label"  width="65"  text="播放音量" font="system_12"  valign="center"/>
+      <Slider class="slider_green" name="play_volume_slider" value="100" min="0" max="100"  valign="center"/>
+      <Label name="play_volume_value_label" width="40" margin="10,0,10,0"  text="100" font="system_14" normaltextcolor="red"  valign="center"/>
+    </HBox>
+      <HBox height="30" margin="10,10,0,0" >
+      <Label name="music_volume_label"  width="65"  text="音乐音量" font="system_12"  valign="center"/>
+      <Slider class="slider_green" name="music_volume_slider" value="100" min="0" max="100"  valign="center"/>
+      <Label name="music_volume_value_label" width="40" margin="10,0,10,0"  text="100" font="system_14" normaltextcolor="red"  valign="center"/>
+    </HBox>
+    <HBox height="30" margin="10,10,0,0">
+       <Label name="play_music_label"  width="65"  text="当前播放" font="system_12"  valign="center"/>
+       <RichEdit name="play_music_name_edit"   borderround="3,3,3,3" readonly="true" bkcolor="bk_wnd_darkcolor"  text="http://music.163.com/song/media/outer/url?id=281951.mp3" font="system_14"  valign="center"  padding="2,6,6"  multiline="false" vscrollbar="false" hscrollbar="false" autovscroll="false"/>
+       <Button class="btn_global_white_80x30"  name="music_select_bnt"  margin="5,0,0,0" width="64" text="选择" font="system_12" />
+       <Button class="btn_global_white_80x30"  name="music_play_mode_bnt"  margin="5,0,10,0" width="64" text="循环" font="system_12" />
+    </HBox>
+   <HBox height="30" margin="10,15,0,0">
+     <Label name="play_music_start_label"  width="45"  text="00:00" font="system_14"  valign="center"/>
+     <Slider class="slider_green" name="music_play_slider" margin="5,0,10,0" value="0" min="0" max="100"  valign="center"/>
+     <Label name="play_music_end_label"  width="45"  text="00:00" font="system_14"  valign="center"/>
+     <Button class="btn_global_white_80x30"  name="music_play_bnt"  margin="5,0,0,0" width="64" text="播放" font="system_12" />
+     <Button class="btn_global_white_80x30"  name="music_pause_bnt"  margin="5,0,10,0" width="64" text="暂停" font="system_12" />
+   </HBox>
+   </VBox>
+     <Control width="1" bkcolor="splitline_level1"/>
+      <VBox width="80">
+        <Button class="btn_global_blue_80x30" name="role_bnt" margin="0,10,0,0" width="80" height="32" halign="center" text="下麦" font="system_14" />
+        <Button class="btn_global_blue_80x30" name="audio_switch_bnt" margin="0,10,0,0" width="80" height="32" halign="center" text="关闭音频" font="system_14" />
+        <Button class="btn_global_blue_80x30" name="video_switch_bnt" margin="0,10,0,0" width="80" height="32" halign="center" text="关闭视频" font="system_14" />
+        <Button class="btn_global_blue_80x30" name="relay_media_bnt" margin="0,10,0,0" width="80" height="32" halign="center" text="开始连麦" font="system_14" />
+        <Button class="btn_global_blue_80x30" name="exit_bnt" margin="0,10,0,0" width="80" height="32" halign="center" text="退出" font="system_14" />
+     </VBox>
+     <VBox width="120">
+        <Button class="btn_global_blue_80x30" name="audio_subscribe_btn" margin="10,10,0,0" width="100" height="32" halign="center" text="取消订阅音频" font="system_14" />
+        <Button class="btn_global_blue_80x30" name="video_subscribe_btn" margin="10,10,0,0" width="100" height="32" halign="center" text="取消订阅视频" font="system_14" />
+     </VBox>
+    </HBox>
+
+  
+</VBox>
+  </Box>
+</Window>

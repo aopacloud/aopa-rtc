@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{2522c700-3540-421d-8cab-bb9b30850634}</ProjectGuid>
+    <RootNamespace>AppRtcWindow</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\yang.jun2\Desktop\workspace\v2.3.3\src\banban\examples\AppRtcWindow\third_party\duilib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\yang.jun2\Desktop\workspace\v2.3.3\src\banban\examples\AppRtcWindow\third_party\duilib\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>.\third_party\duilibsource\duilib;.\third_party\duilibsource;.\third_party\aopalib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\third_party\aopalib\lib\debug;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <OutDir>.\output\$(Configuration)\</OutDir>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>.\third_party\aopalib\include;.\third_party\duilibsource\duilib;.\third_party\duilibsource;$(IncludePath)</IncludePath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>.\third_party\aopalib\lib\release;$(LibraryPath)</LibraryPath>
+    <OutDir>.\output\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>base.lib;duilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDENUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>aopa_rtc_sdk.dll.lib;ws2_32.lib;GdiPlus.lib;Iphlpapi.lib;comctl32.lib;winmm.lib;netapi32.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDENUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>aopa_rtc_sdk.dll.lib;ws2_32.lib;GdiPlus.lib;Iphlpapi.lib;comctl32.lib;winmm.lib;netapi32.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\AppRtcWindow.cpp" />
+    <ClCompile Include="source\AudioFrameObserver.cpp" />
+    <ClCompile Include="source\CustomVideoSource.cpp" />
+    <ClCompile Include="source\HttpClient.cpp" />
+    <ClCompile Include="source\item.cpp" />
+    <ClCompile Include="source\LoginForm.cpp" />
+    <ClCompile Include="source\MusicForm.cpp" />
+    <ClCompile Include="source\MusicVolumeRealControl.cpp" />
+    <ClCompile Include="source\RelayForm.cpp" />
+    <ClCompile Include="source\RoomForm.cpp" />
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\VideoFrameObserver.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\encrypt\des.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\file\file_util.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\file\file_util_posix.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\file\file_util_win.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\framework\default_message_pump.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\framework\message_loop.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\framework\message_loop_proxy.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\framework\message_pump.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\framework\win_io_message_pump.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\framework\win_message_pump.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\framework\win_ui_message_pump.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\hardware\cpu.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\network\network_util.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\synchronization\lock_posix.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\synchronization\lock_win.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\synchronization\semaphore_posix.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\synchronization\semaphore_win.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\synchronization\waitable_event_posix.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\synchronization\waitable_event_win.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\third_party\convert_utf\ConvertUTF.c" />
+    <ClCompile Include="third_party\duilibsource\base\third_party\modp_b64\modp_b64.cc" />
+    <ClCompile Include="third_party\duilibsource\base\thread\framework_thread.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\thread\thread_local_posix.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\thread\thread_local_win.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\thread\thread_manager.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\thread\thread_posix.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\thread\thread_win.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\time\time.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\time\time_posix.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\time\time_win.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\util\at_exit.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\util\base64.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\util\cmd_line_args.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\util\string_number_conversions.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\util\string_util.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\win32\object_watcher.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\win32\path_util.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\win32\platform_string_util.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\win32\security_util.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\win32\shared_memory.cpp" />
+    <ClCompile Include="third_party\duilibsource\base\win32\win_util.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Animation\AnimationManager.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Animation\AnimationPlayer.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Box\ChildBox.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Box\HBox.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Box\TabBox.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Box\TileBox.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Box\VBox.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Box\VHBox.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\CircleProgress.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\Combo.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\List.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\MediaWnd.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\Progress.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\RichEdit.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\ScrollBar.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\Slider.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\TreeView.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Control\VirtualListBox.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\Box.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\Control.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\Define.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\GlobalManager.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\Image.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\Markup.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\Placeholder.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\Window.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Core\WindowBuilder.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Bitmap.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Brush.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Clip.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Factory.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\IRender.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Matrix.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Path.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Pen.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Render\Render.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\ApiWrapper.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\DpiManager.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\MultiLangSupport.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\OnScreenKeyboardManager.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\Shadow.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\StringUtil.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\TimerManager.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\UnZip.cpp" />
+    <ClCompile Include="third_party\duilibsource\duilib\Utils\WinImplBase.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AppRtcWindow.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="AppRtcWindow.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="source\AppRtcWindow.h" />
+    <ClInclude Include="source\AudioFrameObserver.h" />
+    <ClInclude Include="source\CustomVideoSource.h" />
+    <ClInclude Include="source\framework.h" />
+    <ClInclude Include="source\HttpClient.h" />
+    <ClInclude Include="source\item.h" />
+    <ClInclude Include="source\LoginForm.h" />
+    <ClInclude Include="source\MusicForm.h" />
+    <ClInclude Include="source\MusicVolumeRealControl.h" />
+    <ClInclude Include="source\RelayForm.h" />
+    <ClInclude Include="source\RoomForm.h" />
+    <ClInclude Include="source\rtcutil.h" />
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\VideoFrameObserver.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
