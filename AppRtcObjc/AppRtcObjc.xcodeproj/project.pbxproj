@@ -47,8 +47,8 @@
 		9AF012042B03681F00F7FEA7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012032B03681F00F7FEA7 /* SystemConfiguration.framework */; };
 		9AF012062B03683200F7FEA7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012052B03683200F7FEA7 /* CoreFoundation.framework */; };
 		9AF760992B50DA31009AA45C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012072B03689700F7FEA7 /* libz.tbd */; };
-		D81FA2882C22E7310076901B /* AopaRtcKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8EBA3612C202B910042C124 /* AopaRtcKit.xcframework */; };
-		D81FA2892C22E7310076901B /* AopaRtcKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D8EBA3612C202B910042C124 /* AopaRtcKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D81FA2982C296B970076901B /* AopaRtcKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81FA2972C296B970076901B /* AopaRtcKit.framework */; };
+		D81FA2992C296B970076901B /* AopaRtcKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D81FA2972C296B970076901B /* AopaRtcKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,13 +160,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D81FA28A2C22E7310076901B /* Embed Frameworks */ = {
+		D81FA2932C296AE00076901B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D81FA2892C22E7310076901B /* AopaRtcKit.xcframework in Embed Frameworks */,
+				D81FA2992C296B970076901B /* AopaRtcKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -230,7 +230,7 @@
 		9AF012032B03681F00F7FEA7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9AF012052B03683200F7FEA7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		9AF012072B03689700F7FEA7 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		D8EBA3612C202B910042C124 /* AopaRtcKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AopaRtcKit.xcframework; path = ../Sdk/ios/AopaRtcKit.xcframework; sourceTree = "<group>"; };
+		D81FA2972C296B970076901B /* AopaRtcKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AopaRtcKit.framework; path = ../sdk/ios/libs/AopaRtcKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,12 +246,12 @@
 				9AF012002B0367D600F7FEA7 /* Network.framework in Frameworks */,
 				9AA7A7A128365C8000609135 /* MediaPlayer.framework in Frameworks */,
 				9AA7A79F28365C7300609135 /* CoreTelephony.framework in Frameworks */,
+				D81FA2982C296B970076901B /* AopaRtcKit.framework in Frameworks */,
 				9AA7A79D28365C6E00609135 /* CoreLocation.framework in Frameworks */,
 				9AA7A79B28365C6800609135 /* GLKit.framework in Frameworks */,
 				9AA7A79928365C6400609135 /* CoreMedia.framework in Frameworks */,
 				9AA7A79728365C5F00609135 /* CoreGraphics.framework in Frameworks */,
 				9AA7A79528365C5A00609135 /* AVFoundation.framework in Frameworks */,
-				D81FA2882C22E7310076901B /* AopaRtcKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,7 +342,7 @@
 		9A9E4DFC283657F1004D72B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D8EBA3612C202B910042C124 /* AopaRtcKit.xcframework */,
+				D81FA2972C296B970076901B /* AopaRtcKit.framework */,
 				9AF012072B03689700F7FEA7 /* libz.tbd */,
 				9AF012052B03683200F7FEA7 /* CoreFoundation.framework */,
 				9AF012032B03681F00F7FEA7 /* SystemConfiguration.framework */,
@@ -393,7 +393,7 @@
 				9A9E4D112836567F004D72B1 /* Sources */,
 				9A9E4D122836567F004D72B1 /* Frameworks */,
 				9A9E4D132836567F004D72B1 /* Resources */,
-				D81FA28A2C22E7310076901B /* Embed Frameworks */,
+				D81FA2932C296AE00076901B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
