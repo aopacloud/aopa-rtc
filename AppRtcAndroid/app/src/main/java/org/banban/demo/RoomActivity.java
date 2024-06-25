@@ -750,11 +750,11 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
 
   private void startRelayMedia(){
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("连麦");
-    builder.setMessage("输入房间号");
+    builder.setTitle("relay");
+    builder.setMessage("insert roomid");
     final EditText edit = new EditText(this);
     builder.setView(edit);
-    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+    builder.setPositiveButton("sure", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         String name = edit.getText().toString();

@@ -31,10 +31,10 @@ void Item::InitSubControls(uint32_t userId)
 	ui::Button* muteBnt = dynamic_cast<ui::Button*>(FindSubControl(L"audio_mute_bnt"));
 	muteBnt->AttachClick([this, muteBnt](ui::EventArgs* args) {
 		if (isAudioMute_) {
-			muteBnt->SetText(L"禁音");
+			muteBnt->SetText(L"mute");
 		}
 		else {
-			muteBnt->SetText(L"播放");
+			muteBnt->SetText(L"play");
 		}
         isAudioMute_ = !isAudioMute_;
 		if (sink_)
@@ -45,10 +45,10 @@ void Item::InitSubControls(uint32_t userId)
     ui::Button* videoMuteBnt = dynamic_cast<ui::Button*>(FindSubControl(L"video_mute_bnt"));
     videoMuteBnt->AttachClick([this, videoMuteBnt](ui::EventArgs* args) {
         if (isVideoMute_) {
-            videoMuteBnt->SetText(L"关闭视频");
+            videoMuteBnt->SetText(L"close video");
         }
         else {
-            videoMuteBnt->SetText(L"订阅视频");
+            videoMuteBnt->SetText(L"sub video");
         }
         isVideoMute_ = !isVideoMute_;
         if (sink_)
@@ -59,10 +59,10 @@ void Item::InitSubControls(uint32_t userId)
 	ui::Button* doubleStreamBnt = dynamic_cast<ui::Button*>(FindSubControl(L"double_stream_bnt"));
 	doubleStreamBnt->AttachClick([this, doubleStreamBnt](ui::EventArgs* args) {
 		if (isBigStream) {
-			doubleStreamBnt->SetText(L"小流");
+			doubleStreamBnt->SetText(L"low stream");
 		}
 		else {
-			doubleStreamBnt->SetText(L"大流");
+			doubleStreamBnt->SetText(L"high stream");
 		}
 		isBigStream = !isBigStream;
 		if (sink_)

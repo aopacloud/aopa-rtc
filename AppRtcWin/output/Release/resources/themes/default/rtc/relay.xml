@@ -8,10 +8,10 @@
     </HBox>
 
     <Box height="auto" margin="0,32,0,0">
-     <Label name="roomid_label" margin="20,50,0,0" width="60" height="30"  text="房间号" font="system_12"/>
+     <Label name="roomid_label" margin="20,50,0,0" width="60" height="30"  text="roomid" font="system_12"/>
      <RichEdit class="input" name="roomid_edit" borderround="3,3,3,3" bkcolor="bk_wnd_lightcolor" width="stretch" height="30" padding="6,6,6" margin="80,42,30,0" font="system_14" multiline="false" vscrollbar="false" hscrollbar="false" autovscroll="false"  />
-	   <Button class="btn_global_red_80x30"  name="cancel_bnt" margin="81,140,0,0" width="64" height="32"  text="取消"  />
-     <Button class="btn_global_red_80x30"  name="enter_bnt" margin="195,140,0,0" width="64" height="32"  text="确定"  />
+	   <Button class="btn_global_red_80x30"  name="cancel_bnt" margin="81,140,0,0" width="64" height="32"  text="cancel"  />
+     <Button class="btn_global_red_80x30"  name="enter_bnt" margin="195,140,0,0" width="64" height="32"  text="sure"  />
     </Box>
 
   </Box>

@@ -37,8 +37,8 @@ void LoginForm::InitWindow() {
   roomIdEdit->SetText(L"8899");
   roomIdEdit->SetEnabled(true);
   std::wstring audioQualitys[] = {
-      L"默认",      L"32k单声道",       L"48k单声道",
-      L"48k双声道",   L"48k高音质单声道", L"48k高音质双声道", L"48超高音质双声道"};
+      L"default",      L"32kmono",       L"48kmono",
+      L"48kstero",   L"48kmonohigh", L"48ksterohigh", L"48sterosuperhigh"};
   ui::Combo* audioCombox =
       dynamic_cast<ui::Combo*>(FindControl(L"audio_combox"));
   for (auto i = 0; i < 7; i++) {
@@ -52,7 +52,7 @@ void LoginForm::InitWindow() {
   }
   audioCombox->SelectItem(5);
 
-  std::wstring userRoles[] = {L"主播", L"观众"};
+  std::wstring userRoles[] = {L"broad", L"audience"};
   ui::Combo* roleCombox = dynamic_cast<ui::Combo*>(FindControl(L"role_combox"));
   for (auto i = 0; i < 2; i++) {
     ui::ListContainerElement* element = new ui::ListContainerElement;
@@ -65,7 +65,7 @@ void LoginForm::InitWindow() {
   }
   roleCombox->SelectItem(0);
 
-   std::wstring servers[] = {L"正式环境"};
+   std::wstring servers[] = {L"aopa fromal env"};
   ui::Combo* serverCombox = dynamic_cast<ui::Combo*>(FindControl(L"server_combox"));
   for (auto i = 0; i < 1; i++) {
     ui::ListContainerElement* element = new ui::ListContainerElement;

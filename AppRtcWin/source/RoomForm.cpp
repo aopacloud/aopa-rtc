@@ -50,16 +50,16 @@ void RoomForm::InitWindow() {
 	ui::Button* audioSwitchBtn = dynamic_cast<ui::Button*>(FindControl(L"audio_switch_bnt"));
 	audioSwitchBtn->AttachClick([this, audioSwitchBtn](ui::EventArgs* args) {
 		if (roleType_ == 2) {
-			::MessageBox(NULL, L"请先上麦", L"提示", MB_OKCANCEL);
+			::MessageBox(NULL, L"please change audio state", L"提示", MB_OKCANCEL);
 			return true;
 		}
 		if (audioOpen_) {
 			rtcEngine_->muteLocalAudioStream(true);
-			audioSwitchBtn->SetText(L"打开音频");
+			audioSwitchBtn->SetText(L"send local voice");
 		}
 		else {
 			rtcEngine_->muteLocalAudioStream(false);
-			audioSwitchBtn->SetText(L"关闭音频");
+			audioSwitchBtn->SetText(L"not send");
 		}
 		audioOpen_ = !audioOpen_;
 		return true;
@@ -69,18 +69,18 @@ void RoomForm::InitWindow() {
 		dynamic_cast<ui::Button*>(FindControl(L"video_switch_bnt"));
 	videoSwitchBtn->AttachClick([this, videoSwitchBtn](ui::EventArgs* args) {
 		if (roleType_ == 2) {
-			::MessageBox(NULL, L"请先上麦", L"提示", MB_OKCANCEL);
+			::MessageBox(NULL, L"please change audio state", L"提示", MB_OKCANCEL);
 			return true;
 		}
 		if (videoOpen_) {
 			rtcEngine_->enableLocalVideo(false);
 			rtcEngine_->stopPreview();
-			videoSwitchBtn->SetText(L"打开视频");
+			videoSwitchBtn->SetText(L"open video");
 		}
 		else {
 			rtcEngine_->enableLocalVideo(true);
 			rtcEngine_->startPreview();
-			videoSwitchBtn->SetText(L"关闭视频");
+			videoSwitchBtn->SetText(L"close video");
 		}
 		videoOpen_ = !videoOpen_;
 		return true;
@@ -95,9 +95,9 @@ void RoomForm::InitWindow() {
 			rtcEngine_->stopPreview();
 			rtcEngine_->enableLocalVideo(false);
 			rtcEngine_->setClientRole(bbrtc::CLIENT_ROLE_AUDIENCE);
-			roleBtn->SetText(L"上麦");
-			audioSwitchBtn->SetText(L"打开音频");
-			videoSwitchBtn->SetText(L"打开视频");
+			roleBtn->SetText(L"on mic");
+			audioSwitchBtn->SetText(L"open audio");
+			videoSwitchBtn->SetText(L"open video");
 			stopPlayMusic();
             enableButton(false);
 		}
@@ -108,9 +108,9 @@ void RoomForm::InitWindow() {
             rtcEngine_->startPreview();
             rtcEngine_->enableLocalVideo(true);
 			rtcEngine_->setClientRole(bbrtc::CLIENT_ROLE_BROADCASTER);
-			roleBtn->SetText(L"下麦");
-			audioSwitchBtn->SetText(L"关闭音频");
-            videoSwitchBtn->SetText(L"关闭视频");
+			roleBtn->SetText(L"down mic");
+			audioSwitchBtn->SetText(L"close audio");
+            videoSwitchBtn->SetText(L"close video");
             enableButton(true);
 		}
 		return true;
@@ -137,13 +137,13 @@ void RoomForm::InitWindow() {
 	musicPlayModeBtn->AttachClick([this, musicPlayModeBtn](ui::EventArgs* args) {
 		music_play_mode_ = (MusicMode)((music_play_mode_ + 1) % 3);
 		if (music_play_mode_ == music_loop) {
-			musicPlayModeBtn->SetText(L"循环");
+			musicPlayModeBtn->SetText(L"loop");
 		}
 		else if (music_play_mode_ == music_random) {
-			musicPlayModeBtn->SetText(L"随机");
+			musicPlayModeBtn->SetText(L"random");
 		}
 		else if (music_play_mode_ == music_repetition) {
-			musicPlayModeBtn->SetText(L"重复");
+			musicPlayModeBtn->SetText(L"repeat");
 		}
 		return true;
 	});
@@ -170,11 +170,11 @@ void RoomForm::InitWindow() {
 			return true;
 		if (!musicPaused_) {
 			rtcEngine_->pauseAudioMixing();
-			musicPauseBtn->SetText(L"恢复");
+			musicPauseBtn->SetText(L"resume");
 		}
 		else {
 			rtcEngine_->resumeAudioMixing();
-			musicPauseBtn->SetText(L"暂停");
+			musicPauseBtn->SetText(L"pause");
 		}
 		musicPaused_ = !musicPaused_;
 		return true; });
@@ -228,11 +228,11 @@ void RoomForm::InitWindow() {
     videoSubscribeBtn->AttachClick([this, videoSubscribeBtn](ui::EventArgs* args) {
         if (videoSubscribe_) {
             rtcEngine_->muteAllRemoteVideoStreams(true);
-            videoSubscribeBtn->SetText(L"订阅视频");
+            videoSubscribeBtn->SetText(L"sub video");
         }
         else {
             rtcEngine_->muteAllRemoteVideoStreams(false);
-            videoSubscribeBtn->SetText(L"取消订阅视频");
+            videoSubscribeBtn->SetText(L"cancel sub video");
         }
         videoSubscribe_ = !videoSubscribe_;
         return true;
@@ -242,11 +242,11 @@ void RoomForm::InitWindow() {
     audioSubscribeBtn->AttachClick([this, audioSubscribeBtn](ui::EventArgs* args) {
         if (audioSubscribe_) {
            rtcEngine_->muteAllRemoteAudioStreams(true);
-            audioSubscribeBtn->SetText(L"订阅音频");
+            audioSubscribeBtn->SetText(L"sub audio");
         }
         else {
            rtcEngine_->muteAllRemoteAudioStreams(false);
-            audioSubscribeBtn->SetText(L"取消订阅音频");
+            audioSubscribeBtn->SetText(L"cancel sub audio");
         }
         audioSubscribe_ = !audioSubscribe_;
         return true;
@@ -301,7 +301,7 @@ void RoomForm::startRelayMedia() {
 void RoomForm::stopRelayMedia() {
 	rtcEngine_->stopChannelMediaRelay();
 	relayState_ = false;
-	relayMediaBnt_->SetText(L"开始连麦");
+	relayMediaBnt_->SetText(L"start relay");
 }
 
 void RoomForm::OnMusicSelectFiles(const std::wstring& path,
@@ -350,11 +350,11 @@ void RoomForm::joinRoom() {
 	rtcEngine_->enableAudioVolumeIndication(500, 3, true);
 	ui::Button* roleBtn = dynamic_cast<ui::Button*>(FindControl(L"role_bnt"));
 	if (roleType_ == 1) {
-		roleBtn->SetText(L"下麦");
+		roleBtn->SetText(L"down mic");
 		audioOpen_ = true;
 	}
 	else {
-		roleBtn->SetText(L"上麦");
+		roleBtn->SetText(L"up mic");
 		audioOpen_ = false;
         enableButton(false);
 	}
@@ -369,7 +369,7 @@ void RoomForm::startPlayMusic() {
 		stopPlayMusic();
 
 	if (rtcEngine_->startAudioMixing(musicPath_.c_str(), false, true, -1) != 0) {
-		::MessageBox(NULL, L"打开文件失败!", L"提示", MB_OKCANCEL);
+		::MessageBox(NULL, L"open music file failed!", L"提示", MB_OKCANCEL);
 		return;
 	}
 
@@ -381,8 +381,8 @@ void RoomForm::startPlayMusic() {
 	ui::Label* startLabel = dynamic_cast<ui::Label*>(FindControl(L"play_music_start_label"));
 	ui::Label* endLabel = dynamic_cast<ui::Label*>(FindControl(L"play_music_end_label"));
 
-	palyBnt->SetText(L"停止");
-	pauseBnt->SetText(L"暂停");
+	palyBnt->SetText(L"stop");
+	pauseBnt->SetText(L"pause");
 	startLabel->SetText(L"00:00");
 	endLabel->SetText(L"00:00");
 }
@@ -399,8 +399,8 @@ void RoomForm::stopPlayMusic() {
 	ui::Label* startLabel = dynamic_cast<ui::Label*>(FindControl(L"play_music_start_label"));
 	ui::Label* endLabel = dynamic_cast<ui::Label*>(FindControl(L"play_music_end_label"));
 
-	palyBnt->SetText(L"播放");
-	pauseBnt->SetText(L"暂停");
+	palyBnt->SetText(L"play");
+	pauseBnt->SetText(L"pause");
 	slider->SetValue(0);
 	startLabel->SetText(L"00:00");
 	endLabel->SetText(L"00:00");
@@ -513,17 +513,17 @@ void RoomForm::onError(int err, const char* msg) {
 }
 void RoomForm::onJoinChannelSuccess(const char* channel, bbrtc::uid_t uid, int elapsed) {
 	nbase::ThreadManager::PostTask(kThreadUI, [this]() {
-		stateLabel_->SetText(L"加入房间成功");
+		stateLabel_->SetText(L"join room suc");
 	});
 }
 void RoomForm::onRejoinChannelSuccess(const char* channel, bbrtc::uid_t uid, int elapsed) {
 	nbase::ThreadManager::PostTask(kThreadUI, [this]() {
-		stateLabel_->SetText(L"重连成功");
+		stateLabel_->SetText(L"reconnecting suc");
 	});
 }
 void RoomForm::onLeaveChannel(const bbrtc::RtcStats& stats) {
 	nbase::ThreadManager::PostTask(kThreadUI, [this]() {
-		stateLabel_->SetText(L"退出房间成功");
+		stateLabel_->SetText(L"exit room suc");
 	});
 }
 void RoomForm::onClientRoleChanged(bbrtc::CLIENT_ROLE_TYPE oldRole, bbrtc::CLIENT_ROLE_TYPE newRole) {
@@ -642,7 +642,7 @@ void RoomForm::onAudioMixingStateChanged(bbrtc::AUDIO_MIXING_STATE_TYPE state, b
 	nbase::ThreadManager::PostTask(kThreadUI, [this, state, errorCode]() {
 		switch (state) {
 		case bbrtc::AUDIO_MIXING_STATE_PLAYING: {
-			stateLabel_->SetText(L"播放音乐成功");
+			stateLabel_->SetText(L"play music suc");
 			musicTotalTimeMs_ = rtcEngine_->getAudioMixingDuration();
 			musicTotalTimeLabel_->SetText(nbase::StringPrintf(L"%02d:%02d", (int)musicTotalTimeMs_/1000/60, (int)musicTotalTimeMs_/1000%60));
 			musicSlider_->SetMaxValue(musicTotalTimeMs_ / 1000);
@@ -652,22 +652,22 @@ void RoomForm::onAudioMixingStateChanged(bbrtc::AUDIO_MIXING_STATE_TYPE state, b
 		}
 			break;
 		case bbrtc::AUDIO_MIXING_STATE_PAUSED:
-			stateLabel_->SetText(L"播放音乐暂停");
+			stateLabel_->SetText(L"play music pause");
 			break;
 		case bbrtc::AUDIO_MIXING_STATE_STOPPED:
-			stateLabel_->SetText(L"播放音乐结束");
+			stateLabel_->SetText(L"play music end");
 			break;
 		case bbrtc::AUDIO_MIXING_STATE_FAILED: {
 			switch (errorCode) {
 			case bbrtc::AUDIO_MIXING_REASON_CAN_NOT_OPEN:
-				stateLabel_->SetText(L"播放音乐打开失败");
+				stateLabel_->SetText(L"open music failed");
 				stopPlayMusic();
 				break;
 			case bbrtc::AUDIO_MIXING_REASON_TOO_FREQUENT_CALL:
-				stateLabel_->SetText(L"播放音乐调用太频繁");
+				stateLabel_->SetText(L"open music call too fre");
 				break;
 			case bbrtc::AUDIO_MIXING_REASON_INTERRUPTED_EOF:
-				stateLabel_->SetText(L"播放音乐中断");
+				stateLabel_->SetText(L"open music interruption");
 				stopPlayMusic();
 				break;
 			default:
@@ -685,47 +685,47 @@ void RoomForm::onConnectionStateChanged(bbrtc::CONNECTION_STATE_TYPE state, bbrt
 		{
 			switch (reason) {
 			case bbrtc::CONNECTION_CHANGED_INTERRUPTED:
-				stateLabel_->SetText(L"连接断开, 网络异常");
+				stateLabel_->SetText(L"disconnecting net error");
 				break;
 			case bbrtc::CONNECTION_CHANGED_JOIN_FAILED:
-				stateLabel_->SetText(L"连接断开, 加入房间失败");
+				stateLabel_->SetText(L"disconnecting join failed");
 				break;
 			case bbrtc::CONNECTION_CHANGED_LEAVE_CHANNEL:
-				stateLabel_->SetText(L"连接断开, 离开房间");
+				stateLabel_->SetText(L"disconnect leave channel");
 				break;
 			case bbrtc::CONNECTION_CHANGED_INVALID_CHANNEL_NAME:
-				stateLabel_->SetText(L"连接断开, 房间名称无效");
+				stateLabel_->SetText(L"disconnect,invalid channel name");
 				break;
 			case bbrtc::CONNECTION_CHANGED_BANNED_BY_SERVER:
-				stateLabel_->SetText(L"连接断开, 拒绝加入");
+				stateLabel_->SetText(L"disconnect,rejected join");
 				break;
 			case bbrtc::CONNECTION_CHANGED_KEEP_ALIVE_TIMEOUT:
-				stateLabel_->SetText(L"连接断开, 心跳超时");
+				stateLabel_->SetText(L"disconnect,heartbeat timeout");
 				break;
 			default:
-				stateLabel_->SetText(L"连接断开");
+				stateLabel_->SetText(L"disconnect");
 				break;
 			}
 		}break;
 		case bbrtc::CONNECTION_STATE_CONNECTING:
 			switch (reason) {
 			case bbrtc::CONNECTION_CHANGED_JOIN_SUCCESS:
-				stateLabel_->SetText(L"正在连接，加入房间成功...");
+				stateLabel_->SetText(L"connecting ,join channel suc..");
 				break;
 			default:
-				stateLabel_->SetText(L"正在连接...");
+				stateLabel_->SetText(L"connecting...");
 				break;
 			}
 			break;
 		case bbrtc::CONNECTION_STATE_CONNECTED:
-			stateLabel_->SetText(L"连接成功");
+			stateLabel_->SetText(L"connected suc");
 			isJoined_ = true;
 			break;
 		case bbrtc::CONNECTION_STATE_RECONNECTING:
-			stateLabel_->SetText(L"正在重连...");
+			stateLabel_->SetText(L"connecting...");
 			break;
 		case bbrtc::CONNECTION_STATE_FAILED:
-			stateLabel_->SetText(L"连接失败");
+			stateLabel_->SetText(L"connect failed");
 			rtcEngine_->leaveChannel();
 			break;
 		}
@@ -736,11 +736,11 @@ void RoomForm::onChannelMediaRelayStateChanged(bbrtc::CHANNEL_MEDIA_RELAY_STATE 
 {
 		nbase::ThreadManager::PostTask(kThreadUI, [this, state, code]() {
 			if (state == bbrtc::RELAY_STATE_RUNNING && code == bbrtc::RELAY_OK) {
-				stateLabel_->SetText(L"连麦成功");
+				stateLabel_->SetText(L"relay suc");
 			}
 			else if (state == bbrtc::RELAY_STATE_FAILURE) {
 				wchar_t msg[128] = { 0 };
-				wsprintf(msg, L"连麦失败, code:%d", code);
+				wsprintf(msg, L"relay failed, code:%d", code);
 				stateLabel_->SetText(msg);
 				stopRelayMedia();
 			}
@@ -751,12 +751,12 @@ void RoomForm::onChannelMediaRelayEvent(bbrtc::CHANNEL_MEDIA_RELAY_EVENT code)
 {
 	nbase::ThreadManager::PostTask(kThreadUI, [this, code]() {
 		if (code == bbrtc::RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_IS_NULL) {
-			stateLabel_->SetText(L"连麦失败, 房间不存在");
+			stateLabel_->SetText(L"relay failed, channel not exit");
 			stopRelayMedia();
 		}
 		else {
 			wchar_t msg[128] = { 0 };
-			wsprintf(msg, L"连麦事件, event:%d", code);
+			wsprintf(msg, L"relay event, event:%d", code);
 			stateLabel_->SetText(msg);
 		}
 	});
