@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
   private int mAppIdType = 0;
   private int mQualityType = 5;
   private int mRoleType = 0;
-  private int mServerType = 2;
+  private int mServerType = 0;
   private int mResolutionType = 0;
   private int mScenarioType = 0;
   private Handler mHandler = new Handler();
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     mAppIdSpinner.setAdapter(appidAdapter);
 
 
-    String[] quelityTypes = new String[]{"默认", "32k单声道", "48k单声道", "48k双声道", "48k单声道高音质", "48k双声道高音质"};
+    String[] quelityTypes = new String[]{"default", "32kMono", "48kMono", "48kStero", "48kMonoHighqulity", "48kSteroHighqulity"};
     ArrayAdapter<String> quelityAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, quelityTypes);
     quelityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mSpinnerQuality.setAdapter(quelityAdapter);
@@ -144,12 +144,12 @@ public class MainActivity extends AppCompatActivity {
     scenarioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mSpinnerScenario.setAdapter(scenarioAdapter);
 
-    String[] roleTypes = new String[]{"主播", "观众"};
+    String[] roleTypes = new String[]{"Broadcaster", "Audience"};
     ArrayAdapter<String> roleAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, roleTypes);
     roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mSpinnerRole.setAdapter(roleAdapter);
 
-    String[] serverTypes = new String[]{"奥帕云正式环境","BB正式环境", "测试环境", "测试环境V2", "内网环境", "自定义", "P2P"};
+    String[] serverTypes = new String[]{"Aopa FormalEnv"};
     ArrayAdapter<String> serverAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, serverTypes);
     serverAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mServerSpinner.setAdapter(serverAdapter);

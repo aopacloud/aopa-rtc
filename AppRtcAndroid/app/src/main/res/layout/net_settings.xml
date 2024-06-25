@@ -13,8 +13,8 @@
         android:layout_height="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="40dp"
-        android:text="上行丢包率(0-100):"
-        android:textColor="@android:color/black"/>
+        android:text="UpLost(0-100):"
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/LossrateUpText"
@@ -38,11 +38,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/LossrateUpLabel"
-        android:layout_alignRight="@+id/LossrateUpLabel"
         android:layout_alignTop="@+id/LossrateUpLabel"
+        android:layout_alignRight="@+id/LossrateUpLabel"
         android:layout_marginVertical="55dp"
-        android:text="下行丢包率(0-100):"
-        android:textColor="@android:color/black"/>
+        android:text="DownLost(0-100):"
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/LossrateDownText"
@@ -66,11 +66,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/LossrateDownLabel"
-        android:layout_alignRight="@+id/LossrateDownLabel"
         android:layout_alignTop="@+id/LossrateDownLabel"
+        android:layout_alignRight="@+id/LossrateDownLabel"
         android:layout_marginVertical="55dp"
-        android:text="上行时延(ms):"
-        android:textColor="@android:color/black"/>
+        android:text="UpDelay(ms):"
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/RttUpText"
@@ -94,11 +94,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/RttUpLabel"
-        android:layout_alignRight="@+id/RttUpLabel"
         android:layout_alignTop="@+id/RttUpLabel"
+        android:layout_alignRight="@+id/RttUpLabel"
         android:layout_marginVertical="55dp"
-        android:text="下行时延(ms):"
-        android:textColor="@android:color/black"/>
+        android:text="DownDelay(ms):"
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/RttDownText"
@@ -123,11 +123,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/RttDownLabel"
-        android:layout_alignRight="@+id/RttDownLabel"
         android:layout_alignTop="@+id/RttDownLabel"
+        android:layout_alignRight="@+id/RttDownLabel"
         android:layout_marginVertical="55dp"
-        android:text="上行带宽(kbps):"
-        android:textColor="@android:color/black"/>
+        android:text="UpBwe(kbps):"
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/BandwidthUpText"
@@ -151,11 +151,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/BandwidthUpLabel"
-        android:layout_alignRight="@+id/BandwidthUpLabel"
         android:layout_alignTop="@+id/BandwidthUpLabel"
+        android:layout_alignRight="@+id/BandwidthUpLabel"
         android:layout_marginVertical="55dp"
-        android:text="下行带宽(kbps):"
-        android:textColor="@android:color/black"/>
+        android:text="DownBwe(kbps):"
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/BandwidthDownText"

@@ -29,7 +29,7 @@
                 android:gravity="left"
                 android:paddingLeft="5dp"
                 android:paddingTop="4dp"
-                android:text="状态"
+                android:text="Status"
                 android:textColor="#FFA06000"
                 android:textSize="12dp" />
 

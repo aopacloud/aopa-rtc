@@ -252,13 +252,13 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
       ((EditText) findViewById(R.id.MusicFileEditText)).setText("/storage/emulated/0/Download/chorus_bgm.mp3");
     }
 
-    String[] quelityTypes = new String[]{"默认", "32k单声道", "48k单声道", "48k双声道", "48k单声道高音质", "48k双声道高音质"};
+    String[] quelityTypes = new String[]{"default", "32kMono", "48kMono", "48kStero", "48kMonoHighqulity", "48kSteroHighqulity"};
     ArrayAdapter<String> quelityAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, quelityTypes);
     quelityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mSpinnerQuality.setAdapter(quelityAdapter);
     mSpinnerQuality.setSelection(mQualityType);
 
-    String[] chorusTypes = new String[]{"NONE", "主唱", "副唱"};
+    String[] chorusTypes = new String[]{"NONE", "Main", "Deputy"};
     ArrayAdapter<String> chorusAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, chorusTypes);
     quelityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mChorusRole.setAdapter(chorusAdapter);
@@ -366,10 +366,10 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
        RtcEngine.getInstance().startPreview();
     }
    // RtcEngine.getInstance().adjustAudioMixingPublishVolume(0);
-    mRoleSwitchButton.setText(mRoleType == 1 ? "观众" : "主播");
-    mAudioSwitchButton.setText(mAudioLocalState ? "关麦" : "开麦");
-    mVideoSwitchButton.setText(mVideoLocalState ? "关闭视频" : "开启视频");
-    mCameraSwitchButton.setText("摄像头");
+    mRoleSwitchButton.setText(mRoleType == 1 ? "audience" : "broadcaster");
+    mAudioSwitchButton.setText(mAudioLocalState ? "close mic" : "open mic");
+    mVideoSwitchButton.setText(mVideoLocalState ? "close video" : "open video");
+    mCameraSwitchButton.setText("camera");
     mDefaultDrawable = getResources().getDrawable(R.drawable.bnt_shape_default);
     mRedDrawable = getResources().getDrawable(R.drawable.btn_shape);
     mVadStateView.setBackground(mDefaultDrawable);
@@ -631,7 +631,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
      int role = mRoleType == 1 ? 2 : 1;
      if (RtcEngine.getInstance().setClientRole(role) == 0){
        mRoleType = role;
-       mRoleSwitchButton.setText(mRoleType == 1 ? "观众" : "主播");
+       mRoleSwitchButton.setText(mRoleType == 1 ? "audience" : "broadcaster");
        mAudioLocalState = mRoleType == 1;
        mVideoLocalState = mRoleType == 1;
        if (mVideoLocalState){
@@ -645,8 +645,8 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
          });
        }
        RtcEngine.getInstance().enableLocalVideo(mVideoEnabled);
-       mAudioSwitchButton.setText(mAudioLocalState ? "关麦" : "开麦");
-       mVideoSwitchButton.setText(mVideoLocalState ? "关闭视频" : "开启视频");
+       mAudioSwitchButton.setText(mAudioLocalState ? "close mic" : "open mic");
+       mVideoSwitchButton.setText(mVideoLocalState ? "clode video" : "open video");
        updateStatus(mRoleType == 1);
      }
      else {
@@ -667,7 +667,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
 //    mAudioSwitchButton.setText(mAudioLocalState ? "关麦" : "开麦");
     if (RtcEngine.getInstance().muteLocalAudioStream(mAudioLocalState) == 0){
       mAudioLocalState = !mAudioLocalState;
-      mAudioSwitchButton.setText(mAudioLocalState ? "关麦" : "开麦");
+      mAudioSwitchButton.setText(mAudioLocalState ? "close mic" : "open mic");
     }
     else {
       Log.e(TAG, "Set audio state failed");
@@ -678,7 +678,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     if(RtcEngine.getInstance() == null) return ;
     if (RtcEngine.getInstance().muteLocalVideoStream(mVideoLocalState) == 0){
       mVideoLocalState = !mVideoLocalState;
-      mVideoSwitchButton.setText(mVideoLocalState ? "关闭视频" : "开启视频");
+      mVideoSwitchButton.setText(mVideoLocalState ? "close video" : "open video");
     }
     else {
       Log.e(TAG, "Set video state failed");
@@ -768,7 +768,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
         int ret = RtcEngine.getInstance().startChannelMediaRelay(configurations);
         if (ret == 0){
           mRelayState = true;
-          mRelayMediaButton.setText("停止连麦");
+          mRelayMediaButton.setText("stop relay");
         }
         else{
           showToast("开始连麦失败，ret:" + ret);
@@ -791,7 +791,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     if(RtcEngine.getInstance() == null) return;
     RtcEngine.getInstance().stopChannelMediaRelay();
     mRelayState = false;
-    mRelayMediaButton.setText("开始连麦");
+    mRelayMediaButton.setText("start relay");
   }
 
   private void removeAllVideoView(boolean exitroom){
@@ -847,11 +847,11 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
        return;
      if (mMusicIsPause){
        RtcEngine.getInstance().resumeAudioMixing();
-       mMusicPauseButton.setText("暂停");
+       mMusicPauseButton.setText("pause");
        mMusicIsPause = false;
      }else{
        RtcEngine.getInstance().pauseAudioMixing();
-       mMusicPauseButton.setText("恢复");
+       mMusicPauseButton.setText("resume");
        mMusicIsPause = true;
      }
   }
@@ -859,11 +859,11 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     if(RtcEngine.getInstance() == null) return;
     if (mAudioSubscribe){
       RtcEngine.getInstance().muteAllRemoteAudioStreams(true);
-      mAudioSubscribeButton.setText("订阅音频");
+      mAudioSubscribeButton.setText("sub audio");
       mAudioSubscribe = false;
     }else{
      RtcEngine.getInstance().muteAllRemoteAudioStreams(false);
-     mAudioSubscribeButton.setText("取消订阅音频");
+     mAudioSubscribeButton.setText("cancel sub audio");
       mAudioSubscribe = true;
     }
   }
@@ -871,11 +871,11 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     if(RtcEngine.getInstance() == null) return;
     if (mVideoSubscribe){
       RtcEngine.getInstance().muteAllRemoteVideoStreams(true);
-      mVideoSubscribeButton.setText("订阅视频");
+      mVideoSubscribeButton.setText("sub video");
       mVideoSubscribe = false;
     }else{
       RtcEngine.getInstance().muteAllRemoteVideoStreams(false);
-      mVideoSubscribeButton.setText("取消订阅视频");
+      mVideoSubscribeButton.setText("cancel sub video");
       mVideoSubscribe = true;
     }
   }
@@ -956,13 +956,13 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
       if (RtcEngine.getInstance().startAudioMixing(filepath, false, false, -1) == 0) {
         mMusicIsPlayed = true;
         mMusicIsPause = false;
-        mMusicPlayButton.setText("停止");
-        mMusicPauseButton.setText("暂停");
+        mMusicPlayButton.setText("stop");
+        mMusicPauseButton.setText("pause");
         mMusicTimer = new Timer();
         mMusicTotalTimeMs = 0;
         mMusicTimer.schedule(new MusicTimerTask(), 1000, 1000);
       } else {
-        showToast("播放文件失败");
+        showToast("play music failed");
       }
     }
     mMusicNameEditText.setText(filepath);
@@ -981,8 +981,8 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
        mMusicSeekBar.setProgress(0);
        mMusicTotalTimeTextView.setText("00:00");
        mMusicCurrentTimeTextView.setText("00:00");
-       mMusicPlayButton.setText("播放");
-       mMusicPauseButton.setText("暂停");
+       mMusicPlayButton.setText("play");
+       mMusicPauseButton.setText("pause");
        if(RtcEngine.getInstance() == null) return ;
        RtcEngine.getInstance().stopAudioMixing();
      }
@@ -1170,14 +1170,14 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
 
     @Override public void  onJoinChannelSuccess(String channel, int uid, int elapsed) {
       mHandler.post(()-> {
-         mStateTextView.setText("加入房间成功");
+         mStateTextView.setText("join room suc");
        });
       Log.i(TAG, "+++ onJoinChannelSuccess channelid:" + channel + " uid:" + uid + " elapsed:" + elapsed);
     }
 
     @Override public void  onRejoinChannelSuccess(String channel, int uid, int elapsed) {
       mHandler.post(()-> {
-          mStateTextView.setText("重新加入房间成功");
+          mStateTextView.setText("repeat join room suc");
       });
       Log.i(TAG, "+++ onRejoinChannelSuccess channelid:" + channel + " uid:" + uid + " elapsed:" + elapsed);
     }
@@ -1195,13 +1195,13 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
 
     @Override public void onChorusStart(){
       mHandler.post(()-> {
-        mStateTextView.setText("合唱开始");
+        mStateTextView.setText("chorus start");
       });
     }
 
     @Override public void onChorusStop(){
       mHandler.post(()-> {
-        mStateTextView.setText("合唱停止");
+        mStateTextView.setText("chorus stop");
       });
     }
 
@@ -1231,41 +1231,41 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
           {
             switch (reason) {
               case CONNECTION_CHANGED_INTERRUPTED:
-                mStateTextView.setText("连接断开, 网络异常");
+                mStateTextView.setText("disconnect, net error");
                 break;
               case CONNECTION_CHANGED_JOIN_FAILED:
-                mStateTextView.setText("连接断开, 加入房间失败 ");
+                mStateTextView.setText("disconnect, joinroom fail ");
                 break;
               case CONNECTION_CHANGED_LEAVE_CHANNEL:
-                mStateTextView.setText("连接断开, 离开房间 ");
+                mStateTextView.setText("disconnect, leave room ");
                 break;
               case CONNECTION_CHANGED_INVALID_CHANNEL_NAME:
-                mStateTextView.setText("连接断开, 房间名称无效 ");
+                mStateTextView.setText("disconnect, invalid room ");
                 break;
               case CONNECTION_CHANGED_BANNED_BY_SERVER:
-                mStateTextView.setText("连接断开, 被踢出");
+                mStateTextView.setText("disconnect, be kicked");
                 showToast("你已被踢出");
                 break;
               case CONNECTION_CHANGED_KEEP_ALIVE_TIMEOUT:
-                mStateTextView.setText("连接断开, 心跳超时 ");
+                mStateTextView.setText("disconnect, heatbeat timeout ");
                 break;
               case CONNECTION_CHANGED_INVALID_APP_ID:
-                mStateTextView.setText("连接断开, 无效的APPID");
+                mStateTextView.setText("disconnect, invalidAPPID");
                 break;
               case CONNECTION_CHANGED_TOKEN_EXPIRED:
-                mStateTextView.setText("连接断开, Token超时");
+                mStateTextView.setText("disconnect,Token timeout");
                 break;
               case CONNECTION_CHANGED_INVALID_TOKEN:
-                mStateTextView.setText("连接断开, Token无效");
+                mStateTextView.setText("disconnect, invalid token");
                 break;
               case CONNECTION_CHANGED_REJECTED_BY_SERVER:
-                mStateTextView.setText("连接断开, 多设备重复登录");
+                mStateTextView.setText("disconnect, multi device join");
                 break;
               case CONNECTION_CHANGED_CLIENT_IP_ADDRESS_CHANGED:
-                mStateTextView.setText("连接断开, 网络类型改变");
+                mStateTextView.setText("disconnect, net change");
                 break;
               default:
-                mStateTextView.setText("连接断开 ");
+                mStateTextView.setText("disconnect");
                 break;
             }
             removeAllVideoView(false);
@@ -1274,21 +1274,21 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
           case CONNECTION_STATE_CONNECTING:
             switch (reason) {
               case CONNECTION_CHANGED_JOIN_SUCCESS:
-                mStateTextView.setText("正在连接，加入房间成功... ");
+                mStateTextView.setText("connecting，join room suc... ");
                 break;
               default:
-                mStateTextView.setText("正在连接... ");
+                mStateTextView.setText("connectting... ");
                 break;
             }
             break;
           case CONNECTION_STATE_CONNECTED:
-            mStateTextView.setText("连接成功 ");
+            mStateTextView.setText("join suc ");
             break;
           case CONNECTION_STATE_RECONNECTING:
-            mStateTextView.setText("正在重连... ");
+            mStateTextView.setText("reconnecting... ");
             break;
           case CONNECTION_STATE_FAILED:
-            mStateTextView.setText("连接失败");
+            mStateTextView.setText("connect failed");
             if(RtcEngine.getInstance() != null)
                RtcEngine.getInstance().leaveChannel();
             break;
@@ -1297,7 +1297,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     }
 
     @Override public void  onConnectionLost() {
-      showToast("连接丢失");
+      showToast("connect lost");
     }
 
 
@@ -1389,9 +1389,9 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
       Log.i(TAG, "channelMediaRelayStateDidChange state:" + state + ", code:" + code);
       mHandler.post(()-> {
         if (state == RELAY_STATE_RUNNING && code == RELAY_OK) {
-          mStateTextView.setText("连麦成功");
+          mStateTextView.setText("relay suc");
         } else if (state == RELAY_STATE_FAILURE) {
-          mStateTextView.setText("连麦失败, code:" + code);
+          mStateTextView.setText("relay failed, code:" + code);
           stopRelayMedia();
         }
       });
@@ -1401,10 +1401,10 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
       Log.i(TAG, "didReceiveChannelMediaRelayEvent event:" + code);
       mHandler.post(()-> {
         if (code == RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_IS_NULL) {
-          mStateTextView.setText("连麦失败, 房间不存在");
+          mStateTextView.setText("relay failed,room not exit");
           stopRelayMedia();
         } else {
-          mStateTextView.setText("连麦事件, event:" + code);
+          mStateTextView.setText("relay event, event:" + code);
         }
       });
     }

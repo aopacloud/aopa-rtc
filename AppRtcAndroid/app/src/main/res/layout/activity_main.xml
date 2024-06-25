@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="40dp"
-        android:text="房间ID"
+        android:text="RoomID"
         android:textColor="@android:color/black" />
 
     <EditText
@@ -60,7 +60,7 @@
         android:layout_below="@+id/AppIDTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="用户ID"
+        android:text="UserID"
         android:textColor="@android:color/black" />
 
     <EditText
@@ -81,12 +81,12 @@
 
     <TextView
         android:id="@+id/ServerAddrTextView"
-        android:layout_width="60dp"
+        android:layout_width="65dp"
         android:layout_height="30dp"
         android:layout_below="@+id/UserIdTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="服务环境"
+        android:text="ServerEnv"
         android:textColor="@android:color/black"
         android:visibility="visible"
         tools:visibility="visible" />
@@ -107,13 +107,13 @@
 
     <TextView
         android:id="@+id/AudioQualityTextView"
-        android:textColor="@android:color/black"
-        android:layout_width="60dp"
+        android:layout_width="75dp"
         android:layout_height="30dp"
         android:layout_below="@+id/ServerAddrTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="音质" />
+        android:text="AudQuality"
+        android:textColor="@android:color/black" />
 
     <Spinner
         android:id="@+id/AudioQualitySpinner"
@@ -129,13 +129,13 @@
 
     <TextView
         android:id="@+id/ScenarioTextView"
-        android:textColor="@android:color/black"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_below="@+id/AudioQualityTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="场景" />
+        android:text="Scene"
+        android:textColor="@android:color/black" />
 
     <Spinner
         android:id="@+id/ScenarioSpinner"
@@ -156,7 +156,7 @@
         android:layout_below="@+id/ScenarioTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="角色"
+        android:text="Role"
         android:textColor="@android:color/black" />
 
     <Spinner
@@ -178,7 +178,7 @@
         android:layout_below="@+id/RoleTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="采集分辨率"
+        android:text="VCapReso"
         android:textColor="@android:color/black" />
 
     <Spinner
@@ -200,7 +200,7 @@
         android:layout_below="@+id/ResolutionSpinner"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="自定义服务"
+        android:text="SelfDefineIp"
         android:textColor="@android:color/black" />
 
     <EditText
@@ -229,7 +229,7 @@
         android:layout_below="@+id/CustomServerTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="10dp"
-        android:text="Token校验" />
+        android:text="TokenCheck" />
 
     <CheckBox
         android:id="@+id/StatsCheckBox"
@@ -239,7 +239,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="0dp"
         android:layout_toRightOf="@+id/TokenCheckBox"
-        android:text="统计数据" />
+        android:text="ShowStatistic" />
 
     <CheckBox
         android:id="@+id/SpeakerCheckBox"
@@ -248,7 +248,7 @@
         android:layout_below="@+id/TokenCheckBox"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="10dp"
-        android:text="扬声器输出" />
+        android:text="AudioOutput" />
 
     <CheckBox
         android:id="@+id/QuicCheckBox"
@@ -267,7 +267,7 @@
         android:layout_below="@+id/SpeakerCheckBox"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="10dp"
-        android:text="耳返" />
+        android:text="Inear" />
 
     <CheckBox
         android:id="@+id/ReverbCheckBox"
@@ -277,7 +277,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="0dp"
         android:layout_toRightOf="@+id/InearCheckBox"
-        android:text="混响" />
+        android:text="Reverb" />
 
     <CheckBox
         android:id="@+id/AAACheckBox"
@@ -286,7 +286,7 @@
         android:layout_below="@+id/InearCheckBox"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="5dp"
-        android:text="3A处理" />
+        android:text="3A" />
 
     <CheckBox
         android:id="@+id/VideoCheckBox"
@@ -295,7 +295,7 @@
         android:layout_below="@+id/InearCheckBox"
         android:layout_alignLeft="@+id/ReverbCheckBox"
         android:layout_marginTop="5dp"
-        android:text="开启视频" />
+        android:text="OpenVideo" />
 
     <CheckBox
         android:id="@+id/MulticastCheckBox"
@@ -304,7 +304,7 @@
         android:layout_below="@+id/AAACheckBox"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="5dp"
-        android:text="大小视频" />
+        android:text="Simucast" />
 
     <CheckBox
         android:id="@+id/DetachCheckBox"
@@ -313,7 +313,7 @@
         android:layout_below="@+id/VideoCheckBox"
         android:layout_alignLeft="@+id/VideoCheckBox"
         android:layout_marginTop="5dp"
-        android:text="推拉流分离" />
+        android:text="StreamDetach" />
 
     <Button
         android:id="@+id/RoomBnt"
@@ -323,7 +323,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:onClick="onJoinClick"
-        android:text="多人视频" />
+        android:text="Multi video" />
 
     <Button
         android:id="@+id/SingleBnt"
@@ -333,7 +333,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:onClick="onSingleClick"
-        android:text="单人视频" />
+        android:text="Single video" />
 
     <TextView
         android:id="@+id/VersionText"
