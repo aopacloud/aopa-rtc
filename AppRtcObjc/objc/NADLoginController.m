@@ -101,10 +101,10 @@ struct LoginConfig{
     _appIdList = [[NSArray alloc] initWithObjects:
                   @"PT",
                   nil];
-    _audioOptionTitles = [[NSArray alloc]initWithObjects:@"默认", @"通话单声道",
-                          @"音乐单声道", @"音乐立体声", @"音乐单声道高音质", @"音乐高音质立体声", nil];
-    _userOptionTitles = [[NSArray alloc]initWithObjects:@"主播", @"观众", nil];
-    _serverOptionTitles = [[NSArray alloc]initWithObjects:@"奥帕云正式环境", nil];
+    _audioOptionTitles = [[NSArray alloc]initWithObjects:@"default", @"speechmono",
+                          @"musicmono", @"musicstero", @"musicmonoHighqulity", @"musicSteroHighQuality", nil];
+    _userOptionTitles = [[NSArray alloc]initWithObjects:@"broadcaster", @"audience", nil];
+    _serverOptionTitles = [[NSArray alloc]initWithObjects:@"Aopa formal env", nil];
     _scenarioOptionTitles = [[NSArray alloc]initWithObjects:@"ShowRoom", @"GameStreaming", @"Chorus", nil];
     _videoProfileOptionTitles = [[NSArray alloc]initWithObjects:@"360x640", @"480x640", @"540x960", @"720x1280", @"1080x1920", nil];
     _userId = arc4random() % 100000;
@@ -116,7 +116,7 @@ struct LoginConfig{
     _roomIdLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _roomIdLabel.font = [UIFont systemFontOfSize:13];
     _roomIdLabel.textColor = [UIColor blackColor];
-    [_roomIdLabel setText:@"房间号"];
+    [_roomIdLabel setText:@"roomid"];
     [_view addSubview:_roomIdLabel];
 
     _roomIdText = [[MyUITextField alloc] initWithFrame:CGRectZero];
@@ -136,7 +136,7 @@ struct LoginConfig{
     _userIdLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _userIdLabel.font = [UIFont systemFontOfSize:13];
     _userIdLabel.textColor = [UIColor blackColor];
-    [_userIdLabel setText:@"用户ID"];
+    [_userIdLabel setText:@"userID"];
     [_view addSubview:_userIdLabel];
        
     _userIdText = [[MyUITextField alloc] initWithFrame:CGRectZero];
@@ -156,7 +156,7 @@ struct LoginConfig{
     _serverAddrLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _serverAddrLabel.font = [UIFont systemFontOfSize:13];
     _serverAddrLabel.textColor = [UIColor blackColor];
-    [_serverAddrLabel setText:@"自定义服务"];
+    [_serverAddrLabel setText:@"self define ip"];
     [_view addSubview:_serverAddrLabel];
 
     _serverAddrText = [[MyUITextField alloc] initWithFrame:CGRectZero];
@@ -177,7 +177,7 @@ struct LoginConfig{
     _joinButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [_joinButton.layer setMasksToBounds:YES];
     [_joinButton.layer setCornerRadius:5.0];
-    [_joinButton setTitle:@"多人视频" forState:UIControlStateNormal];
+    [_joinButton setTitle:@"multi vudei" forState:UIControlStateNormal];
     [_joinButton setTintColor:[UIColor whiteColor]];
     [_joinButton setBackgroundColor: [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1.0]]; 
     [_joinButton addTarget:self action:@selector(join:) forControlEvents:UIControlEventTouchUpInside];
@@ -188,7 +188,7 @@ struct LoginConfig{
     _singleButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [_singleButton.layer setMasksToBounds:YES];
     [_singleButton.layer setCornerRadius:5.0];
-    [_singleButton setTitle:@"单人视频" forState:UIControlStateNormal];
+    [_singleButton setTitle:@"single video" forState:UIControlStateNormal];
     [_singleButton setTintColor:[UIColor whiteColor]];
     [_singleButton setBackgroundColor: [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1.0]];
     [_singleButton addTarget:self action:@selector(joinSingle:) forControlEvents:UIControlEventTouchUpInside];
@@ -204,7 +204,7 @@ struct LoginConfig{
     [_quicCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_quicCheckBox];
 
-    _videoCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"开启视频"] columns:1];
+    _videoCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"open video"] columns:1];
     _videoCheckBox.translatesAutoresizingMaskIntoConstraints = NO;
     _videoCheckBox.isMulti = YES;
     _videoCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
@@ -214,7 +214,7 @@ struct LoginConfig{
     [_videoCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_videoCheckBox];
 
-    _videoSourceCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"本地源"] columns:1];
+    _videoSourceCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"locvsource"] columns:1];
     _videoSourceCheckBox.translatesAutoresizingMaskIntoConstraints = NO;
     _videoSourceCheckBox.isMulti = YES;
     _videoSourceCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
@@ -224,7 +224,7 @@ struct LoginConfig{
     [_videoSourceCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_videoSourceCheckBox];
 
-    _speakerCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"扬声器"] columns:1];
+    _speakerCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"speaker"] columns:1];
     _speakerCheckBox.translatesAutoresizingMaskIntoConstraints = NO;
     _speakerCheckBox.isMulti = YES;
     _speakerCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
@@ -233,7 +233,7 @@ struct LoginConfig{
     [_speakerCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_speakerCheckBox];
 
-    _simulcastStreamCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"大小流"] columns:1];
+    _simulcastStreamCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"simucast"] columns:1];
     _simulcastStreamCheckBox.translatesAutoresizingMaskIntoConstraints = NO;
     _simulcastStreamCheckBox.isMulti = YES;
     _simulcastStreamCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
@@ -243,7 +243,7 @@ struct LoginConfig{
     [_simulcastStreamCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_simulcastStreamCheckBox];
 
-    _detachStreamCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"推拉流分离"] columns:1];
+    _detachStreamCheckBox = [[NADCheckBox alloc]initWithItemTitleArray:@[@"stream detach"] columns:1];
     _detachStreamCheckBox.translatesAutoresizingMaskIntoConstraints = NO;
     _detachStreamCheckBox.isMulti = YES;
     _detachStreamCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
@@ -258,7 +258,7 @@ struct LoginConfig{
     _serverTypeLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _serverTypeLabel.font = [UIFont systemFontOfSize:13];
     _serverTypeLabel.textColor = [UIColor blackColor];
-    [_serverTypeLabel setText:@"服务器"];
+    [_serverTypeLabel setText:@"server"];
     [_view addSubview:_serverTypeLabel];
     
     _serverTypeMenu = [[LMJDropdownMenu alloc] initWithFrame:CGRectZero];
@@ -271,7 +271,7 @@ struct LoginConfig{
     _serverTypeMenu.layer.cornerRadius = 5;
 
     
-    _serverTypeMenu.title           = @"奥帕云正式环境";
+    _serverTypeMenu.title           = @"aopa formal env";
     _serverTypeMenu.titleBgColor    = [UIColor colorWithRed:255/255.f green:255/255.f blue:255/255.f alpha:1];
     _serverTypeMenu.titleFont       = [UIFont systemFontOfSize:13];
     _serverTypeMenu.titleColor      = [UIColor blackColor];
@@ -305,7 +305,7 @@ struct LoginConfig{
     _userRoleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _userRoleLabel.font = [UIFont systemFontOfSize:13];
     _userRoleLabel.textColor = [UIColor blackColor];
-    [_userRoleLabel setText:@"角色"];
+    [_userRoleLabel setText:@"role"];
     [_view addSubview:_userRoleLabel];
     
     _userRoleMenu = [[LMJDropdownMenu alloc] initWithFrame:CGRectZero];
@@ -317,7 +317,7 @@ struct LoginConfig{
     _userRoleMenu.layer.borderWidth  = 1;
     _userRoleMenu.layer.cornerRadius = 5;
     
-    _userRoleMenu.title           = @"主播";
+    _userRoleMenu.title           = @"broadcaster";
     _userRoleMenu.titleBgColor    = [UIColor colorWithRed:255/255.f green:255/255.f blue:255/255.f alpha:1];
     _userRoleMenu.titleFont       = [UIFont systemFontOfSize:13];
     _userRoleMenu.titleColor      = [UIColor blackColor];
@@ -328,7 +328,7 @@ struct LoginConfig{
     _audioProfileLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _audioProfileLabel.font = [UIFont systemFontOfSize:13];
     _audioProfileLabel.textColor = [UIColor blackColor];
-    [_audioProfileLabel setText:@"音质"];
+    [_audioProfileLabel setText:@"audioquality"];
     [_view addSubview:_audioProfileLabel];
     
     _audioProfileMenu = [[LMJDropdownMenu alloc] initWithFrame:CGRectZero];
@@ -340,7 +340,7 @@ struct LoginConfig{
     _audioProfileMenu.layer.borderWidth  = 1;
     _audioProfileMenu.layer.cornerRadius = 5;
 
-    _audioProfileMenu.title           = @"音乐立体声";
+    _audioProfileMenu.title           = @"music stero";
     _audioProfileMenu.titleBgColor    = [UIColor colorWithRed:255/255.f green:255/255.f blue:255/255.f alpha:1];
     _audioProfileMenu.titleFont       = [UIFont systemFontOfSize:13];
     _audioProfileMenu.titleColor      = [UIColor blackColor];
@@ -351,7 +351,7 @@ struct LoginConfig{
     _audioScenarioLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _audioScenarioLabel.font = [UIFont systemFontOfSize:13];
     _audioScenarioLabel.textColor = [UIColor blackColor];
-    [_audioScenarioLabel setText:@"场景"];
+    [_audioScenarioLabel setText:@"scene"];
     [_view addSubview:_audioScenarioLabel];
     
     _audioScenarioMenu = [[LMJDropdownMenu alloc] initWithFrame:CGRectZero];
@@ -375,7 +375,7 @@ struct LoginConfig{
     _videoProfileLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _videoProfileLabel.font = [UIFont systemFontOfSize:13];
     _videoProfileLabel.textColor = [UIColor blackColor];
-    [_videoProfileLabel setText:@"分辨率"];
+    [_videoProfileLabel setText:@"resolution"];
     [_view addSubview:_videoProfileLabel];
     
     _videoProfileMenu = [[LMJDropdownMenu alloc] initWithFrame:CGRectZero];

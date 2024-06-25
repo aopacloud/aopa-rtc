@@ -109,7 +109,7 @@
 #pragma mark - View controller lifecycle
 
 - (void)loadView {
-    audioOptionTitles_ = [[NSArray alloc]initWithObjects:@"默认",@"通话单声道",@"音乐单声道",@"音乐立体声",@"音乐单声道高音质", @"音乐高音质立体声", nil];
+    audioOptionTitles_ = [[NSArray alloc]initWithObjects:@"default", @"speechmono",@"musicmono", @"musicstero", @"musicmonoHighqulity", @"musicSteroHighQuality", nil];
     chorusRoleTitles_ = [[NSArray alloc]initWithObjects:@"INVALID", @"MAIN", @"DEPUTY", nil];
     view_ = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     [view_ setBackgroundColor: [UIColor blackColor] ];
@@ -1002,11 +1002,11 @@
 
 - (void) startRelayMedia{
     //提示框添加文本输入框
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"连麦"
-                                                                   message:@"请输入房间号."
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"relay"
+                                                                   message:@"please insert roomid"
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault
+    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"sure" style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction * action) {
         for(UITextField *text in alert.textFields){
             if ([text.text length] == 0) {
@@ -1025,12 +1025,12 @@
             }
         }
     }];
-    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel
+    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction * action) {
         
     }];
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-        textField.placeholder = @"房间号";
+        textField.placeholder = @"roomid";
         textField.secureTextEntry = YES;
     }];
     
@@ -1111,7 +1111,7 @@
     //2.是否支持多选,默认为no
     controller.allowsPickingMultipleItems = NO;
     //在导航栏的上方添加一个提示文本
-    controller.prompt = @"选择一个音频文件";
+    controller.prompt = @"choose music";
     //3.设置代理（代理比较简单，只有两个方法，完成选取和取消选取）
     controller.delegate = self;
     //4.弹出媒体选择器
@@ -1174,7 +1174,7 @@
     __block __typeof(self)weakSelf = self;
     [exporter exportAsynchronouslyWithCompletionHandler:^(){
         if (exporter.status == AVAssetExportSessionStatusCompleted) {
-            NSLog(@"\n歌名：%@ \n 歌曲路径：%@ \n", name, exportFile);
+            NSLog(@"\nsong name：%@ \n song path：%@ \n", name, exportFile);
             dispatch_async(dispatch_get_main_queue(), ^{
                 weakSelf.musicFilePath = [NSString stringWithFormat:@"%@", exportFile];
                 [weakSelf startMixerMusic];
@@ -1378,51 +1378,51 @@
         {
             switch (reason) {
                 case BBRtcConnectionChangedInterrupted:
-                    [self setStatus:@"连接断开, 网络异常"];
+                    [self setStatus:@"disconnect, net error"];
                     break;
                 case BBRtcConnectionChangedJoinFailed:
-                    [self setStatus:@"连接断开, 加入房间失败"];
+                    [self setStatus:@"disconnect, join room fail"];
                     break;
                 case BBRtcConnectionChangedLeaveChannel:
-                    [self setStatus:@"连接断开, 离开房间"];
+                    [self setStatus:@"disconnect, exit room"];
                     break;
                 case BBRtcConnectionChangedInvalidChannelName:
-                    [self setStatus:@"连接断开, 房间名称无效"];
+                    [self setStatus:@"disconnect, invalid roomid"];
                     break;
                 case BBRtcConnectionChangedBannedByServer:
-                    [self setStatus:@"连接断开, 被踢出"];
+                    [self setStatus:@"disconnect, be kicked"];
                     break;
                 case BBRtcConnectionChangedKeepAliveTimeout:
-                    [self setStatus:@"连接断开, 心跳超时"];
+                    [self setStatus:@"disconnect, heartbeat timeout"];
                     break;
                 default:
-                    [self setStatus:@"连接断开"];
+                    [self setStatus:@"disconnect"];
                     break;
             }
         }break;
         case BBRtcConnectionStateConnecting:
             switch (reason) {
                 case BBRtcConnectionChangedJoinSuccess:
-                    [self setStatus:@"正在连接，加入房间成功..."];
+                    [self setStatus:@"connecting join room suc"];
                     break;
                 default:
-                    [self setStatus:@"正在连接..."];
+                    [self setStatus:@"connencting..."];
                     break;
             }
             break;
         case BBRtcConnectionStateConnected:
         {
-            [self setStatus:@"连接成功"];
+            [self setStatus:@"connect suc"];
 //             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(),^{
 //               [self hangUp:nil];
 //             });
             break;
         }
         case BBRtcConnectionStateReconnecting:
-            [self setStatus:@"正在重连..."];
+            [self setStatus:@"connecting..."];
             break;
         case BBRtcConnectionStateFailed:
-            [self setStatus:@"连接失败"];
+            [self setStatus:@"connect fail"];
             [sharedEngine_ leaveChannel:nil];
             break;
     }
@@ -1545,33 +1545,33 @@
 
 - (void)rtcEngineLocalAudioMixingDidFinish:(BBRtcEngineKit * _Nonnull)engine{
     [self stopMixerMusic];
-    [self setStatus:@"播放音乐完成"];
+    [self setStatus:@"play music end"];
 }
 
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine localAudioMixingStateDidChanged:(BBRtcAudioMixingStateCode)state errorCode:(BBRtcAudioMixingReasonCode)errorCode{
     switch (state) {
         case BBRtcAudioMixingStatePlaying:
-            [self setStatus:@"播放音乐成功"];
+            [self setStatus:@"play music suc"];
             musicTotalTimeMs_ = [sharedEngine_ getAudioMixingDuration];
             _musicTotalTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d", musicTotalTimeMs_/1000/60, musicTotalTimeMs_/1000%60];
             break;
         case BBRtcAudioMixingStatePaused:
-            [self setStatus:@"播放音乐暂停"];
+            [self setStatus:@"play music pause"];
             break;
         case BBRtcAudioMixingStateStopped:
-            [self setStatus:@"播放音乐结束"];
+            [self setStatus:@"play music end"];
             break;
         case BBRtcAudioMixingStateFailed:
             switch (errorCode) {
                 case BBRtcAudioMixingReasonCanNotOpen:
-                    [self setStatus:@"播放音乐打开失败"];
+                    [self setStatus:@"music open failed"];
                     [self stopMixerMusic];
                     break;
                 case BBRtcAudioMixingReasonTooFrequentCall:
-                    [self setStatus:@"播放音乐调用太频繁"];
+                    [self setStatus:@"call too frequency"];
                     break;
                 case BBRtcAudioMixingReasonInterruptedEOF:
-                    [self setStatus:@"播放音乐中断"];
+                    [self setStatus:@"music play interruption"];
                     [self stopMixerMusic];
                     break;
                 default:
@@ -1584,10 +1584,10 @@
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine channelMediaRelayStateDidChange:(BBRtcChannelMediaRelayState)state error:(BBRtcChannelMediaRelayError)error{
     NSLog(@"channelMediaRelayStateDidChange state:%td, error:%td\n", state, error);
     if (state == BBRtcChannelMediaRelayStateRunning && error == BBRtcChannelMediaRelayErrorNone) {
-        [self setStatus:@"连麦成功"];
+        [self setStatus:@"relay suc"];
     }
     else if(state == BBRtcChannelMediaRelayStateFailure){
-        [self setStatus:[NSString stringWithFormat:@"连麦失败, code:%td", error]];
+        [self setStatus:[NSString stringWithFormat:@"relay failed, code:%td", error]];
         [self stopRelayMedia];
     }
 }
@@ -1595,11 +1595,11 @@
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine didReceiveChannelMediaRelayEvent:(BBRtcChannelMediaRelayEvent)event{
     NSLog(@"didReceiveChannelMediaRelayEvent event:%td\n", event);
     if (event == BBRtcChannelMediaRelayEventUpdateDestinationChannelIsNil) {
-        [self setStatus:@"连麦失败, 房间不存在"];
+        [self setStatus:@"relay failed by room not exit"];
         [self stopRelayMedia];
     }
     else{
-      [self setStatus:[NSString stringWithFormat:@"连麦事件, event:%td", event]];
+      [self setStatus:[NSString stringWithFormat:@"relay event, event:%td", event]];
     }
 }
 
@@ -1637,10 +1637,10 @@
 }
 
 - (void)rtcEngineChorusStart:(BBRtcEngineKit * _Nonnull)engine{
-  [self setStatus:@"合唱开始"];
+  [self setStatus:@"chorus start"];
 }
 - (void)rtcEngineChorusStop:(BBRtcEngineKit * _Nonnull)engine{
-  [self setStatus:@"合唱停止"];
+  [self setStatus:@"chorus stop"];
 }
 #pragma mark - LMJDropdownMenu DataSource
 - (NSUInteger)numberOfOptionsInDropdownMenu:(LMJDropdownMenu *)menu{
