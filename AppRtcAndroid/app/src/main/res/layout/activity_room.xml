@@ -289,6 +289,7 @@
                     android:layout_centerHorizontal="true"
                     android:onClick="onRoleSwitchClick"
                     android:text="Audience"
+                    android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
@@ -301,6 +302,7 @@
                     android:layout_marginTop="-6dp"
                     android:onClick="onAudioSwitchClick"
                     android:text="CloseMic"
+                    android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
@@ -313,6 +315,7 @@
                     android:layout_marginTop="-6dp"
                     android:onClick="onVideoSwitchClick"
                     android:text="OpenCam"
+                    android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
@@ -324,6 +327,7 @@
                     android:layout_centerHorizontal="true"
                     android:onClick="onExitRoomClick"
                     android:text="Exit"
+                    android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
@@ -336,6 +340,7 @@
                     android:layout_marginTop="-6dp"
                     android:onClick="onCameraSwitchClick"
                     android:text="Camera"
+                    android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
@@ -348,6 +353,7 @@
                     android:layout_marginTop="-6dp"
                     android:onClick="onRelaySwitchClick"
                     android:text="StartRelay"
+                    android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
@@ -360,6 +366,7 @@
                     android:layout_marginTop="-6dp"
                     android:onClick="onAudioSubscribeClick"
                     android:text="CcancelSubA"
+                    android:textAllCaps="false"
                     android:textSize="10dp" />
 
                 <Button
@@ -372,6 +379,7 @@
                     android:layout_marginTop="-6dp"
                     android:onClick="onVideoSubscribeClick"
                     android:text="CancelSubV"
+                    android:textAllCaps="false"
                     android:textSize="10dp" />
 
 
@@ -386,6 +394,7 @@
                     android:layout_marginTop="-6dp"
                     android:onClick="onNetSettings"
                     android:text="NetSetting"
+                    android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <TextView
@@ -443,7 +452,7 @@
 
             <Button
                 android:id="@+id/MusicSelectButton"
-                android:layout_width="55dp"
+                android:layout_width="65dp"
                 android:layout_height="36dp"
                 android:layout_alignTop="@+id/MusicFileEditText"
                 android:layout_alignRight="@+id/verticalSplitView"
@@ -451,6 +460,7 @@
                 android:layout_marginRight="2dp"
                 android:onClick="onMusicSelectClick"
                 android:text="Choose"
+                android:textAllCaps="false"
                 android:textSize="12dp" />
 
 
@@ -462,6 +472,7 @@
                 android:layout_toLeftOf="@+id/MusicPlayButton"
                 android:onClick="onMusicPauseClick"
                 android:text="Pasue"
+                android:textAllCaps="false"
                 android:textSize="12dp" />
 
             <Button
@@ -473,6 +484,7 @@
                 android:layout_marginTop="5dp"
                 android:onClick="onMusicPlayClick"
                 android:text="Play"
+                android:textAllCaps="false"
                 android:textSize="12dp" />
 
 

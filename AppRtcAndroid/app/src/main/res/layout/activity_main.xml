@@ -86,7 +86,7 @@
         android:layout_below="@+id/UserIdTextView"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="ServerEnv"
+        android:text="SerrEnv"
         android:textColor="@android:color/black"
         android:visibility="visible"
         tools:visibility="visible" />
@@ -233,7 +233,7 @@
 
     <CheckBox
         android:id="@+id/StatsCheckBox"
-        android:layout_width="120dp"
+        android:layout_width="140dp"
         android:layout_height="30dp"
         android:layout_alignTop="@+id/TokenCheckBox"
         android:layout_marginLeft="10dp"
@@ -308,7 +308,7 @@
 
     <CheckBox
         android:id="@+id/DetachCheckBox"
-        android:layout_width="120dp"
+        android:layout_width="130dp"
         android:layout_height="30dp"
         android:layout_below="@+id/VideoCheckBox"
         android:layout_alignLeft="@+id/VideoCheckBox"
@@ -323,7 +323,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:onClick="onJoinClick"
-        android:text="Multi video" />
+        android:text="Multi video"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/SingleBnt"
@@ -333,7 +334,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:onClick="onSingleClick"
-        android:text="Single video" />
+        android:text="Single video"
+        android:textAllCaps="false" />
 
     <TextView
         android:id="@+id/VersionText"

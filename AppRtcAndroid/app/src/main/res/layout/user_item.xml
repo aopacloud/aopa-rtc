@@ -73,6 +73,7 @@
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:text="Video Mute"
+            android:textAllCaps="false"
             android:textSize="9dp" />
 
         <Button
@@ -83,6 +84,7 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:text="Audio Mute"
+            android:textAllCaps="false"
             android:textSize="9dp" />
 
         <Button
@@ -93,6 +95,7 @@
             android:layout_toRightOf="@+id/videoMuteButton"
             android:gravity="center"
             android:text="high"
+            android:textAllCaps="false"
             android:textSize="9dp" />
 
         <SeekBar
