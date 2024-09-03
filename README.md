@@ -1,4 +1,4 @@
-[中文版本](./README.md)
+[中文版本](./README_zh.md)
 # Introduction
     AopaRtcDemo is a live streaming SDK Demo provided by Wuhan Aopa Cloud Computing Technology Co., Ltd., including versions for Android, iOS, Windows, and Flutter.
     Developers can refer to this demo to implement their own push and pull streaming functions.
