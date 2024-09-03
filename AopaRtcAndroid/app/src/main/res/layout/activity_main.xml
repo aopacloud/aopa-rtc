@@ -107,7 +107,7 @@
 
     <TextView
         android:id="@+id/AudioQualityTextView"
-        android:layout_width="75dp"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_below="@+id/ServerAddrTextView"
         android:layout_marginLeft="50dp"
@@ -200,8 +200,10 @@
         android:layout_below="@+id/ResolutionSpinner"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="4dp"
-        android:text="SelfDefineIp"
-        android:textColor="@android:color/black" />
+        android:text="CustomIp"
+        android:textColor="@android:color/black"
+        android:visibility="invisible"
+        tools:visibility="invisible" />
 
     <EditText
         android:id="@+id/CustomServerEditText"
@@ -243,10 +245,10 @@
 
     <CheckBox
         android:id="@+id/SpeakerCheckBox"
-        android:layout_width="120dp"
+        android:layout_width="125dp"
         android:layout_height="30dp"
         android:layout_below="@+id/TokenCheckBox"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="55dp"
         android:layout_marginTop="10dp"
         android:text="AudioOutput" />
 
@@ -308,7 +310,7 @@
 
     <CheckBox
         android:id="@+id/DetachCheckBox"
-        android:layout_width="130dp"
+        android:layout_width="140dp"
         android:layout_height="30dp"
         android:layout_below="@+id/VideoCheckBox"
         android:layout_alignLeft="@+id/VideoCheckBox"

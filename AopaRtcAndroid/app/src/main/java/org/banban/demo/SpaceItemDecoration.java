@@ -26,9 +26,7 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration{
   @Override
   public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
     StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) parent.getLayoutManager();
-    //竖直方向的
     if (layoutManager.getOrientation() == LinearLayoutManager.VERTICAL) {
-      //最后一项需要 bottom
       if (parent.getChildAdapterPosition(view) == layoutManager.getItemCount() - 1) {
         outRect.bottom = topBottom;
       }
@@ -36,7 +34,6 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration{
       outRect.left = leftRight;
       outRect.right = leftRight;
     } else {
-      //最后一项需要right
       if (parent.getChildAdapterPosition(view) == layoutManager.getItemCount() - 1) {
         outRect.right = leftRight;
       }

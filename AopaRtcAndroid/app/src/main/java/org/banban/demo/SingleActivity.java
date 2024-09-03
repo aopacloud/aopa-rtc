@@ -284,26 +284,26 @@ public class SingleActivity extends AppCompatActivity {
 
         @Override public void  onJoinChannelSuccess(String channel, int uid, int elapsed) {
             mHandler.post(()-> {
-                mStateTextView.setText("加入房间成功");
+                mStateTextView.setText("join room suc");
             });
             Log.i(TAG, "+++ onJoinChannelSuccess channelid:" + channel + " uid:" + uid + " elapsed:" + elapsed);
         }
 
         @Override public void  onRejoinChannelSuccess(String channel, int uid, int elapsed) {
             mHandler.post(()-> {
-                mStateTextView.setText("重新加入房间成功");
+                mStateTextView.setText("rejoin room suc");
             });
             Log.i(TAG, "+++ onRejoinChannelSuccess channelid:" + channel + " uid:" + uid + " elapsed:" + elapsed);
         }
 
         @Override public void  onLeaveChannel(IRtcEngineEventHandler.RtcStats stats) {
             mHandler.post(()->{
-                mStateTextView.setText("退出房间成功");
+                mStateTextView.setText("exit room suc");
             });
         }
 
         @Override public void  onClientRoleChanged(int oldRole, int newRole) {
-            showToast("角色切换:" + oldRole + "->" + newRole);
+            showToast("role change:" + oldRole + "->" + newRole);
         }
 
         @Override public void  onUserJoined(int uid, int elapsed) {
@@ -321,84 +321,86 @@ public class SingleActivity extends AppCompatActivity {
                 onRemoteUserLeft();
             });
         }
-
-        @Override public void  onConnectionStateChanged(int state, int reason) {
-            Log.i(TAG, "onConnectionStateChanged state:" + state);
-            if(mIsExitRoom)
-                return;
-            mHandler.post(()->{
-                if(mIsExitRoom)
-                    return;
-                switch(state){
-                    case CONNECTION_STATE_DISCONNECTED:
-                    {
-                        switch (reason) {
-                            case CONNECTION_CHANGED_INTERRUPTED:
-                                mStateTextView.setText("连接断开, 网络异常");
-                                break;
-                            case CONNECTION_CHANGED_JOIN_FAILED:
-                                mStateTextView.setText("连接断开, 加入房间失败 ");
-                                break;
-                            case CONNECTION_CHANGED_LEAVE_CHANNEL:
-                                mStateTextView.setText("连接断开, 离开房间 ");
-                                break;
-                            case CONNECTION_CHANGED_INVALID_CHANNEL_NAME:
-                                mStateTextView.setText("连接断开, 房间名称无效 ");
-                                break;
-                            case CONNECTION_CHANGED_BANNED_BY_SERVER:
-                                mStateTextView.setText("连接断开, 被踢出");
-                                showToast("你已被踢出");
-                                break;
-                            case CONNECTION_CHANGED_KEEP_ALIVE_TIMEOUT:
-                                mStateTextView.setText("连接断开, 心跳超时 ");
-                                break;
-                            case CONNECTION_CHANGED_INVALID_APP_ID:
-                                mStateTextView.setText("连接断开, 无效的APPID");
-                                break;
-                            case CONNECTION_CHANGED_TOKEN_EXPIRED:
-                                mStateTextView.setText("连接断开, Token超时");
-                                break;
-                            case CONNECTION_CHANGED_INVALID_TOKEN:
-                                mStateTextView.setText("连接断开, Token无效");
-                                break;
-                            case CONNECTION_CHANGED_REJECTED_BY_SERVER:
-                                mStateTextView.setText("连接断开, 多设备重复登录");
-                                break;
-                            case CONNECTION_CHANGED_CLIENT_IP_ADDRESS_CHANGED:
-                                mStateTextView.setText("连接断开, 网络类型改变");
-                                break;
-                            default:
-                                mStateTextView.setText("连接断开 ");
-                                break;
-                        }
-                    }break;
-                    case CONNECTION_STATE_CONNECTING:
-                        switch (reason) {
-                            case CONNECTION_CHANGED_JOIN_SUCCESS:
-                                mStateTextView.setText("正在连接，加入房间成功... ");
-                                break;
-                            default:
-                                mStateTextView.setText("正在连接... ");
-                                break;
-                        }
-                        break;
-                    case CONNECTION_STATE_CONNECTED:
-                        mStateTextView.setText("连接成功 ");
-                        break;
-                    case CONNECTION_STATE_RECONNECTING:
-                        mStateTextView.setText("正在重连... ");
-                        break;
-                    case CONNECTION_STATE_FAILED:
-                        mStateTextView.setText("连接失败");
-                        if(RtcEngine.getInstance() != null)
-                            RtcEngine.getInstance().leaveChannel();
-                        break;
-                }
-            });
-        }
-
+        
+    @Override public void  onConnectionStateChanged(int state, int reason) {
+        Log.i(TAG, "onConnectionStateChanged state:" + state);
+        if(mIsExitRoom)
+          return;
+        mHandler.post(()->{
+          if(mIsExitRoom)
+            return;
+          switch(state){
+            case CONNECTION_STATE_DISCONNECTED:
+            {
+              switch (reason) {
+                case CONNECTION_CHANGED_INTERRUPTED:
+                  mStateTextView.setText("disconnect, net error");
+                  break;
+                case CONNECTION_CHANGED_JOIN_FAILED:
+                  mStateTextView.setText("disconnect, joinroom fail ");
+                  break;
+                case CONNECTION_CHANGED_LEAVE_CHANNEL:
+                  mStateTextView.setText("disconnect, leave room ");
+                  break;
+                case CONNECTION_CHANGED_INVALID_CHANNEL_NAME:
+                  mStateTextView.setText("disconnect, invalid room ");
+                  break;
+                case CONNECTION_CHANGED_BANNED_BY_SERVER:
+                  mStateTextView.setText("disconnect, be kicked");
+                  showToast("你已被踢出");
+                  break;
+                case CONNECTION_CHANGED_KEEP_ALIVE_TIMEOUT:
+                  mStateTextView.setText("disconnect, heatbeat timeout ");
+                  break;
+                case CONNECTION_CHANGED_INVALID_APP_ID:
+                  mStateTextView.setText("disconnect, invalidAPPID");
+                  break;
+                case CONNECTION_CHANGED_TOKEN_EXPIRED:
+                  mStateTextView.setText("disconnect,Token timeout");
+                  break;
+                case CONNECTION_CHANGED_INVALID_TOKEN:
+                  mStateTextView.setText("disconnect, invalid token");
+                  break;
+                case CONNECTION_CHANGED_REJECTED_BY_SERVER:
+                  mStateTextView.setText("disconnect, multi device join");
+                  break;
+                case CONNECTION_CHANGED_CLIENT_IP_ADDRESS_CHANGED:
+                  mStateTextView.setText("disconnect, net change");
+                  break;
+                default:
+                  mStateTextView.setText("disconnect");
+                  break;
+              }
+              removeAllVideoView(false);
+              mSimpleRecycleAdapter.addItem(mUserId, true);
+            }break;
+            case CONNECTION_STATE_CONNECTING:
+              switch (reason) {
+                case CONNECTION_CHANGED_JOIN_SUCCESS:
+                  mStateTextView.setText("connecting，join room suc... ");
+                  break;
+                default:
+                  mStateTextView.setText("connectting... ");
+                  break;
+              }
+              break;
+            case CONNECTION_STATE_CONNECTED:
+              mStateTextView.setText("join suc ");
+              break;
+            case CONNECTION_STATE_RECONNECTING:
+              mStateTextView.setText("reconnecting... ");
+              break;
+            case CONNECTION_STATE_FAILED:
+              mStateTextView.setText("connect failed");
+              if(RtcEngine.getInstance() != null)
+                 RtcEngine.getInstance().leaveChannel();
+              break;
+          }
+        });
+      }
+  
         @Override public void  onConnectionLost() {
-            showToast("连接丢失");
+            showToast("connect lost");
         }
 
 
@@ -447,22 +449,15 @@ public class SingleActivity extends AppCompatActivity {
 
         @Override public void  onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
             Log.i(TAG,"+++ onRemoteVideoStateChanged uid:" + uid + ", state:" + state + ", reason:" + reason + ", elapsed:" + elapsed);
-//            if (mRemoteUid == -1 && state == Constants.REMOTE_VIDEO_STATE_DECODING) {
-//                runOnUiThread(() -> {
-//                    mRemoteUid = uid;
-//                    mStatsManager.addUserStats(mRemoteUid, false);
-//                    setRemoteVideoView(uid);
-//                });
-//            }
         }
 
         @Override public void  onChannelMediaRelayStateChanged(int state, int code) {
             Log.i(TAG, "channelMediaRelayStateDidChange state:" + state + ", code:" + code);
             mHandler.post(()-> {
                 if (state == RELAY_STATE_RUNNING && code == RELAY_OK) {
-                    mStateTextView.setText("连麦成功");
+                    mStateTextView.setText("media releay suc");
                 } else if (state == RELAY_STATE_FAILURE) {
-                    mStateTextView.setText("连麦失败, code:" + code);
+                    mStateTextView.setText("media reley failed, code:" + code);
                 }
             });
         }
@@ -471,9 +466,9 @@ public class SingleActivity extends AppCompatActivity {
             Log.i(TAG, "didReceiveChannelMediaRelayEvent event:" + code);
             mHandler.post(()-> {
                 if (code == RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_IS_NULL) {
-                    mStateTextView.setText("连麦失败, 房间不存在");
+                    mStateTextView.setText("media relay failed,room not exit");
                 } else {
-                    mStateTextView.setText("连麦事件, event:" + code);
+                    mStateTextView.setText("media relay, event:" + code);
                 }
             });
         }
@@ -485,7 +480,7 @@ public class SingleActivity extends AppCompatActivity {
         }
 
         @Override public void  onAudioRouteChanged(int routing) {
-            showToast("音频路由改变:" + routing);
+            showToast("audio route change:" + routing);
         }
 
         @Override public void  onCameraFocusAreaChanged(Rect rect) {
@@ -564,27 +559,27 @@ public class SingleActivity extends AppCompatActivity {
             mHandler.post(()-> {
                 switch (state) {
                     case MEDIA_ENGINE_AUDIO_EVENT_MIXING_PLAY:
-                        showToast("播放音乐成功");
+                        showToast("play auido suc");
                         break;
                     case MEDIA_ENGINE_AUDIO_EVENT_MIXING_PAUSED:
-                        showToast("播放音乐暂停");
+                        showToast("play auido pause");
                         break;
                     case MEDIA_ENGINE_AUDIO_EVENT_MIXING_RESTART:
-                        showToast("播放音乐恢复");
+                        showToast("play auido resume");
                         break;
                     case MEDIA_ENGINE_AUDIO_EVENT_MIXING_STOPPED:
-                        showToast("播放音乐结束");
+                        showToast("play auido ended");
                         break;
                     case MEDIA_ENGINE_AUDIO_EVENT_MIXING_ERROR:
                         switch (errorCode) {
                             case MEDIA_ENGINE_AUDIO_ERROR_MIXING_OPEN:
-                                showToast("播放音乐打开失败");
+                                showToast("play auido open failed");
                                 break;
                             case MEDIA_ENGINE_AUDIO_EVENT_MIXING_INTERRUPTED_EOF:
-                                showToast("播放音乐中断");
+                                showToast("play auido interrupt");
                                 break;
                             case MEDIA_ENGINE_AUDIO_EVENT_MIXING_NETWORK_UNSTABLE:
-                                showToast("播放音乐网络差卡顿");
+                                showToast("play auido bad network");
                                 break;
                         }
                         break;
@@ -599,7 +594,7 @@ public class SingleActivity extends AppCompatActivity {
 
 
         @Override public void  onLocalAudioStateChanged(int state, int error) {
-            showToast("本地音频状态改变:" + state);
+            showToast("local audio route change:" + state);
         }
 
         @Override public void  onLocalVideoStateChanged(int localVideoState, int error) {
@@ -627,7 +622,7 @@ public class SingleActivity extends AppCompatActivity {
         }
 
         @Override public void  onNetworkTypeChanged(int type) {
-            showToast("网络类型改变:" + type);
+            showToast("net type change:" + type);
         }
 
     }

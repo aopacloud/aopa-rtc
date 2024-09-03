@@ -277,7 +277,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     }
     mStatsManager.enableStats(mStatsEnabled);
     mRtcEngineEventImpl = new RtcEngineEventImpl();
-    //RtcEngine.getInstance().setParameters("{\"che.video.hsv.enable\":true}");
     RtcEngine.getInstance().addHandler(mRtcEngineEventImpl);
     RtcEngine.getInstance().enableAudio();
     RtcEngine.getInstance().setClientRole(mRoleType);
@@ -316,14 +315,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
       RtcEngine.getInstance().enableVideo();
       RtcEngine.getInstance().enableLocalVideo(false);
     }
-    //RtcEngine.getInstance().createDataStream(true, true);
-    //RtcEngine.getInstance().setAudioMixingPitch(4);
-//    File directory = new File("/sdcard/download/dump");
-//    if (!directory.exists()) {
-//      directory.mkdirs();
-//    }
-//    RtcEngine.getInstance().setDumpOutputDirectory("/sdcard/download/dump");
-//    RtcEngine.getInstance().enableDump(true);
     RtcEngine.getInstance().enableDualStreamMode(mMulticastEnabled);
     RtcEngine.getInstance().enableLocalAudio(true);
     RtcEngine.getInstance().enableLocalVideo(mVideoEnabled);
@@ -333,15 +324,12 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     }
     if(!intent.getBooleanExtra("3A", true)){
        RtcEngine.getInstance().setParameters("{\"che.audio.enable.3a\":false}");
-       //RtcEngine.getInstance().setParameters("{\"che.audio.enable.headset.mode\":true}");
     }
     if(intent.getBooleanExtra("detach", true)){
       RtcEngine.getInstance().setParameters("{\"che.media.detach\":true}");
     }else{
       RtcEngine.getInstance().setParameters("{\"che.media.detach\":false}");
     }
-   // RtcEngine.getInstance().registerAudioFrameObserver(mRtcAudioFrameObserver);
-   // RtcEngine.getInstance().setParameters("{\"che.audio.enable.low.latency\":true}");
     RtcEngine.getInstance().registerVideoFrameObserver(mRtcVideoFrameObserver);
     RtcEngine.getInstance().setParameters(String.format("{\"che.network.enable.quic\":%b}", mQuicEnabled));
     ChannelMediaOptions mediaOptions = new ChannelMediaOptions();
@@ -365,7 +353,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     if(mVideoLocalState){
        RtcEngine.getInstance().startPreview();
     }
-   // RtcEngine.getInstance().adjustAudioMixingPublishVolume(0);
+
     mRoleSwitchButton.setText(mRoleType == 1 ? "audience" : "broadcaster");
     mAudioSwitchButton.setText(mAudioLocalState ? "close mic" : "open mic");
     mVideoSwitchButton.setText(mVideoLocalState ? "close video" : "open video");
@@ -494,7 +482,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
           @Override
           public void run() {
             int duration = RtcEngine.getInstance().getVoiceDuration();
-           // showToast(String.format("vad duration:%d", duration));
           }
         });
       }
@@ -533,8 +520,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
           ((ListView) v).setClickable(false);
           ((ListView) v).setEnabled(false);
         } else if (v instanceof RecyclerView) {
-         // ((ListView) v).setClickable(false);
-         // ((ListView) v).setEnabled(false);
         }
         else {
           disableSubControls((ViewGroup) v);
@@ -545,7 +530,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
       } else if (v instanceof Button) {
         ((Button) v).setEnabled(false);
       } else if (v instanceof SeekBar) {
-       // ((Button) v).setEnabled(false);
       }
     }
   }
@@ -658,13 +642,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
   public void onAudioSwitchClick(View view){
     if(RtcEngine.getInstance() == null) return ;
 
-//    if(mAudioLocalState){
-//      RtcEngine.getInstance().setParameters("{\"che.audio.enable.ns\":true}");
-//    }else{
-//      RtcEngine.getInstance().setParameters("{\"che.audio.enable.ns\":false}");
-//    }
-//    mAudioLocalState = !mAudioLocalState;
-//    mAudioSwitchButton.setText(mAudioLocalState ? "关麦" : "开麦");
     if (RtcEngine.getInstance().muteLocalAudioStream(mAudioLocalState) == 0){
       mAudioLocalState = !mAudioLocalState;
       mAudioSwitchButton.setText(mAudioLocalState ? "close mic" : "open mic");
@@ -771,7 +748,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
           mRelayMediaButton.setText("stop relay");
         }
         else{
-          showToast("开始连麦失败，ret:" + ret);
+          showToast("开始连麦失败,ret:" + ret);
         }
         dialog.dismiss();
       }
@@ -1005,23 +982,13 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
    }
   };
 
-  /**
-   * Get a file path from a Uri. This will get the the path for Storage Access
-   * Framework Documents, as well as the _data field for the MediaStore and
-   * other file-based ContentProviders.
-   *
-   * @param context The context.
-   * @param uri The Uri to query.
-   * @author paulburke
-   */
+
   public  String getPath(final Context context, final Uri uri) {
     if(uri == null)
       return null;
     final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     try{
-      // DocumentProvider
       if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-        // ExternalStorageProvider
         if (isExternalStorageDocument(uri)) {
           final String docId = DocumentsContract.getDocumentId(uri);
           final String[] split = docId.split(":");
@@ -1030,10 +997,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
           if ("primary".equalsIgnoreCase(type)) {
             return Environment.getExternalStorageDirectory() + "/" + split[1];
           }
-
-          // TODO handle non-primary volumes
         }
-        // DownloadsProvider
         else if (isDownloadsDocument(uri)) {
 
           final String id = DocumentsContract.getDocumentId(uri);
@@ -1046,7 +1010,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
 
           return getDataColumn(context, contentUri, null, null);
         }
-        // MediaProvider
         else if (isMediaDocument(uri)) {
           final String docId = DocumentsContract.getDocumentId(uri);
           final String[] split = docId.split(":");
@@ -1069,11 +1032,9 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
           return getDataColumn(context, contentUri, selection, selectionArgs);
         }
       }
-      // MediaStore (and general)
       else if ("content".equalsIgnoreCase(uri.getScheme())) {
         return getDataColumn(context, uri, null, null);
       }
-      // File
       else if ("file".equalsIgnoreCase(uri.getScheme())) {
         return uri.getPath();
       }
@@ -1085,19 +1046,8 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     return null;
   }
 
-  /**
-   * Get the value of the data column for this Uri. This is useful for
-   * MediaStore Uris, and other file-based ContentProviders.
-   *
-   * @param context The context.
-   * @param uri The Uri to query.
-   * @param selection (Optional) Filter used in the query.
-   * @param selectionArgs (Optional) Selection arguments used in the query.
-   * @return The value of the _data column, which is typically a file path.
-   */
   public  String getDataColumn(Context context, Uri uri, String selection,
                                String[] selectionArgs) {
-
     Cursor cursor = null;
     final String column = "_data";
     final String[] projection = {
@@ -1117,26 +1067,15 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     }
     return null;
   }
-  /**
-   * @param uri The Uri to check.
-   * @return Whether the Uri authority is ExternalStorageProvider.
-   */
+
   public  boolean isExternalStorageDocument(Uri uri) {
     return "com.android.externalstorage.documents".equals(uri.getAuthority());
   }
 
-  /**
-   * @param uri The Uri to check.
-   * @return Whether the Uri authority is DownloadsProvider.
-   */
   public  boolean isDownloadsDocument(Uri uri) {
     return "com.android.providers.downloads.documents".equals(uri.getAuthority());
   }
 
-  /**
-   * @param uri The Uri to check.
-   * @return Whether the Uri authority is MediaProvider.
-   */
   public static boolean isMediaDocument(Uri uri) {
     return "com.android.providers.media.documents".equals(uri.getAuthority());
   }
@@ -1504,30 +1443,30 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
                 mMusicTotalTimeTextView.setText(str);
               }
             }
-            showToast("播放音乐成功");
+            showToast("play music suc");
             break;
           case MEDIA_ENGINE_AUDIO_EVENT_MIXING_PAUSED:
-            showToast("播放音乐暂停");
+            showToast("play music pause");
             break;
           case MEDIA_ENGINE_AUDIO_EVENT_MIXING_RESTART:
-            showToast("播放音乐恢复");
+            showToast("play music resume");
             break;
           case MEDIA_ENGINE_AUDIO_EVENT_MIXING_STOPPED:
-            showToast("播放音乐结束");
+            showToast("play music ended");
             stopMusic();
             break;
           case MEDIA_ENGINE_AUDIO_EVENT_MIXING_ERROR:
             switch (errorCode) {
               case MEDIA_ENGINE_AUDIO_ERROR_MIXING_OPEN:
-                showToast("播放音乐打开失败");
+                showToast("play music open failed");
                 stopMusic();
                 break;
               case MEDIA_ENGINE_AUDIO_EVENT_MIXING_INTERRUPTED_EOF:
-                showToast("播放音乐中断");
+                showToast("play music interrupt");
                 stopMusic();
                 break;
               case MEDIA_ENGINE_AUDIO_EVENT_MIXING_NETWORK_UNSTABLE:
-                showToast("播放音乐网络差卡顿");
+                showToast("play music bad network");
                 break;
             }
             break;
@@ -1542,7 +1481,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
 
 
     @Override public void  onLocalAudioStateChanged(int state, int error) {
-      showToast("本地音频状态改变:" + state);
+      showToast("local audio state change:" + state);
     }
 
     @Override public void  onLocalVideoStateChanged(int localVideoState, int error) {
@@ -1573,7 +1512,7 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     }
 
     @Override public void  onNetworkTypeChanged(int type) {
-      showToast("网络类型改变:" + type);
+      showToast("local network change:" + type);
     }
 
   }
@@ -1656,7 +1595,6 @@ public class RoomActivity extends AppCompatActivity implements UserViewInterface
     }
 
     public boolean onCaptureVideoFrame(IVideoFrameObserver.VideoFrame videoFrame) {
-     // Log.i(TAG, "onCaptureVideoFrame: output video frame" + mWriteCount++);
       return true;
     }
 

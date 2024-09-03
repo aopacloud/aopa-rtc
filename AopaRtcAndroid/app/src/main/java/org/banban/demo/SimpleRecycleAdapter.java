@@ -55,9 +55,6 @@ public class SimpleRecycleAdapter extends RecyclerView.Adapter<SimpleHolder> {
         }
         mList.remove(i);
         mStatsManager.removeUserStats(userId);
-        //删除动画
-        //this.notifyItemRemoved(i);
-        //this.notifyItemRangeChanged(i, 1);
         break;
       }
     }
@@ -105,60 +102,6 @@ public class SimpleRecycleAdapter extends RecyclerView.Adapter<SimpleHolder> {
   public int getItemCount() {
     return mList.size();
   }
-/*
-  @Override
-  public SimpleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(mContext.get()).inflate(R.layout.user_item , parent,false);
-    DisplayMetrics metrics = mContext.get().getResources().getDisplayMetrics();
-    int widthPixels = metrics.widthPixels;
-    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-    layoutParams.width = widthPixels/2;
-    layoutParams.height = layoutParams.width/3*4;
-    SimpleHolder holder = new SimpleHolder(view, mDelegate.get(), mStatsManager);
-    return holder;
-  }
-
-  @Override
-  public void onBindViewHolder(SimpleHolder holder, int position) {
-    updateData(holder, position);
-  }
-
-  public void onBindViewHolder(SimpleHolder holder, int position, List<Object> payloads) {
-    if(payloads.isEmpty()){
-      if (holder.getUserId() == mList.get(position).userId && holder.getVideoView().getChildCount() > 0)
-        return;
-    }
-
-    if(!payloads.isEmpty()){
-      ParamInfo info = (ParamInfo)payloads.get(payloads.size() -1);
-      if (info.type == 0)
-        holder.setRealTimeVolume(info.volume);
-      else if (info.type == 1)
-        holder.setRemoteMute(info.mute);
-      return;
-    }
-
-    if(holder.getUserId() == 0){
-      if(mList.get(position).holder != null){
-        mDelegate.get().onUserRemoved(holder.getUserId(), holder.getVideoView());
-      }
-        updateData(holder, position);
-      mDelegate.get().onUserAdd(mList.get(position).userId, holder.getVideoView());
-        return;
-     }
-
-      if (mList.get(position).holder != null && holder != mList.get(position).holder){
-        mDelegate.get().onUserRemoved(mList.get(position).userId, mList.get(position).holder.getVideoView());
-      }
-      if (holder.getUserId() != 0 && holder.getUserId() != mList.get(position).userId){
-        mDelegate.get().onUserRemoved(holder.getUserId(), holder.getVideoView());
-      }
-      updateData(holder, position);
-    mDelegate.get().onUserAdd(mList.get(position).userId, holder.getVideoView());
-
-
-  }
-*/
 
   @Override
   public SimpleHolder onCreateViewHolder(ViewGroup parent, int viewType) {

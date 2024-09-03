@@ -47,7 +47,11 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 public class MainActivity extends AppCompatActivity {
   private String TAG = "MainActivity";
-  private String [] servers = {"{\"signaling\":\"wss://rtc-gateway-oversea.aopacloud.net:6080/rtc/channel\",\"rtconfig\":\"https://rtc-gateway-oversea.aopacloud.net:6080/rtc/get_rtc_config\",\"log\":\"https://rtc-gateway-oversea.aopacloud.net:6080/ali/v1/get_upload_url\",\"quic\":\"rtc-gateway-oversea-quic.aopacloud.net:16081\",\"report\":\"https://rtc-gateway-oversea.aopacloud.net:6080/rtc/rtc_event_report\"}"};
+  private String [] servers = {"{\"signaling\":\"wss://rtc-gateway-oversea.aopacloud.net:6080/rtc/channel\"," +
+                                "\"rtconfig\":\"https://rtc-gateway-oversea.aopacloud.net:6080/rtc/get_rtc_config\"," +
+                                "\"log\":\"https://rtc-gateway-oversea.aopacloud.net:6080/ali/v1/get_upload_url\"," +
+                                "\"quic\":\"rtc-gateway-oversea-quic.aopacloud.net:16081\"," +
+                                "\"report\":\"https://rtc-gateway-oversea.aopacloud.net:6080/rtc/rtc_event_report\"}"};
   private String [] appIdList = {
           "6MHg9hZqMMcKjNyiauSyU8H5b3eTr4qM"
   };
@@ -196,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
     mSpinnerRole.setEnabled(false);
     mAppIdSpinner.setEnabled(false);
     mTokenCheckBox.setEnabled(false);
-
-    //onJoinClick(null);
   }
 
   @Override
@@ -225,8 +227,6 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  //文件拷贝
-  //要复制的目录下的所有非子目录(文件夹)文件拷贝
   public static int copySdcardFile(String fromFile, String toFile) {
 
     try {
@@ -238,9 +238,8 @@ public class MainActivity extends AppCompatActivity {
       while ((len = fosfrom.read(buffer)) != -1) {
         baos.write(buffer, 0, len);
       }
-      // 从内存到写入到具体文件
+
       fosto.write(baos.toByteArray());
-      // 关闭文件流
       baos.close();
       fosto.close();
       fosfrom.close();
@@ -352,34 +351,30 @@ public class MainActivity extends AppCompatActivity {
           Manifest.permission.CAMERA,
           Manifest.permission.ACCESS_COARSE_LOCATION,
           Manifest.permission.ACCESS_FINE_LOCATION
-        //  "android.permission.BLUETOOTH_CONNECT"
   };
 
-  //权限申请标记
+
   public static final int APPLY_PERMISSIONS = 154;
   public  boolean applyPermissions(String[] permissions) {
-    //1.筛选未申请的权限：
     ArrayList<String> unApplyList = new ArrayList<String>();
     for (int i = 0; permissions!=null&&i < permissions.length; i++) {
-      //筛选未拥有&&满足API要求的权限
-      if (ActivityCompat.checkSelfPermission(getApplicationContext(), permissions[i]) != PackageManager.PERMISSION_GRANTED) {//未拥有的权限
-        if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE) && getSDKVersionNumber() < 16) {//读取文件权限要求16以上
-        } else if (permissions[i].equals(Manifest.permission.BODY_SENSORS) && getSDKVersionNumber() < 20) {//获取体征数据要求20以上
-        } else if (permissions[i].equals(Manifest.permission.READ_CALL_LOG) && getSDKVersionNumber() < 16) {//读取手机通讯录要求16以上
-        } else if (permissions[i].equals(Manifest.permission.WRITE_CALL_LOG) && getSDKVersionNumber() < 16) {//写入手机通讯录要求16以上
-        } else if (permissions[i].equals(Manifest.permission.ADD_VOICEMAIL) && getSDKVersionNumber() < 14) {//添加语音信箱要求14以上
+      if (ActivityCompat.checkSelfPermission(getApplicationContext(), permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+        if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE) && getSDKVersionNumber() < 16) {
+        } else if (permissions[i].equals(Manifest.permission.BODY_SENSORS) && getSDKVersionNumber() < 20) {
+        } else if (permissions[i].equals(Manifest.permission.READ_CALL_LOG) && getSDKVersionNumber() < 16) {
+        } else if (permissions[i].equals(Manifest.permission.WRITE_CALL_LOG) && getSDKVersionNumber() < 16) {
+        } else if (permissions[i].equals(Manifest.permission.ADD_VOICEMAIL) && getSDKVersionNumber() < 14) {
         } else {
           unApplyList.add(permissions[i]);
         }
       }
     }
-    //2.如果所有权限都拥有了，返回true，否则申请所有未申请的权限
     if (unApplyList.size() == 0) {
       return true;
     }
     else {
       if (getSDKVersionNumber() < 23) {
-        Toast.makeText(getApplicationContext(), "权限不足，请到设置页面给予应用相应的权限！", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Permission deny,please set effient right in setting", Toast.LENGTH_SHORT).show();
         return false;
       } else {
         String[] unApplyArray = new String[unApplyList.size()];
@@ -406,15 +401,13 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
   {
-    //申请所有权限的回调结果：
     if (requestCode == APPLY_PERMISSIONS) {
       for (int i = 0; i < permissions.length; i++) {
-        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {//如果有权限被拒绝
-          Toast.makeText(getApplicationContext(), "对不起，您未给予相应的权限，程序将退出。", Toast.LENGTH_SHORT).show();
+        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+          Toast.makeText(getApplicationContext(), "Permission deny,App exited", Toast.LENGTH_SHORT).show();
           return;
         }
       }
-      //如果全部都同意了就进行配置加载
       joinRoom();
       return;
     }
@@ -526,7 +519,6 @@ public class MainActivity extends AppCompatActivity {
       file.createNewFile();
       InputStream fis = new FileInputStream(file);
       properties.load(fis);
-      //一定要在修改值之前关闭fis
       fis.close();
       OutputStream fos = new FileOutputStream(filename);
       properties.setProperty("roomId", mRoomId);
@@ -545,7 +537,6 @@ public class MainActivity extends AppCompatActivity {
       properties.setProperty("scenarioType", String.valueOf(mScenarioType));
       properties.setProperty("detach", String.valueOf(mDetachEnabled));
       properties.setProperty("resolutionType", String.valueOf(mResolutionType));
-      //保存，并加入注释
       properties.store(fos, "config");
       fos.close();
     }
