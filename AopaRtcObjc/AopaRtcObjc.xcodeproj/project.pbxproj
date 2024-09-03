@@ -175,7 +175,7 @@
 
 /* Begin PBXFileReference section */
 		9A1519902C184F2E008D9E55 /* products.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = products.xcodeproj; path = ../../../out/ios/arm64/products.xcodeproj; sourceTree = "<group>"; };
-		9A9E4D152836567F004D72B1 /* AppRtcObjc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppRtcObjc.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A9E4D152836567F004D72B1 /* AopaRtcObjc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AopaRtcObjc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A9E4D3228365703004D72B1 /* FUViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FUViewController.mm; sourceTree = "<group>"; };
 		9A9E4D3328365703004D72B1 /* NADCheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NADCheckBox.h; sourceTree = "<group>"; };
 		9A9E4D3428365703004D72B1 /* NADAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NADAppDelegate.h; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 		9A9E4D162836567F004D72B1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9A9E4D152836567F004D72B1 /* AppRtcObjc.app */,
+				9A9E4D152836567F004D72B1 /* AopaRtcObjc.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -386,9 +386,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9A9E4D142836567F004D72B1 /* AppRtcObjc */ = {
+		9A9E4D142836567F004D72B1 /* AopaRtcObjc */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9A9E4D2E28365682004D72B1 /* Build configuration list for PBXNativeTarget "AppRtcObjc" */;
+			buildConfigurationList = 9A9E4D2E28365682004D72B1 /* Build configuration list for PBXNativeTarget "AopaRtcObjc" */;
 			buildPhases = (
 				9A9E4D112836567F004D72B1 /* Sources */,
 				9A9E4D122836567F004D72B1 /* Frameworks */,
@@ -399,9 +399,9 @@
 			);
 			dependencies = (
 			);
-			name = AppRtcObjc;
-			productName = AppRtcObjc;
-			productReference = 9A9E4D152836567F004D72B1 /* AppRtcObjc.app */;
+			name = AopaRtcObjc;
+			productName = AopaRtcObjc;
+			productReference = 9A9E4D152836567F004D72B1 /* AopaRtcObjc.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -418,7 +418,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9A9E4D102836567F004D72B1 /* Build configuration list for PBXProject "AppRtcObjc" */;
+			buildConfigurationList = 9A9E4D102836567F004D72B1 /* Build configuration list for PBXProject "AopaRtcObjc" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -437,7 +437,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				9A9E4D142836567F004D72B1 /* AppRtcObjc */,
+				9A9E4D142836567F004D72B1 /* AopaRtcObjc */,
 			);
 		};
 /* End PBXProject section */
@@ -725,7 +725,7 @@
 					"\"$(SRCROOT)/../../..\"",
 				);
 				INFOPLIST_FILE = ./objc/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppBBRtcIOS2;
+				INFOPLIST_KEY_CFBundleDisplayName = AopaRtcIOS;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "App需要您的同意,才能访问媒体资料库";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access needed for video calling";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
@@ -773,7 +773,7 @@
 					"\"$(SRCROOT)/../../..\"",
 				);
 				INFOPLIST_FILE = ./objc/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppBBRtcIOS2;
+				INFOPLIST_KEY_CFBundleDisplayName = AopaRtcIOS;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "App需要您的同意,才能访问媒体资料库";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access needed for video calling";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
@@ -808,7 +808,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9A9E4D102836567F004D72B1 /* Build configuration list for PBXProject "AppRtcObjc" */ = {
+		9A9E4D102836567F004D72B1 /* Build configuration list for PBXProject "AopaRtcObjc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9A9E4D2C28365682004D72B1 /* Debug */,
@@ -817,7 +817,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9A9E4D2E28365682004D72B1 /* Build configuration list for PBXNativeTarget "AppRtcObjc" */ = {
+		9A9E4D2E28365682004D72B1 /* Build configuration list for PBXNativeTarget "AopaRtcObjc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9A9E4D2F28365682004D72B1 /* Debug */,

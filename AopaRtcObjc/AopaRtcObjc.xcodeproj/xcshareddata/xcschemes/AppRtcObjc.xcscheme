@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9A9E4D142836567F004D72B1"
-               BuildableName = "AppRtcObjc.app"
-               BlueprintName = "AppRtcObjc"
-               ReferencedContainer = "container:AppRtcObjc.xcodeproj">
+               BuildableName = "AopaRtcObjc.app"
+               BlueprintName = "AopaRtcObjc"
+               ReferencedContainer = "container:AopaRtcObjc.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9A9E4D142836567F004D72B1"
-            BuildableName = "AppRtcObjc.app"
-            BlueprintName = "AppRtcObjc"
-            ReferencedContainer = "container:AppRtcObjc.xcodeproj">
+            BuildableName = "AopaRtcObjc.app"
+            BlueprintName = "AopaRtcObjc"
+            ReferencedContainer = "container:AopaRtcObjc.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9A9E4D142836567F004D72B1"
-            BuildableName = "AppRtcObjc.app"
-            BlueprintName = "AppRtcObjc"
-            ReferencedContainer = "container:AppRtcObjc.xcodeproj">
+            BuildableName = "AopaRtcObjc.app"
+            BlueprintName = "AopaRtcObjc"
+            ReferencedContainer = "container:AopaRtcObjc.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
