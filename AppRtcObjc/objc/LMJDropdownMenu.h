@@ -22,12 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol LMJDropdownMenuDelegate <NSObject>
 @optional
-- (void)dropdownMenuWillShow:(LMJDropdownMenu *)menu;    // 当下拉菜单将要显示时调用
-- (void)dropdownMenuDidShow:(LMJDropdownMenu *)menu;     // 当下拉菜单已经显示时调用
-- (void)dropdownMenuWillHidden:(LMJDropdownMenu *)menu;  // 当下拉菜单将要收起时调用
-- (void)dropdownMenuDidHidden:(LMJDropdownMenu *)menu;   // 当下拉菜单已经收起时调用
+- (void)dropdownMenuWillShow:(LMJDropdownMenu *)menu;    
+- (void)dropdownMenuDidShow:(LMJDropdownMenu *)menu;    
+- (void)dropdownMenuWillHidden:(LMJDropdownMenu *)menu;  
+- (void)dropdownMenuDidHidden:(LMJDropdownMenu *)menu;   
 
-- (void)dropdownMenu:(LMJDropdownMenu *)menu didSelectOptionAtIndex:(NSUInteger)index optionTitle:(NSString *)title; // 当选择某个选项时调用
+- (void)dropdownMenu:(LMJDropdownMenu *)menu didSelectOptionAtIndex:(NSUInteger)index optionTitle:(NSString *)title; 
 @end
 
 
@@ -59,13 +59,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) CGSize            optionIconSize;  // default:(15,15)
 
 
-@property(nonatomic,assign) CGFloat animateTime;   // 下拉动画时间 default: 0.25
+@property(nonatomic,assign) CGFloat animateTime;   
 
 
 - (void)reloadOptionsData;
 
-- (void)showDropDown; // 显示下拉菜单
-- (void)hideDropDown; // 隐藏下拉菜单
+- (void)showDropDown; 
+- (void)hideDropDown; 
 
 - (void)selectItme:(int)index;
 - (int)getSelcetedIndex;

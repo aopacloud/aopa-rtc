@@ -49,7 +49,7 @@
     _lossRateUpLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _lossRateUpLabel.font = [UIFont systemFontOfSize:13];
     _lossRateUpLabel.textColor = [UIColor blackColor];
-    [_lossRateUpLabel setText:@"上行丢包率"];
+    [_lossRateUpLabel setText:@"up lost"];
     [bkView addSubview:_lossRateUpLabel];
     
     _lossRateUpTextField = [[MyUITextField2 alloc] initWithFrame:CGRectZero];
@@ -68,7 +68,7 @@
     _lossRateDownLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _lossRateDownLabel.font = [UIFont systemFontOfSize:13];
     _lossRateDownLabel.textColor = [UIColor blackColor];
-    [_lossRateDownLabel setText:@"下行丢包率"];
+    [_lossRateDownLabel setText:@"down lost"];
     [bkView addSubview:_lossRateDownLabel];
     
     _lossRateDownTextField = [[MyUITextField2 alloc] initWithFrame:CGRectZero];
@@ -87,7 +87,7 @@
     _rttUpLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _rttUpLabel.font = [UIFont systemFontOfSize:13];
     _rttUpLabel.textColor = [UIColor blackColor];
-    [_rttUpLabel setText:@"上行时延(ms)"];
+    [_rttUpLabel setText:@"up delay(ms)"];
     [bkView addSubview:_rttUpLabel];
     
     _rttUpTextField = [[MyUITextField2 alloc] initWithFrame:CGRectZero];
@@ -106,7 +106,7 @@
     _rttDownLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _rttDownLabel.font = [UIFont systemFontOfSize:13];
     _rttDownLabel.textColor = [UIColor blackColor];
-    [_rttDownLabel setText:@"下行时延(ms)"];
+    [_rttDownLabel setText:@"down delay(ms)"];
     [bkView addSubview:_rttDownLabel];
     
     _rttDownTextField = [[MyUITextField2 alloc] initWithFrame:CGRectZero];
@@ -127,7 +127,7 @@
     _bandwidthUpLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _bandwidthUpLabel.font = [UIFont systemFontOfSize:13];
     _bandwidthUpLabel.textColor = [UIColor blackColor];
-    [_bandwidthUpLabel setText:@"上行带宽(kbps)"];
+    [_bandwidthUpLabel setText:@"up bw(kbps)"];
     [bkView addSubview:_bandwidthUpLabel];
     
     _bandwidthUpTextField = [[MyUITextField2 alloc] initWithFrame:CGRectZero];
@@ -146,7 +146,7 @@
     _bandwidthDownLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _bandwidthDownLabel.font = [UIFont systemFontOfSize:13];
     _bandwidthDownLabel.textColor = [UIColor blackColor];
-    [_bandwidthDownLabel setText:@"下行带宽(kbps)"];
+    [_bandwidthDownLabel setText:@"down bw(kbps)"];
     [bkView addSubview:_bandwidthDownLabel];
     
     _bandwidthDownTextField = [[MyUITextField2 alloc] initWithFrame:CGRectZero];
@@ -167,7 +167,7 @@
     _cancelButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [_cancelButton.layer setMasksToBounds:YES];
     [_cancelButton.layer setCornerRadius:5.0];
-    [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [_cancelButton setTitle:@"cancel" forState:UIControlStateNormal];
     [_cancelButton setTintColor:[UIColor whiteColor]];
     [_cancelButton setBackgroundColor: [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1.0]];
     [_cancelButton addTarget:self action:@selector(onCacel:) forControlEvents:UIControlEventTouchUpInside];
@@ -178,7 +178,7 @@
     _saveButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [_saveButton.layer setMasksToBounds:YES];
     [_saveButton.layer setCornerRadius:5.0];
-    [_saveButton setTitle:@"保存" forState:UIControlStateNormal];
+    [_saveButton setTitle:@"save" forState:UIControlStateNormal];
     [_saveButton setTintColor:[UIColor whiteColor]];
     [_saveButton setBackgroundColor: [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1.0]];
     [_saveButton addTarget:self action:@selector(onSave:) forControlEvents:UIControlEventTouchUpInside];

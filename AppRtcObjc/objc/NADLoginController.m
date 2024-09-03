@@ -156,7 +156,7 @@ struct LoginConfig{
     _serverAddrLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _serverAddrLabel.font = [UIFont systemFontOfSize:13];
     _serverAddrLabel.textColor = [UIColor blackColor];
-    [_serverAddrLabel setText:@"self define ip"];
+    [_serverAddrLabel setText:@"custom ip"];
     [_view addSubview:_serverAddrLabel];
 
     _serverAddrText = [[MyUITextField alloc] initWithFrame:CGRectZero];
@@ -209,7 +209,7 @@ struct LoginConfig{
     _videoCheckBox.isMulti = YES;
     _videoCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
     [_videoCheckBox setItemSelected:NO index:0];
-    [_videoCheckBox setFrame:CGRectMake(0, 0, 80, 40)];
+    [_videoCheckBox setFrame:CGRectMake(0, 0, 100, 40)];
     [_videoCheckBox setNormalImage:[UIImage imageNamed:@"icon_check_n"]];
     [_videoCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_videoCheckBox];
@@ -219,7 +219,7 @@ struct LoginConfig{
     _videoSourceCheckBox.isMulti = YES;
     _videoSourceCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
     [_videoSourceCheckBox setItemSelected:NO index:0];
-    [_videoSourceCheckBox setFrame:CGRectMake(0, 0, 80, 40)];
+    [_videoSourceCheckBox setFrame:CGRectMake(0, 0, 100, 40)];
     [_videoSourceCheckBox setNormalImage:[UIImage imageNamed:@"icon_check_n"]];
     [_videoSourceCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_videoSourceCheckBox];
@@ -238,7 +238,7 @@ struct LoginConfig{
     _simulcastStreamCheckBox.isMulti = YES;
     _simulcastStreamCheckBox.alignment = UIControlContentHorizontalAlignmentLeft;
     [_simulcastStreamCheckBox setItemSelected:NO index:0];
-    [_simulcastStreamCheckBox setFrame:CGRectMake(0, 0, 80, 40)];
+    [_simulcastStreamCheckBox setFrame:CGRectMake(0, 0, 100, 40)];
     [_simulcastStreamCheckBox setNormalImage:[UIImage imageNamed:@"icon_check_n"]];
     [_simulcastStreamCheckBox setSelectedImage:[UIImage imageNamed:@"icon_check_s"]];
     [_view addSubview:_simulcastStreamCheckBox];
@@ -328,7 +328,7 @@ struct LoginConfig{
     _audioProfileLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _audioProfileLabel.font = [UIFont systemFontOfSize:13];
     _audioProfileLabel.textColor = [UIColor blackColor];
-    [_audioProfileLabel setText:@"audioquality"];
+    [_audioProfileLabel setText:@"aquality"];
     [_view addSubview:_audioProfileLabel];
     
     _audioProfileMenu = [[LMJDropdownMenu alloc] initWithFrame:CGRectZero];
@@ -375,7 +375,7 @@ struct LoginConfig{
     _videoProfileLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _videoProfileLabel.font = [UIFont systemFontOfSize:13];
     _videoProfileLabel.textColor = [UIColor blackColor];
-    [_videoProfileLabel setText:@"resolution"];
+    [_videoProfileLabel setText:@"resolu"];
     [_view addSubview:_videoProfileLabel];
     
     _videoProfileMenu = [[LMJDropdownMenu alloc] initWithFrame:CGRectZero];
@@ -551,16 +551,15 @@ struct LoginConfig{
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-  //  [self join:nil];
 }
 
 - (IBAction)join:(id)sender {
     _singleJoin = NO;
     _userId = [_userIdText.text intValue];
-    if([_token compare:@""] == 0){
+    /*if([_token compare:@""] == 0){
         [self getToken];
         return;
-    }
+    }*/
     int scenarioType;
     if([_audioScenarioMenu getSelcetedIndex] == 0){
         scenarioType = 4;
@@ -714,11 +713,9 @@ struct LoginConfig{
         NSHTTPURLResponse *resp = (NSHTTPURLResponse *)response;
         NSString *msg = [NSHTTPURLResponse localizedStringForStatusCode:resp.statusCode];
         NSLog(@"%td %@ %@",resp.statusCode, msg, resp.allHeaderFields);
-        //这个block会在请求完毕的时候自动调用
         if (connectionError || data == nil) {
             return;
         }
-        //解析服务器返回的JSON数据
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
         NSString* code = dict[@"code"];
         if ([code intValue] == 200) {

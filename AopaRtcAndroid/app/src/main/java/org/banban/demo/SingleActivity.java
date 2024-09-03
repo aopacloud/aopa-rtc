@@ -321,7 +321,7 @@ public class SingleActivity extends AppCompatActivity {
                 onRemoteUserLeft();
             });
         }
-        
+    
     @Override public void  onConnectionStateChanged(int state, int reason) {
         Log.i(TAG, "onConnectionStateChanged state:" + state);
         if(mIsExitRoom)
@@ -371,8 +371,6 @@ public class SingleActivity extends AppCompatActivity {
                   mStateTextView.setText("disconnect");
                   break;
               }
-              removeAllVideoView(false);
-              mSimpleRecycleAdapter.addItem(mUserId, true);
             }break;
             case CONNECTION_STATE_CONNECTING:
               switch (reason) {

@@ -11,8 +11,8 @@
 
 @property (nonatomic, strong) UIView      * bgView;
 @property (nonatomic, strong) UIButton    * mainBtn;
-@property (nonatomic, strong) UIImageView * arrowMark;   // 尖头图标
-@property (nonatomic, strong) UITableView * optionsList;   // 下拉列表
+@property (nonatomic, strong) UIImageView * arrowMark;  
+@property (nonatomic, strong) UITableView * optionsList;  
 
 @property (nonatomic, assign) NSLayoutConstraint * hConstraint;
 @property (nonatomic, strong) NSMutableArray<NSLayoutConstraint *> * bConstraints;
@@ -91,7 +91,6 @@
 - (void)initViews{
     self.layer.masksToBounds = YES;
     
-    // 主按钮 显示在界面上的点击按钮
     _mainBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _mainBtn.translatesAutoresizingMaskIntoConstraints = NO;
     [_mainBtn addTarget:self action:@selector(clickMainBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -100,13 +99,12 @@
     _mainBtn.selected                   = NO;
     [self addSubview:_mainBtn];
     
-    // 旋转尖头
+
     _arrowMark = [[UIImageView alloc] init];
     _arrowMark.translatesAutoresizingMaskIntoConstraints = NO;
     [_mainBtn addSubview:_arrowMark];
     
     
-    // 下拉列表TableView
     _optionsList = [[UITableView alloc] init];
    // _optionsList.translatesAutoresizingMaskIntoConstraints = NO;
     _optionsList.delegate       = self;
@@ -133,12 +131,6 @@
     [_arrowMark.widthAnchor constraintEqualToConstant:self.rotateIconSize.width].active = YES;
     [_arrowMark.heightAnchor constraintEqualToConstant:self.rotateIconSize.height].active = YES;
     
-//    [_optionsList.topAnchor constraintEqualToAnchor:_mainBtn.bottomAnchor].active = YES;
-//    [_optionsList.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
-//    [_optionsList.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
-//    [_optionsList.heightAnchor constraintEqualToConstant:0].active = YES;
-    //    [_mainBtn setFrame:CGRectMake(0, 0, self.frame.size.width, _originHeight)];
-    //    [_arrowMark setFrame:CGRectMake(self.frame.size.width -7.5-self.rotateIconSize.width, (_originHeight -self.rotateIconSize.height)/2, self.rotateIconSize.width, self.rotateIconSize.height)];
     [_optionsList setFrame:CGRectMake(0, _originHeight, self.frame.size.width, 0)];
 }
 
@@ -197,7 +189,7 @@
     }
 }
 
-- (void)showDropDown{   // 显示下拉列表
+- (void)showDropDown{  
     for (UIView * view in self.superview.subviews) {
         if ([view isKindOfClass:[LMJDropdownMenu class]]) {
             if (view != self) {
@@ -206,7 +198,7 @@
         }
     }
     if ([self.delegate respondsToSelector:@selector(dropdownMenuWillShow:)]) {
-        [self.delegate dropdownMenuWillShow:self]; // 将要显示回调代理
+        [self.delegate dropdownMenuWillShow:self]; 
     }
     NSUInteger count = [self.dataSource numberOfOptionsInDropdownMenu:self];
     _cellHeights = [[NSMutableArray alloc] init];
@@ -235,7 +227,7 @@
         weakSelf.optionsList.frame = CGRectMake(0, self->_originHeight, self.frame.size.width, self->_listHeight);
     }completion:^(BOOL finished) {
         if ([self.delegate respondsToSelector:@selector(dropdownMenuDidShow:)]) {
-            [self.delegate dropdownMenuDidShow:self]; // 已经显示回调代理
+            [self.delegate dropdownMenuDidShow:self]; 
         }
     }];
     
@@ -243,9 +235,9 @@
 }
 
 
-- (void)hideDropDown{  // 隐藏下拉列表
+- (void)hideDropDown{  
     if ([self.delegate respondsToSelector:@selector(dropdownMenuWillHidden:)]) {
-        [self.delegate dropdownMenuWillHidden:self]; // 将要隐藏回调代理
+        [self.delegate dropdownMenuWillHidden:self]; 
     }
     
     __block LMJDropdownMenu*  weakSelf = self;
@@ -266,7 +258,7 @@
         }
     }completion:^(BOOL finished) {
         if ([self.delegate respondsToSelector:@selector(dropdownMenuDidHidden:)]) {
-            [self.delegate dropdownMenuDidHidden:self]; // 已经隐藏回调代理
+            [self.delegate dropdownMenuDidHidden:self]; 
         }
     }];
     
@@ -285,7 +277,6 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        //---------------------------下拉选项样式，可在此处自定义-------------------------
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.selectionStyle  = UITableViewCellSelectionStyleNone;
         cell.backgroundColor =  [UIColor whiteColor];//self.optionBgColor;
@@ -313,14 +304,6 @@
         titleLabel.text = [self.dataSource dropdownMenu:self titleForOptionAtIndex:indexPath.row];
         titleLabel.frame = CGRectMake(15, 0, self.frame.size.width - 15 -self.optionIconSize.width -15, cHeight);
     }
-    
-    
-    
-    //    UIImageView * icon = [cell viewWithTag:888];
-    //    if ([self.dataSource respondsToSelector:@selector(dropdownMenu:iconForOptionAtIndex:)]){
-    //        icon.image =  [self.dataSource dropdownMenu:self iconForOptionAtIndex:indexPath.row];
-    //    }
-    //    icon.frame = CGRectMake(self.frame.size.width -7.5-self.optionIconSize.width, (cHeight - self.optionIconSize.height)/2, self.optionIconSize.width, self.optionIconSize.height);
     
     return cell;
 }
