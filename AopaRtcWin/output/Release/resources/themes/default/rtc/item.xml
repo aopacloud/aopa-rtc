@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <ListContainerElement class="listitem" height="280" width="250" margin="0,0,0,10">
+    <VBox>
+    <HBox height="30" bkcolor="user_item_titile">
+    <Control />
+    <Label name="userid_label"  text="" font="system_bold_14" normaltextcolor="white" halign="center" valign="center" halign="center"/>
+    <Control />
+    </HBox>
+    <Box>
+       <MediaWnd name="video_view" bkcolor="black"/>
+    </Box>
+    <HBox name="video_layout" height="4" bkcolor="darkcolor">
+         <Label name="current_volume_label" visible="false" width="30" height="24" margin="0,0,0,0"  text="100" font="system_14" normaltextcolor="white" />
+         <VolumeRealControl name="current_volume_bar" height="6" margin="0,0,0,0" />
+    </HBox>
+    <HBox height="30" bkcolor="user_item_bottom">
+        <Button class="btn_global_white_80x30"  name="video_mute_bnt"  margin="2,3,0,5" width="64" height="24" text="close video" font="system_12" />
+        <Button class="btn_global_white_80x30"  name="audio_mute_bnt"  margin="2,3,0,5" width="34" height="24" text="mute" font="system_12" />
+        <Button class="btn_global_white_80x30"  name="double_stream_bnt"  margin="2,3,0,5" width="34" height="24" text="high" font="system_12" />
+        <Slider class="slider_green" name="volume_slider" value="100" min="0" max="100"  valign="center"/>
+        <Label name="music_volume_value_label" width="32" margin="5,0,0,0"  text="100" font="system_14" normaltextcolor="white"  valign="center"/>
+    </HBox>
+    </VBox>
+  </ListContainerElement>
+</Window>

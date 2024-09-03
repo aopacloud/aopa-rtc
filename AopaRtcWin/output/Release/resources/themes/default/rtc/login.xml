@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window  size="450,380" caption="0,0,0,35" shadowattached="false">
+  <Box  bkcolor="bk_wnd_darkcolor">
+     <HBox width="stretch" height="35" bkcolor="bk_main_wnd_title">
+      <Label text="BBRtc" valign="center" margin="8"/>
+      <Control />
+      <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
+    </HBox>
+
+    <Box height="auto" margin="0,35,0,0">
+     <Label name="roomid_label" margin="80,50,0,0" width="60" height="30"  text="roomid" font="system_12"/>
+     <RichEdit class="input" name="roomid_edit" borderround="3,3,3,3" bkcolor="bk_wnd_lightcolor" width="stretch" height="30" padding="6,6,6" margin="140,42,80,0" font="system_14" multiline="false" vscrollbar="false" hscrollbar="false" autovscroll="false"  />
+     <Label name="audio_label" margin="80,100,0,0" width="60" height="30"  text="aquality" font="system_12"/>
+      <Combo class="list" name="audio_combox" height="30" margin="140,92,80,0" padding="6" bkimage="file='../public/combo/normal.png' corner='5,5,30,5'"/>
+     <Label name="role_label" margin="80,150,0,0" width="60" height="30"  text="role" font="system_12"/>
+      <Combo class="list" name="role_combox" height="30" margin="140,142,80,0" padding="6" bkimage="file='../public/combo/normal.png' corner='5,5,30,5'"/>
+     <Label name="server_label" margin="80,200,0,0" width="60" height="30"  text="serverip" font="system_12"/>
+      <Combo class="list" name="server_combox" height="30" margin="140,192,80,0" padding="6" bkimage="file='../public/combo/normal.png' corner='5,5,30,5'"/>
+      <Button class="btn_global_red_80x30"  name="enter_login" margin="0,260,0,0" width="120" height="36" halign="center"  text="加入"  />
+
+    </Box>
+
+  </Box>
+</Window>
