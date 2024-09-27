@@ -11,7 +11,7 @@
 #include "BBRtcBase.h"
 #include "IBBMediaEngine.h"
 namespace bbrtc {
-const long RTCVERSION = 235103;
+const long RTCVERSION = 240101;
 typedef unsigned int uid_t;
 typedef void* view_t;
 /** Maximum length of the device ID.
@@ -52,9 +52,114 @@ enum QUALITY_REPORT_FORMAT_TYPE
 
 enum MEDIA_ENGINE_EVENT_CODE_TYPE
 {
+    /** 0: For internal use only.
+     */
+    MEDIA_ENGINE_RECORDING_ERROR = 0,
+    /** 1: For internal use only.
+     */
+    MEDIA_ENGINE_PLAYOUT_ERROR = 1,
+    /** 2: For internal use only.
+     */
+    MEDIA_ENGINE_RECORDING_WARNING = 2,
+    /** 3: For internal use only.
+     */
+    MEDIA_ENGINE_PLAYOUT_WARNING = 3,
+    /** 10: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_FILE_MIX_FINISH = 10,
+    /** 12: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_FAREND_MUSIC_BEGINS = 12,
+    /** 13: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_FAREND_MUSIC_ENDS = 13,
+    /** 14: For internal use only.
+     */
+    MEDIA_ENGINE_LOCAL_AUDIO_RECORD_ENABLED = 14,
+    /** 15: For internal use only.
+     */
+    MEDIA_ENGINE_LOCAL_AUDIO_RECORD_DISABLED = 15,
+    // media engine role changed
+    /** 20: For internal use only.
+     */
+    MEDIA_ENGINE_ROLE_BROADCASTER_SOLO = 20,
+    /** 21: For internal use only.
+     */
+    MEDIA_ENGINE_ROLE_BROADCASTER_INTERACTIVE = 21,
+    /** 22: For internal use only.
+     */
+    MEDIA_ENGINE_ROLE_AUDIENCE = 22,
+    /** 23: For internal use only.
+     */
+    MEDIA_ENGINE_ROLE_COMM_PEER = 23,
+    /** 24: For internal use only.
+     */
+    MEDIA_ENGINE_ROLE_GAME_PEER = 24,
+    // iOS adm sample rate changed
+    /** 110: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ADM_REQUIRE_RESTART = 110,
+    /** 111: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ADM_SPECIAL_RESTART = 111,
+    /** 112: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ADM_USING_COMM_PARAMS = 112,
+    /** 113: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ADM_USING_NORM_PARAMS = 113,
+    // audio mix state
+    /** 710: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_PLAY = 710,
+    /** 711: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_PAUSED = 711,
+    /** 712: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_RESTART         = 712,
+    /** 713: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_STOPPED = 713,
+    /** 714: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_ERROR = 714,
+    //Mixing error codes
+    /** 701: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ERROR_MIXING_OPEN = 701,
+    /** 702: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ERROR_MIXING_TOO_FREQUENT = 702,
+    /** 703: The audio mixing file playback is interrupted. For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ERROR_MIXING_INTERRUPTED_EOF = 703,
+
+    /** 720: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_STARTED_BY_USER = 720,
+    /** 721: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_ONE_LOOP_COMPLETED = 721,
+    /** 722: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_START_NEW_LOOP = 722,
     /** 723: For internal use only.
      */
     MEDIA_ENGINE_AUDIO_EVENT_MIXING_ALL_LOOPS_COMPLETED = 723,
+    /** 724: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_STOPPED_BY_USER = 724,
+    /** 725: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_PAUSED_BY_USER = 725,
+    /** 726: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_EVENT_MIXING_RESUMED_BY_USER = 726,
+
+    /** 0: For internal use only.
+     */
+    MEDIA_ENGINE_AUDIO_ERROR_MIXING_NO_ERROR = 0,
 };
 
 /** The states of the local user's audio mixing file.
@@ -544,16 +649,18 @@ enum AUDIO_SCENARIO_TYPE // set a suitable scenario for your app type
  */
 enum CHANNEL_PROFILE_TYPE
 {
-   /** (Default) The Communication profile. Use this profile in one-on-one calls or group calls, where all users can talk freely.
-    */
+    /** (Default) The Communication profile. Use this profile in one-on-one calls or group calls, where all users can talk freely.*/
     CHANNEL_PROFILE_COMMUNICATION = 0,
-   /** The Live-Broadcast profile. Users in a live-broadcast channel have a role as either broadcaster or audience.
-    A broadcaster can both send and receive streams; an audience can only receive streams.
-    */
+    /** The Live-Broadcast profile. Users in a live-broadcast channel have a role as either broadcaster or audience.
+     A broadcaster can both send and receive streams; an audience can only receive streams.
+     */
     CHANNEL_PROFILE_LIVE_BROADCASTING = 1,
-   /** 2: The Gaming profile. This profile uses a codec with a lower bitrate and consumes less power. Applies to the gaming scenario, where all game players can talk freely.
-    */
+    /** 2: The Gaming profile. This profile uses a codec with a lower bitrate and consumes less power.
+     Applies to the gaming scenario, where all game players can talk freely.
+     */
     CHANNEL_PROFILE_GAME = 2,
+    /** 3: The Audio Player profile. */
+    CHANNEL_PROFILE_AUDIO_PLAYER = 3,
 };
 
 /** Client roles in a live broadcast. */
@@ -1154,6 +1261,17 @@ enum REMOTE_AUDIO_STATE_REASON
       REMOTE_AUDIO_REASON_REMOTE_OFFLINE = 7,
 };
 
+/** Remote video states. */
+// enum REMOTE_VIDEO_STATE
+// {
+//     // REMOTE_VIDEO_STATE_STOPPED is not used at this version. Ignore this value.
+//     // REMOTE_VIDEO_STATE_STOPPED = 0,  // Default state, video is started or remote user disabled/muted video stream
+//       /** 1: The remote video is playing. */
+//       REMOTE_VIDEO_STATE_RUNNING = 1,  // Running state, remote video can be displayed normally
+//       /** 2: The remote video is frozen. */
+//       REMOTE_VIDEO_STATE_FROZEN = 2,    // Remote video is frozen, probably due to network issue.
+// };
+
 /** The publishing state.
  */
 enum STREAM_PUBLISH_STATE {
@@ -1318,7 +1436,7 @@ enum DEGRADATION_PREFERENCE {
     MAINTAIN_FRAMERATE = 1,
     /** 2: (For future use) Maintain a balance between the frame rate and video quality. */
     MAINTAIN_BALANCED = 2,
-    
+
     MAINTAIN_DISABLED = 3,
 };
 
@@ -1463,6 +1581,15 @@ enum NETWORK_TYPE
   NETWORK_TYPE_MOBILE_5G = 6,
 };
 
+/** States of the last-mile network probe test. */
+enum LASTMILE_PROBE_RESULT_STATE {
+  /** 1: The last-mile network probe test is complete. */
+  LASTMILE_PROBE_RESULT_COMPLETE = 1,
+  /** 2: The last-mile network probe test is incomplete and the bandwidth estimation is not available, probably due to limited test resources. */
+  LASTMILE_PROBE_RESULT_INCOMPLETE_NO_BWE = 2,
+  /** 3: The last-mile network probe test is not carried out, probably due to poor network conditions. */
+  LASTMILE_PROBE_RESULT_UNAVAILABLE = 3
+};
 /** Audio output routing. */
 enum AUDIO_ROUTE_TYPE {
     /** Default.
@@ -1515,6 +1642,44 @@ enum CAMERA_DIRECTION {
     CAMERA_FRONT = 1,
 };
 #endif
+
+/** The uplink or downlink last-mile network probe test result. */
+struct LastmileProbeOneWayResult {
+  /** The packet loss rate (%). */
+  unsigned int packetLossRate;
+  /** The network jitter (ms). */
+  unsigned int jitter;
+  /* The estimated available bandwidth (Kbps). */
+  unsigned int availablebandwidth;
+};
+
+/** The uplink and downlink last-mile network probe test result. */
+struct LastmileProbeResult{
+  /** The state of the probe test. */
+  LASTMILE_PROBE_RESULT_STATE state;
+  /** The uplink last-mile network probe test result. */
+  LastmileProbeOneWayResult uplinkReport;
+  /** The downlink last-mile network probe test result. */
+  LastmileProbeOneWayResult downlinkReport;
+  /** The round-trip delay time (ms). */
+  unsigned int rtt;
+};
+
+/** Configurations of the last-mile network probe test. */
+struct LastmileProbeConfig {
+  /** Sets whether or not to test the uplink network. Some users, for example, the audience in a Live-broadcast channel, do not need such a test:
+  - true: test.
+  - false: do not test. */
+  bool probeUplink;
+  /** Sets whether or not to test the downlink network:
+  - true: test.
+  - false: do not test. */
+  bool probeDownlink;
+  /** The expected maximum sending bitrate (Kbps) of the local user. The value ranges between 100 and 5000. We recommend setting this parameter according to the bitrate value set by \ref IRtcEngine::setVideoEncoderConfiguration "setVideoEncoderConfiguration". */
+  unsigned int expectedUplinkBitrate;
+  /** The expected maximum receiving bitrate (Kbps) of the local user. The value ranges between 100 and 5000. */
+  unsigned int expectedDownlinkBitrate;
+};
 
 /** Properties of the audio volume information.
 
@@ -1965,6 +2130,12 @@ struct VideoDimensions {
  */
 const int STANDARD_BITRATE = 0;
 
+/** The compatible bitrate set in the \ref IRtcEngine::setVideoEncoderConfiguration "setVideoEncoderConfiguration" method.
+
+ The bitrate remains the same regardless of the channel profile. If you choose this mode in the Live-broadcast profile, the video frame rate may be lower than the set value.
+ */
+const int COMPATIBLE_BITRATE = -1;
+
 /** Use the default minimum bitrate.
  */
 const int DEFAULT_MIN_BITRATE = -1;
@@ -2397,6 +2568,18 @@ struct ChannelMediaRelayConfiguration {
     {}
 };
 
+/**  **DEPRECATED** Lifecycle of the CDN live video stream.
+*/
+enum RTMP_STREAM_LIFE_CYCLE_TYPE
+{
+  /** Bind to the channel lifecycle. If all hosts leave the channel, the CDN live streaming stops after 30 seconds.
+  */
+    RTMP_STREAM_LIFE_CYCLE_BIND2CHANNEL = 1,
+  /** Bind to the owner of the RTMP stream. If the owner leaves the channel, the CDN live streaming stops immediately.
+  */
+    RTMP_STREAM_LIFE_CYCLE_BIND2OWNER = 2,
+};
+
 /** Content hints for screen sharing.
 */
 enum VideoContentHint
@@ -2410,6 +2593,107 @@ enum VideoContentHint
     /** Motionless content. Choose this option if you prefer sharpness or when you are sharing a picture, PowerPoint slide, or text.
      */
     CONTENT_HINT_DETAILS
+};
+
+/** The relative location of the region to the screen or window.
+ */
+struct Rectangle
+{
+    /** The horizontal offset from the top-left corner.
+    */
+    int x;
+    /** The vertical offset from the top-left corner.
+    */
+    int y;
+    /** The width of the region.
+    */
+    int width;
+    /** The height of the region.
+    */
+    int height;
+
+    Rectangle(): x(0), y(0), width(0), height(0) {}
+    Rectangle(int xx, int yy, int ww, int hh): x(xx), y(yy), width(ww), height(hh) {}
+};
+
+/**  **DEPRECATED** Definition of the rectangular region. */
+typedef struct Rect {
+    /** Y-axis of the top line.
+     */
+    int top;
+    /** X-axis of the left line.
+     */
+    int left;
+    /** Y-axis of the bottom line.
+     */
+    int bottom;
+    /** X-axis of the right line.
+     */
+    int right;
+
+    Rect(): top(0), left(0), bottom(0), right(0) {}
+    Rect(int t, int l, int b, int r): top(t), left(l), bottom(b), right(r) {}
+} Rect;
+
+/** The options of the watermark image to be added. */
+typedef struct WatermarkOptions {
+    /** Sets whether or not the watermark image is visible in the local video preview:
+     * - true: (Default) The watermark image is visible in preview.
+     * - false: The watermark image is not visible in preview.
+     */
+    bool visibleInPreview;
+    /**
+     * The watermark position in the landscape mode. See Rectangle.
+     * For detailed information on the landscape mode, see [Rotate the video](https://docs.bb.io/en/Interactive%20Broadcast/rotation_guide_windows?platform=Windows).
+     */
+    Rectangle positionInLandscapeMode;
+    /**
+     * The watermark position in the portrait mode. See Rectangle.
+     * For detailed information on the portrait mode, see [Rotate the video](https://docs.bb.io/en/Interactive%20Broadcast/rotation_guide_windows?platform=Windows).
+     */
+    Rectangle positionInPortraitMode;
+
+    WatermarkOptions()
+        : visibleInPreview(true)
+        , positionInLandscapeMode(0, 0, 0, 0)
+        , positionInPortraitMode(0, 0, 0, 0)
+    {}
+} WatermarkOptions;
+
+/** Screen sharing encoding parameters.
+*/
+struct ScreenCaptureParameters
+{
+    /** The maximum encoding dimensions of the shared region in terms of width &times; height.
+
+     The default value is 1920 &times; 1080 pixels, that is, 2073600 pixels. Aopa uses the value of this parameter to calculate the charges.
+
+     If the aspect ratio is different between the encoding dimensions and screen dimensions, Aopa applies the following algorithms for encoding. Suppose the encoding dimensions are 1920 x 1080:
+
+     - If the value of the screen dimensions is lower than that of the encoding dimensions, for example, 1000 &times; 1000, the SDK uses 1000 &times; 1000 for encoding.
+     - If the value of the screen dimensions is higher than that of the encoding dimensions, for example, 2000 &times; 1500, the SDK uses the maximum value under 1920 &times; 1080 with the aspect ratio of the screen dimension (4:3) for encoding, that is, 1440 &times; 1080.
+     */
+    VideoDimensions dimensions;
+    /** The frame rate (fps) of the shared region.
+
+    The default value is 5. We do not recommend setting this to a value greater than 15.
+     */
+    int frameRate;
+    /** The bitrate (Kbps) of the shared region.
+
+    The default value is 0 (the SDK works out a bitrate according to the dimensions of the current screen).
+     */
+    int bitrate;
+    /** Sets whether or not to capture the mouse for screen sharing:
+
+    - true: (Default) Capture the mouse.
+    - false: Do not capture the mouse.
+     */
+    bool captureMouseCursor;
+
+    ScreenCaptureParameters() : dimensions(1920, 1080), frameRate(5), bitrate(STANDARD_BITRATE), captureMouseCursor(true) {}
+    ScreenCaptureParameters(const VideoDimensions& d, int f, int b, bool c) : dimensions(d), frameRate(f), bitrate(b), captureMouseCursor(c) {}
+    ScreenCaptureParameters(int width, int height, int f, int b, bool c) : dimensions(width, height), frameRate(f), bitrate(b), captureMouseCursor(c) {}
 };
 
 /** Video display settings of the VideoCanvas class.
@@ -2732,6 +3016,59 @@ struct VirtualBackgroundSource {
   VirtualBackgroundSource() : color(0xffffff), source(NULL), background_source_type(BACKGROUND_COLOR), blur_degree(BLUR_DEGREE_HIGH) {}
 };
 
+
+/** Definition of IPacketObserver.
+*/
+class IPacketObserver
+{
+public:
+    virtual ~IPacketObserver(){}
+/** Definition of Packet.
+ */
+    struct Packet
+    {
+        /** Buffer address of the sent or received data.
+         * @note Aopa recommends that the value of buffer is more than 2048 bytes, otherwise, you may meet undefined behaviors such as a crash.
+         */
+        const unsigned char* buffer;
+        /** Buffer size of the sent or received data.
+         */
+        unsigned int size;
+    };
+    /** Occurs when the local user sends an audio packet.
+
+     @param packet The sent audio packet. See Packet.
+     @return
+     - true: The audio packet is sent successfully.
+     - false: The audio packet is discarded.
+     */
+    virtual bool onSendAudioPacket(Packet& packet) = 0;
+    /** Occurs when the local user sends a video packet.
+
+     @param packet The sent video packet. See Packet.
+     @return
+     - true: The video packet is sent successfully.
+     - false: The video packet is discarded.
+     */
+    virtual bool onSendVideoPacket(Packet& packet) = 0;
+    /** Occurs when the local user receives an audio packet.
+
+     @param packet The received audio packet. See Packet.
+     @return
+     - true: The audio packet is received successfully.
+     - false: The audio packet is discarded.
+     */
+    virtual bool onReceiveAudioPacket(Packet& packet) = 0;
+    /** Occurs when the local user receives a video packet.
+
+     @param packet The received video packet. See Packet.
+     @return
+     - true: The video packet is received successfully.
+     - false: The video packet is discarded.
+     */
+    virtual bool onReceiveVideoPacket(Packet& packet) = 0;
+};
+
 #if defined(_WIN32)
 /** The capture type of the custom video source.
  */
@@ -2852,41 +3189,44 @@ class IRtcEngineEventHandler
 {
 public:
     virtual ~IRtcEngineEventHandler() {}
-    
-    /**
-     * Reports a warning during SDK operation.
-     *
-     * Applications can typically ignore SDK warnings, as the SDK attempts to self-correct or recover from issues. For instance, a #WARN_LOOKUP_CHANNEL_TIMEOUT might be followed by an automatic reconnection attempt.
-     *
-     * @param warn The warning code indicating the type of issue encountered.
-     * @param msg A pointer to a string describing the warning in detail.
+
+    /** Reports a warning during SDK runtime.
+
+     In most cases, the application can ignore the warning reported by the SDK because the SDK can usually fix the issue and resume running. For example, when losing connection with the server, the SDK may report #WARN_LOOKUP_CHANNEL_TIMEOUT and automatically try to reconnect.
+
+     @param warn Warning code: #WARN_CODE_TYPE.
+     @param msg Pointer to the warning message.
      */
     virtual void onWarning(int warn, const char* msg) {
         (void)warn;
         (void)msg;
     }
 
-    /**
-     * Reports an error during SDK operation.
-     *
-     * Errors require application intervention or user notification, as the SDK cannot recover automatically. For example, an #ERR_START_CALL error necessitates informing the user and potentially invoking \ref IRtcEngine::leaveChannel "leaveChannel".
-     *
-     * @param err The error code identifying the specific issue.
-     * @param msg A pointer to a string providing further context about the error.
+    /** Reports an error during SDK runtime.
+
+     In most cases, the SDK cannot fix the issue and resume running. The SDK requires the application to take action or informs the user about the issue.
+
+     For example, the SDK reports an #ERR_START_CALL error when failing to initialize a call. The application informs the user that the call initialization failed and invokes the \ref IRtcEngine::leaveChannel "leaveChannel" method to leave the channel.
+
+     @param err Error code: #ERROR_CODE_TYPE.
+     @param msg Pointer to the error message.
      */
     virtual void onError(int err, const char* msg) {
         (void)err;
         (void)msg;
     }
 
-    /**
-     * Notifies when a user successfully joins a channel.
-     *
-     * This callback signifies that a user has entered a channel after \ref IRtcEngine::joinChannel "joinChannel" was called. The channel name corresponds to the one provided in the join request, and if no user ID was specified, the server assigns one.
-     *
-     * @param channel Pointer to the name of the channel joined.
-     * @param uid The unique user ID assigned to the joining user.
-     * @param elapsed Time in milliseconds from the join request until this callback.
+    /** Occurs when a user joins a channel.
+
+     This callback notifies the application that a user joins a specified channel when the application calls the \ref IRtcEngine::joinChannel "joinChannel" method.
+
+     The channel name assignment is based on @p channelName specified in the \ref IRtcEngine::joinChannel "joinChannel" method.
+
+     If the @p uid is not specified in the *joinChannel* method, the server automatically assigns a @p uid.
+
+     @param channel  Pointer to the channel name.
+     @param  uid User ID of the user joining the channel.
+     @param  elapsed Time elapsed (ms) from the user calling the \ref IRtcEngine::joinChannel "joinChannel" method until the SDK triggers this callback.
      */
     virtual void onJoinChannelSuccess(const char* channel, uid_t uid, int elapsed) {
         (void)channel;
@@ -2894,14 +3234,13 @@ public:
         (void)elapsed;
     }
 
-    /**
-     * Triggers upon a user successfully rejoining a channel after a network disruption.
-     *
-     * Following a network interruption, the SDK automatically attempts to reconnect and invokes this callback upon success.
-     *
-     * @param channel Pointer to the name of the channel rejoined.
-     * @param uid The unique user ID of the rejoining user.
-     * @param elapsed Time in milliseconds from the start of reconnection efforts until this callback.
+    /** Occurs when a user rejoins the channel after disconnection due to network problems.
+
+    When a user loses connection with the server because of network problems, the SDK automatically tries to reconnect and triggers this callback upon reconnection.
+
+     @param channel Pointer to the channel name.
+     @param uid User ID of the user rejoining the channel.
+     @param elapsed Time elapsed (ms) from starting to reconnect until the SDK triggers this callback.
      */
     virtual void onRejoinChannelSuccess(const char* channel, uid_t uid, int elapsed) {
         (void)channel;
@@ -2909,155 +3248,178 @@ public:
         (void)elapsed;
     }
 
-    /**
-     * Indicates when a user leaves a channel.
-     *
-     * This callback delivers channel statistics upon a user exiting via \ref IRtcEngine::leaveChannel "leaveChannel".
-     *
-     * @param stats A reference to the \ref RtcStats structure containing call duration and other metrics.
+    /** Occurs when a user leaves the channel.
+
+    This callback notifies the application that a user leaves the channel when the application calls the \ref IRtcEngine::leaveChannel "leaveChannel" method.
+
+    The application retrieves information, such as the call duration and statistics.
+
+     @param stats Pointer to the statistics of the call: RtcStats.
      */
     virtual void onLeaveChannel(const RtcStats& stats) {
         (void)stats;
     }
 
-    /**
-     * Informs of a change in user role within a live broadcast (e.g., from broadcaster to audience).
-     *
-     * Triggered when the local user's role changes via \ref IRtcEngine::setClientRole "setClientRole", after joining a channel.
-     *
-     * @param oldRole The previous role of the user.
-     * @param newRole The updated role of the user.
+    /** Occurs when the user role switches in a live broadcast. For example, from a host to an audience or vice versa.
+
+    This callback notifies the application of a user role switch when the application calls the \ref IRtcEngine::setClientRole "setClientRole" method.
+
+    The SDK triggers this callback when the local user switches the user role by calling the \ref IRtcEngine::setClientRole "setClientRole" method after joining the channel.
+     @param oldRole Role that the user switches from: #CLIENT_ROLE_TYPE.
+     @param newRole Role that the user switches to: #CLIENT_ROLE_TYPE.
      */
     virtual void onClientRoleChanged(CLIENT_ROLE_TYPE oldRole, CLIENT_ROLE_TYPE newRole) {
     }
 
-    /**
-     * Reports a change in the chorus role within a KTV session.
+    /** Occurs when the chorus role switches in a KTV.
      *
-     * Activated by \ref IRtcEngine::setChorusRole "setChorusRole". Only applicable to users in the #CLIENT_ROLE_BROADCASTER role.
+     * This callback notifies the application of a chorus role switch when the application calls the \ref
+     * IRtcEngine::setChorusRole "setChorusRole" method.
      *
-     * @param oldRole Previous chorus role of the user.
-     * @param newRole New chorus role of the user.
+     * Only the user role is CLIENT_ROLE_BROADCASTER will call back the function.
+     @param oldRole Role that the user switches from: #CLIENT_ROLE_CHORUS_TYPE.
+     @param newRole Role that the user switches to: #CLIENT_ROLE_CHORUS_TYPE.
      */
     virtual void onChorusRoleChanged(CLIENT_ROLE_CHORUS_TYPE oldRole, CLIENT_ROLE_CHORUS_TYPE newRole) {
     }
 
-    /**
-     * Alerts when another user (in Communication) or host (in Live Broadcast) enters the channel.
-     *
-     * - Communication scenario: Notifies of any new user joining.
-     * - Live Broadcast scenario: Specifically indicates a new host joining, with a recommendation to limit hosts to 17.
-     *
-     * Triggers in scenarios such as a user joining, role switching to host post-join, rejoining after a disconnect, or when a host adds an online media stream.
-     *
-     * @param uid The unique user ID of the joining/host user.
-     * @param elapsed Time in milliseconds from the local user's join request until this callback.
+    /** Occurs when a remote user (Communication)/ host (Live Broadcast) joins the channel.
+
+     - Communication profile: This callback notifies the application that another user joins the channel. If other users are already in the channel, the SDK also reports to the application on the existing users.
+     - Live-broadcast profile: This callback notifies the application that the host joins the channel. If other hosts are already in the channel, the SDK also reports to the application on the existing hosts. We recommend limiting the number of hosts to 17.
+
+     The SDK triggers this callback under one of the following circumstances:
+     - A remote user/host joins the channel by calling the \ref bb::rtc::IRtcEngine::joinChannel "joinChannel" method.
+     - A remote user switches the user role to the host by calling the \ref bb::rtc::IRtcEngine::setClientRole "setClientRole" method after joining the channel.
+     - A remote user/host rejoins the channel after a network interruption.
+     - The host injects an online media stream into the channel by calling the \ref bb::rtc::IRtcEngine::addInjectStreamUrl "addInjectStreamUrl" method.
+
+     @note In the Live-broadcast profile:
+     - The host receives this callback when another host joins the channel.
+     - The audience in the channel receives this callback when a new host joins the channel.
+     - When a web application joins the channel, the SDK triggers this callback as long as the web application publishes streams.
+
+     @param uid User ID of the user or host joining the channel.
+     @param elapsed Time delay (ms) from the local user calling the \ref IRtcEngine::joinChannel "joinChannel" method until the SDK triggers this callback.
      */
     virtual void onUserJoined(uid_t uid, int elapsed) {
         (void)uid;
         (void)elapsed;
     }
 
-    /**
-     * Signals when a remote user/host exits the channel or goes offline.
-     *
-     * Reasons for a user being offline include voluntary channel departure or network disconnection. False positives may arise due to unreliable networks, hence a signaling system is advisable for accurate offline detection.
-     *
-     * @param uid The unique user ID of the offline user/host.
-     * @param reason The #USER_OFFLINE_REASON_TYPE explaining the offline status.
+    /** Occurs when a remote user (Communication)/host (Live Broadcast) leaves the channel.
+
+    Reasons why the user is offline:
+
+    - Leave the channel: When the user/host leaves the channel, the user/host sends a goodbye message. When the message is received, the SDK assumes that the user/host leaves the channel.
+    - Drop offline: When no data packet of the user or host is received for a certain period of time, the SDK assumes that the user/host drops offline. Unreliable network connections may lead to false detections, so we recommend using a signaling system for more reliable offline detection.
+
+     @param uid User ID of the user leaving the channel or going offline.
+     @param reason Reason why the user is offline: #USER_OFFLINE_REASON_TYPE.
      */
     virtual void onUserOffline(uid_t uid, USER_OFFLINE_REASON_TYPE reason) {
         (void)uid;
         (void)reason;
     }
 
-    /**
-     * Periodically updates (every 2 seconds) the last-mile network quality before a user joins a channel.
-     *
-     * Reflects the uplink and downlink conditions between the local device and Aopa's edge server, following a call to \ref IRtcEngine::enableLastmileTest "enableLastmileTest".
-     *
-     * @param quality The network quality level as defined by #QUALITY_TYPE.
+    /** Reports the last mile network quality of the local user once every two seconds before the user joins the channel.
+
+     Last mile refers to the connection between the local device and Aopa's edge server. After the application calls the \ref IRtcEngine::enableLastmileTest "enableLastmileTest" method, this callback reports once every two seconds the uplink and downlink last mile network conditions of the local user before the user joins the channel.
+
+     @param quality The last mile network quality: #QUALITY_TYPE.
      */
     virtual void onLastmileQuality(int quality) {
         (void)quality;
     }
 
-    // ===================================================================================
-    // Event Handler Interface for Aopa Real-Time Communication (RTC) Engine
-    // ===================================================================================
+    /** Reports the last-mile network probe result.
 
-    /** 
-     * @brief [DEPRECATED] Notifies when the connection between the SDK and server is interrupted.
-     *
-     * @deprecated Since v2.3.2, use \ref bb::rtc::IRtcEngineEventHandler::onConnectionStateChanged 
-     *             with reason "CONNECTION_STATE_RECONNECTING" and cause "CONNECTION_CHANGED_INTERRUPTED".
-     *
-     * Triggered when the SDK disconnects from the server for over 4 seconds post-connection.
-     * The SDK attempts to automatically reconnect after this event. Implement notifications 
-     * or UI updates via this callback.
-     *
-     * Note: Differs from onConnectionLost in trigger conditions and timing.
-     */
+    The SDK triggers this callback within 30 seconds after the app calls the \ref bb::rtc::IRtcEngine::startLastmileProbeTest "startLastmileProbeTest" method.
+
+    @param result The uplink and downlink last-mile network probe test result. See LastmileProbeResult.
+    */
+    virtual void onLastmileProbeResult(const LastmileProbeResult& result) {
+        (void)result;
+    }
+
+    /** **DEPRECATED** Occurs when the connection between the SDK and the server is interrupted.
+
+     Deprecated as of v2.3.2. Replaced by the \ref bb::rtc::IRtcEngineEventHandler::onConnectionStateChanged "onConnectionStateChanged(CONNECTION_STATE_RECONNECTING, CONNECTION_CHANGED_INTERRUPTED)" callback.
+
+     The SDK triggers this callback when it loses connection with the server for more than four seconds after the connection is established.
+
+     After triggering this callback, the SDK tries reconnecting to the server. You can use this callback to implement pop-up reminders.
+
+     This callback is different from \ref bb::rtc::IRtcEngineEventHandler::onConnectionLost "onConnectionLost":
+     - The SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onConnectionInterrupted "onConnectionInterrupted" callback when it loses connection with the server for more than four seconds after it successfully joins the channel.
+     - The SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onConnectionLost "onConnectionLost" callback when it loses connection with the server for more than 10 seconds, whether or not it joins the channel.
+
+     If the SDK fails to rejoin the channel 20 minutes after being disconnected from Aopa's edge server, the SDK stops rejoining the channel.
+
+    */
     virtual void onConnectionInterrupted() {}
 
-    /** 
-     * @brief Notifies when the SDK fails to reconnect to Aopa's edge server after a 10-second interruption.
-     *
-     * Triggered when reconnection efforts fail 10 seconds after initial disconnection, regardless 
-     * of whether the client was in a channel or not.
-     *
-     * Note: This differs from onConnectionInterrupted in the duration before triggering and scenarios.
+    /** Occurs when the SDK cannot reconnect to Aopa's edge server 10 seconds after its connection to the server is interrupted.
+
+    The SDK triggers this callback when it cannot connect to the server 10 seconds after calling the \ref IRtcEngine::joinChannel "joinChannel" method, whether or not it is in the channel.
+
+    This callback is different from \ref bb::rtc::IRtcEngineEventHandler::onConnectionInterrupted "onConnectionInterrupted":
+
+    - The SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onConnectionInterrupted "onConnectionInterrupted" callback when it loses connection with the server for more than four seconds after it successfully joins the channel.
+    - The SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onConnectionLost "onConnectionLost" callback when it loses connection with the server for more than 10 seconds, whether or not it joins the channel.
+
+    If the SDK fails to rejoin the channel 20 minutes after being disconnected from Aopa's edge server, the SDK stops rejoining the channel.
+
      */
     virtual void onConnectionLost() {}
 
-    /** 
-     * @brief [DEPRECATED] Notifies when the connection is banned by the Aopa server.
-     *
-     * @deprecated Replaced by \ref bb::rtc::IRtcEngineEventHandler::onConnectionStateChanged 
-     *             with state "CONNECTION_STATE_FAILED" and reason "CONNECTION_CHANGED_BANNED_BY_SERVER".
+    /** **DEPRECATED** Deprecated as of v2.3.2. Replaced by the \ref bb::rtc::IRtcEngineEventHandler::onConnectionStateChanged "onConnectionStateChanged(CONNECTION_STATE_FAILED, CONNECTION_CHANGED_BANNED_BY_SERVER)" callback.
+
+    Occurs when your connection is banned by the Aopa Server.
      */
     virtual void onConnectionBanned() {}
 
-    /** 
-     * @brief Executes when an SDK method call finishes, providing error code and method details.
-     *
-     * @param err Error code indicating success (0) or failure.
-     * @param apiPointer Pointer to the name of the executed SDK API method.
-     * @param resultPointer Pointer to the result string of the executed method, if applicable.
+    /** Occurs when a method is executed by the SDK.
+
+     @param err The error code (#ERROR_CODE_TYPE) returned by the SDK when a method call fails. If the SDK returns 0, then the method call is successful.
+     @param api Pointer to the method executed by the SDK.
+     @param result Pointer to the result of the method call.
      */
-    virtual void onApiCallExecuted(int err, const char* apiPointer, const char* resultPointer) {
+    virtual void onApiCallExecuted(int err, const char* api, const char* result) {
         (void)err;
-        (void)apiPointer;
-        (void)resultPointer;
+        (void)api;
+        (void)result;
     }
 
-    /** 
-     * @brief Triggers when the token used for authentication is about to expire or has expired.
-     *
-     * Requires the application to fetch and set a new token via renewToken to maintain session continuity.
-     */
-    virtual void onRequestToken() {}
+    /** Occurs when the token expires.
 
-    /** 
-     * @brief Warns 30 seconds prior to token expiration to allow for proactive token renewal.
-     *
-     * @param tokenPointer Pointer to the token expiring soon.
+     After a token is specified by calling the \ref IRtcEngine::joinChannel "joinChannel" method, if the SDK losses connection with the Aopa server due to network issues, the token may expire after a certain period of time and a new token may be required to reconnect to the server.
+
+     This callback notifies the application to generate a new token. Call the \ref IRtcEngine::renewToken "renewToken" method to renew the token.
      */
-    virtual void onTokenPrivilegeWillExpire(const char* tokenPointer) {
-        (void)tokenPointer;
+    virtual void onRequestToken() {
     }
 
-    /**
-     * @brief [DEPRECATED] Reports the audio quality statistics for each remote user/host.
-     *
-     * @deprecated As of v2.3.2, use \ref bb::rtc::IRtcEngineEventHandler::onRemoteAudioStats "onRemoteAudioStats" instead.
-     *
-     * This callback is triggered every two seconds to provide audio quality metrics for each remote user/host transmitting audio in the channel. If multiple users are sending audio, the callback is fired accordingly for each one.
-     *
-     * @param uid Unique identifier of the remote user whose audio quality is being reported.
-     * @param quality Audio quality metric based on #QUALITY_TYPE.
-     * @param delay Network latency (in ms) from sender to receiver, inclusive of processing, transmission, and jitter buffer delays.
-     * @param lost Packet loss rate (%) of audio packets during transmission from sender to receiver.
+    /** Occurs when the token expires in 30 seconds.
+
+     The user becomes offline if the token used in the \ref IRtcEngine::joinChannel "joinChannel" method expires. The SDK triggers this callback 30 seconds before the token expires to remind the application to get a new token. Upon receiving this callback, generate a new token on the server and call the \ref IRtcEngine::renewToken "renewToken" method to pass the new token to the SDK.
+
+     @param token Pointer to the token that expires in 30 seconds.
+     */
+    virtual void onTokenPrivilegeWillExpire(const char* token) {
+        (void)token;
+    }
+
+    /** **DEPRECATED** Reports the statistics of the audio stream from each remote user/host.
+
+    Deprecated as of v2.3.2. Use the \ref bb::rtc::IRtcEngineEventHandler::onRemoteAudioStats "onRemoteAudioStats" callback instead.
+
+     The SDK triggers this callback once every two seconds to report the audio quality of each remote user/host sending an audio stream. If a channel has multiple users/hosts sending audio streams, the SDK triggers this callback as many times.
+
+     @param uid User ID of the speaker.
+     @param quality Audio quality of the user: #QUALITY_TYPE.
+     @param delay Time delay (ms) of sending the audio packet from the sender to the receiver, including the time delay of audio sampling pre-processing, transmission, and the jitter buffer.
+     @param lost Packet loss rate (%) of the audio packet sent from the sender to the receiver.
      */
     virtual void onAudioQuality(uid_t uid, int quality, unsigned short delay, unsigned short lost) {
         (void)uid;
@@ -3066,25 +3428,23 @@ public:
         (void)lost;
     }
 
-    /**
-     * @brief Provides periodic statistics of the ongoing call.
-     *
-     * Triggered every two seconds following a successful channel join, delivering metrics on the RTC engine performance.
-     *
-     * @param stats Comprehensive statistics object for the RTC session: RtcStats.
+    /** Reports the statistics of the current call.
+
+     The SDK triggers this callback once every two seconds after the user joins the channel.
+
+     @param stats Statistics of the RtcEngine: RtcStats.
      */
     virtual void onRtcStats(const RtcStats& stats) {
         (void)stats;
     }
 
-    /**
-     * @brief Periodically reports the last-mile network quality for each user in the channel.
-     *
-     * The 'last mile' pertains to the link between the local device and Aopa's edge server. This callback is issued every two seconds to update on the network conditions experienced by each participant. If multiple users are present, expect multiple invocations.
-     *
-     * @param uid Unique identifier of the user. If @p uid equals 0, it refers to the local user.
-     * @param txQuality Uplink transmission quality assessment considering bitrate, packet loss, RTT, and jitter. Reflects suitability of current uplink for chosen video encoding settings. See #QUALITY_TYPE.
-     * @param rxQuality Downlink network quality score based on packet loss, RTT, and jitter. Refer to #QUALITY_TYPE.
+    /** Reports the last mile network quality of each user in the channel once every two seconds.
+
+     Last mile refers to the connection between the local device and Aopa's edge server. This callback reports once every two seconds the last mile network conditions of each user in the channel. If a channel includes multiple users, the SDK triggers this callback as many times.
+
+     @param uid User ID. The network quality of the user with this @p uid is reported. If @p uid is 0, the local network quality is reported.
+     @param txQuality Uplink transmission quality rating of the user in terms of the transmission bitrate, packet loss rate, average RTT (Round-Trip Time), and jitter of the uplink network. @p txQuality is a quality rating helping you understand how well the current uplink network conditions can support the selected VideoEncoderConfiguration. For example, a 1000 Kbps uplink network may be adequate for video frames with a resolution of 640 &times; 480 and a frame rate of 15 fps in the Live-broadcast profile, but may be inadequate for resolutions higher than 1280 &times; 720. See #QUALITY_TYPE.
+     @param rxQuality Downlink network quality rating of the user in terms of the packet loss rate, average RTT, and jitter of the downlink network. See #QUALITY_TYPE.
      */
     virtual void onNetworkQuality(uid_t uid, int txQuality, int rxQuality) {
         (void)uid;
@@ -3092,74 +3452,90 @@ public:
         (void)rxQuality;
     }
 
-    /**
-     * @brief Updates the statistics of the local video stream every two seconds.
+    /** Reports the statistics of the local video stream.
      *
-     * This callback is for each local user/host and is called every two seconds. In multi-user scenarios, expect multiple invocations.
+     * The SDK triggers this callback once every two seconds for each
+     * user/host. If there are multiple users/hosts in the channel, the SDK
+     * triggers this callback as many times.
      *
-     * @note If dual streaming is enabled via \ref bb::rtc::IRtcEngine::enableDualStream "enableDualStream", this callback reports on the high-quality video stream.
+     * @note
+     * If you have called the \ref bb::rtc::IRtcEngine::enableDualStream
+     * "enableDualStream" method, the \ref onLocalVideoStats()
+     * "onLocalVideoStats" callback reports the statistics of the high-video
+     * stream (high bitrate, and high-resolution video stream).
      *
-     * @param stats Detailed metrics for the local video stream: LocalVideoStats.
+     * @param stats Statistics of the local video stream. See LocalVideoStats.
      */
     virtual void onLocalVideoStats(const LocalVideoStats& stats) {
         (void)stats;
     }
 
-    /**
-     * @brief Reports statistics of the remote video stream every two seconds per user/host.
+    /** Reports the statistics of the video stream from each remote user/host.
      *
-     * For each remote participant in the channel, this callback is triggered every two seconds to deliver video stream stats. In multi-user channels, anticipate multiple callbacks.
+     * The SDK triggers this callback once every two seconds for each remote
+     * user/host. If a channel includes multiple remote users, the SDK
+     * triggers this callback as many times.
      *
-     * @param stats Object encapsulating remote video stream statistics: RemoteVideoStats.
+     * @param stats Statistics of the remote video stream. See
+     * RemoteVideoStats.
      */
     virtual void onRemoteVideoStats(const RemoteVideoStats& stats) {
         (void)stats;
     }
 
-    /**
-     * @brief Delivers the local audio stream statistics every two seconds.
+    /** Reports the statistics of the local audio stream.
      *
-     * This callback provides a periodic update on the local audio stream's performance.
+     * The SDK triggers this callback once every two seconds.
      *
-     * @param stats Metrics for the local audio stream: LocalAudioStats.
+     * @param stats The statistics of the local audio stream.
+     * See LocalAudioStats.
      */
     virtual void onLocalAudioStats(const LocalAudioStats& stats) {
         (void)stats;
     }
 
-    /**
-     * @brief Supplies statistics of the remote audio streams every two seconds.
-     *
-     * This callback supersedes \ref bb::rtc::IRtcEngineEventHandler::onAudioQuality "onAudioQuality". It is invoked every two seconds per remote user/host, with multiple calls in multi-participant channels.
-     *
-     * @param stats Array pointer to remote audio stream statistics objects: RemoteAudioStats.
+    /** Reports the statistics of the audio stream from each remote user/host.
+
+     This callback replaces the \ref bb::rtc::IRtcEngineEventHandler::onAudioQuality "onAudioQuality" callback.
+
+     The SDK triggers this callback once every two seconds for each remote user/host. If a channel includes multiple remote users, the SDK triggers this callback as many times.
+
+     @param stats Pointer to the statistics of the received remote audio streams. See RemoteAudioStats.
      */
     virtual void onRemoteAudioStats(const RemoteAudioStats& stats) {
         (void)stats;
     }
 
-    /**
-     * @brief Indicates a change in the local audio state, such as recording or encoding issues.
+    /** Occurs when the local audio state changes.
      *
-     * Helps diagnose issues by signaling state transitions in the local audio stream.
+     * This callback indicates the state change of the local audio stream,
+     * including the state of the audio recording and encoding, and allows
+     * you to troubleshoot issues when exceptions occur.
      *
-     * @param state Current state of the local audio stream, see #LOCAL_AUDIO_STREAM_STATE.
-     * @param error Specific error information if the state is #LOCAL_AUDIO_STREAM_STATE_FAILED (3).
+     * @note
+     * When the state is #LOCAL_AUDIO_STREAM_STATE_FAILED (3), see the `error`
+     * parameter for details.
+     *
+     * @param state State of the local audio. See #LOCAL_AUDIO_STREAM_STATE.
+     * @param error The error information of the local audio.
+     * See #LOCAL_AUDIO_STREAM_ERROR.
      */
     virtual void onLocalAudioStateChanged(LOCAL_AUDIO_STREAM_STATE state, LOCAL_AUDIO_STREAM_ERROR error) {
         (void)state;
         (void)error;
     }
 
-    /**
-     * @brief Notifies when the remote audio state changes.
+    /** Occurs when the remote audio state changes.
      *
-     * Reflects changes in the remote user's audio stream state.
+     * This callback indicates the state change of the remote audio stream.
      *
-     * @param uid Unique identifier of the remote user experiencing the audio state change.
-     * @param state New state of the remote audio stream, see #REMOTE_AUDIO_STATE.
-     * @param reason Reason behind the remote audio state change, see #REMOTE_AUDIO_STATE_REASON.
-     * @param elapsed Time (in ms) since joining the channel until this callback is triggered.
+     * @param uid ID of the remote user whose audio state changes.
+     * @param state State of the remote audio. See #REMOTE_AUDIO_STATE.
+     * @param reason The reason of the remote audio state change.
+     * See #REMOTE_AUDIO_STATE_REASON.
+     * @param elapsed Time elapsed (ms) from the local user calling the
+     * \ref IRtcEngine::joinChannel "joinChannel" method until the SDK
+     * triggers this callback.
      */
     virtual void onRemoteAudioStateChanged(uid_t uid, REMOTE_AUDIO_STATE state, REMOTE_AUDIO_STATE_REASON reason, int elapsed) {
         (void)uid;
@@ -3168,17 +3544,16 @@ public:
         (void)elapsed;
     }
 
-    /**
-     * @brief Notifies of changes in the audio publishing state.
+    /** Occurs when the audio publishing state changes.
      *
      * @since v3.1.0
      *
-     * Signals state transitions in the publishing of the local audio stream.
+     * This callback indicates the publishing state change of the local audio stream.
      *
-     * @param channel Name of the channel related to the publishing state change.
-     * @param oldState Previous publishing state, refer to #STREAM_PUBLISH_STATE.
-     * @param newState Current publishing state, refer to #STREAM_PUBLISH_STATE.
-     * @param elapseSinceLastState Time (in ms) from the last state to the current one.
+     * @param channel The channel name.
+     * @param oldState The previous publishing state. For details, see #STREAM_PUBLISH_STATE.
+     * @param newState The current publishing state. For details, see #STREAM_PUBLISH_STATE.
+     * @param elapseSinceLastState The time elapsed (ms) from the previous state to the current state.
      */
     virtual void onAudioPublishStateChanged(const char* channel, STREAM_PUBLISH_STATE oldState, STREAM_PUBLISH_STATE newState, int elapseSinceLastState) {
         (void)channel;
@@ -3187,33 +3562,36 @@ public:
         (void)elapseSinceLastState;
     }
 
-       /**
-     * Reports the change in the local video publishing state.
+    /** Occurs when the video publishing state changes.
      *
-     * @param channel The identifier for the channel where the event occurs.
-     * @param oldState The previous publishing state; refer to #STREAM_PUBLISH_STATE for details.
-     * @param newState The current publishing state; refer to #STREAM_PUBLISH_STATE for details.
-     * @param elapseSinceLastState The time in milliseconds from the last state to the current one.
+     * @since v3.1.0
+     *
+     * This callback indicates the publishing state change of the local video stream.
+     *
+     * @param channel The channel name.
+     * @param oldState The previous publishing state. For details, see #STREAM_PUBLISH_STATE.
+     * @param newState The current publishing state. For details, see #STREAM_PUBLISH_STATE.
+     * @param elapseSinceLastState The time elapsed (ms) from the previous state to the current state.
      */
     virtual void onVideoPublishStateChanged(const char* channel, STREAM_PUBLISH_STATE oldState, STREAM_PUBLISH_STATE newState, int elapseSinceLastState) {
-        // Currently, the implementation is a placeholder and ignores the parameters.
         (void)channel;
         (void)oldState;
         (void)newState;
         (void)elapseSinceLastState;
     }
-
-    /**
-     * Notifies about changes in the subscription state of a remote audio stream.
+    /** Occurs when the audio subscribing state changes.
      *
-     * @param channel The channel name where the event is happening.
-     * @param uid The unique identifier of the remote user.
-     * @param oldState The previous subscription state; refer to #STREAM_SUBSCRIBE_STATE for more information.
-     * @param newState The current subscription state; refer to #STREAM_SUBSCRIBE_STATE for more information.
-     * @param elapseSinceLastState Time in milliseconds since the last state change.
+     * @since v3.1.0
+     *
+     * This callback indicates the subscribing state change of a remote audio stream.
+     *
+     * @param channel The channel name.
+     * @param uid The ID of the remote user.
+     * @param oldState The previous subscribing state. For details, see #STREAM_SUBSCRIBE_STATE.
+     * @param newState The current subscribing state. For details, see #STREAM_SUBSCRIBE_STATE.
+     * @param elapseSinceLastState The time elapsed (ms) from the previous state to the current state.
      */
     virtual void onAudioSubscribeStateChanged(const char* channel, uid_t uid, STREAM_SUBSCRIBE_STATE oldState, STREAM_SUBSCRIBE_STATE newState, int elapseSinceLastState) {
-        // Placeholder implementation; actual logic should utilize the parameters.
         (void)channel;
         (void)uid;
         (void)oldState;
@@ -3221,17 +3599,19 @@ public:
         (void)elapseSinceLastState;
     }
 
-    /**
-     * Notifies about changes in the subscription state of a remote video stream.
+    /** Occurs when the audio subscribing state changes.
      *
-     * @param channel The name of the channel.
-     * @param uid Identifier of the remote user.
-     * @param oldState Prior subscription state; refer to #STREAM_SUBSCRIBE_STATE for enumeration values.
-     * @param newState Current subscription state; refer to #STREAM_SUBSCRIBE_STATE for enumeration values.
-     * @param elapseSinceLastState Duration in milliseconds from the last state to the current one.
+     * @since v3.1.0
+     *
+     * This callback indicates the subscribing state change of a remote video stream.
+     *
+     * @param channel The channel name.
+     * @param uid The ID of the remote user.
+     * @param oldState The previous subscribing state. For details, see #STREAM_SUBSCRIBE_STATE.
+     * @param newState The current subscribing state. For details, see #STREAM_SUBSCRIBE_STATE.
+     * @param elapseSinceLastState The time elapsed (ms) from the previous state to the current state.
      */
     virtual void onVideoSubscribeStateChanged(const char* channel, uid_t uid, STREAM_SUBSCRIBE_STATE oldState, STREAM_SUBSCRIBE_STATE newState, int elapseSinceLastState) {
-        // Function body intentionally left empty; parameters are not used.
         (void)channel;
         (void)uid;
         (void)oldState;
@@ -3239,147 +3619,269 @@ public:
         (void)elapseSinceLastState;
     }
 
-    /**
-     * Provides information on active speakers, their volume levels, and the local user's speaking status.
-     *
-     * @param speakers Array of AudioVolumeInfo structures detailing speaker information.
-     *                 For the local user, `uid`=0, `volume`=totalVolume (sum of voice and audio mixing volume), and `vad`=voice activity detection status.
-     *                 For remote speakers, includes their `uid`, combined `volume`, and `vad`=0.
-     *                 An empty array implies no remote speaker activity.
-     * @param speakerNumber Total number of active speakers reported, ranging from 0 to 3.
-     *                      Always 1 for the local user, regardless of speaking status.
-     *                      For remote speakers, up to 3 loudest speakers are reported when more than 3 are present.
-     * @param totalVolume The combined volume after audio mixing, ranging from 0 (silent) to 255 (loudest).
-     *                    Represents local user's total volume in their callback, and total volume of all remote speakers otherwise.
+
+    /** Reports which users are speaking, the speakers' volume and whether the local user is speaking.
+
+     This callback reports the IDs and volumes of the loudest speakers at the moment in the channel, and whether the local user is speaking.
+
+     By default, this callback is disabled. You can enable it by calling the \ref IRtcEngine::enableAudioVolumeIndication(int, int, bool) "enableAudioVolumeIndication" method.
+     Once enabled, this callback is triggered at the set interval, regardless of whether a user speaks or not.
+
+     The SDK triggers two independent `onAudioVolumeIndication` callbacks at one time, which separately report the volume information of the local user and all the remote speakers.
+     For more information, see the detailed parameter descriptions.
+
+     @note
+     - To enable the voice activity detection of the local user, ensure that you set `report_vad`(true) in the `enableAudioVolumeIndication` method.
+     - Calling the \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream" method affects the SDK's behavior:
+        - If the local user calls the \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream" method, the SDK stops triggering the local user's callback.
+        - 20 seconds after a remote speaker calls the *muteLocalAudioStream* method, the remote speakers' callback excludes this remote user's information; 20 seconds after all remote users call the *muteLocalAudioStream* method, the SDK stops triggering the remote speakers' callback.
+     - An empty @p speakers array in the *onAudioVolumeIndication* callback suggests that no remote user is speaking at the moment.
+
+     @param speakers A pointer to AudioVolumeInfo:
+     - In the local user's callback, this struct contains the following members:
+       - `uid` = 0,
+       - `volume` = `totalVolume`, which reports the sum of the voice volume and audio-mixing volume of the local user, and
+       - `vad`, which reports the voice activity status of the local user.
+     - In the remote speakers' callback, this array contains the following members:
+       - `uid` of the remote speaker,
+       - `volume`, which reports the sum of the voice volume and audio-mixing volume of each remote speaker, and
+       - `vad` = 0.
+
+       An empty speakers array in the callback indicates that no remote user is speaking at the moment.
+     @param speakerNumber Total number of speakers. The value range is [0, 3].
+     - In the local user’s callback, `speakerNumber` = 1, regardless of whether the local user speaks or not.
+     - In the remote speakers' callback, the callback reports the IDs and volumes of the three loudest speakers when there are more than three remote users in the channel, and `speakerNumber` = 3.
+     @param totalVolume Total volume after audio mixing. The value ranges between 0 (lowest volume) and 255 (highest volume).
+     - In the local user’s callback, `totalVolume` is the sum of the voice volume and audio-mixing volume of the local user.
+     - In the remote speakers' callback, `totalVolume` is the sum of the voice volume and audio-mixing volume of all the remote speakers.
      */
     virtual void onAudioVolumeIndication(const AudioVolumeInfo* speakers, unsigned int speakerNumber, int totalVolume) {
-        // Placeholder; actual implementation should handle the provided parameters.
         (void)speakers;
         (void)speakerNumber;
         (void)totalVolume;
     }
 
-    /**
-     * Indicates whether the local user is actively speaking.
-     *
-     * @param localInfo Structure containing the local user's audio volume information.
-     */
+    /** Reports whether the local user is speaking.*/
     virtual void onLocalAudioVolumeIndication(AudioVolumeInfo localInfo) {
-        // Function body is a placeholder and currently disregards the input parameter.
         (void)localInfo;
     }
 
-    /**
-     * Identifies the loudest speaker in the channel.
-     *
-     * @param uid Unique identifier of the loudest speaker. A value of 0 signifies the local user.
-     */
+    /** Reports which user is the loudest speaker.
+
+    If the user enables the audio volume indication by calling the \ref IRtcEngine::enableAudioVolumeIndication(int, int, bool) "enableAudioVolumeIndication" method, this callback returns the @p uid of the active speaker detected by the audio volume detection module of the SDK.
+
+    @note
+    - To receive this callback, you need to call the \ref IRtcEngine::enableAudioVolumeIndication(int, int, bool) "enableAudioVolumeIndication" method.
+    - This callback returns the user ID of the user with the highest voice volume during a period of time, instead of at the moment.
+
+    @param uid User ID of the active speaker. A @p uid of 0 represents the local user.
+    */
     virtual void onActiveSpeaker(uid_t uid) {
-        // Placeholder; actual logic should consider the provided user ID.
         (void)uid;
     }
 
-    /**
-     * Triggers when the first local video frame is displayed.
-     *
-     * @param width Width of the video frame in pixels.
-     * @param height Height of the video frame in pixels.
-     * @param elapsed Time in milliseconds from invoking joinChannel or startPreview until this callback.
+    /** **DEPRECATED** Occurs when the video stops playing.
+
+     The application can use this callback to change the configuration of the view (for example, displaying other pictures in the view) after the video stops playing.
+
+     Deprecated as of v2.4.1. Use LOCAL_VIDEO_STREAM_STATE_STOPPED(0) in the \ref bb::rtc::IRtcEngineEventHandler::onLocalVideoStateChanged "onLocalVideoStateChanged" callback instead.
      */
+    virtual void onVideoStopped() {}
+
+    /** Occurs when the first local video frame is displayed/rendered on the local video view.
+
+    @param width Width (px) of the first local video frame.
+    @param height Height (px) of the first local video frame.
+    @param elapsed Time elapsed (ms) from the local user calling the \ref IRtcEngine::joinChannel "joinChannel" method until the SDK triggers this callback.
+    If you call the \ref IRtcEngine::startPreview "startPreview" method  before calling the *joinChannel* method, then @p elapsed is the time elapsed from calling the *startPreview* method until the SDK triggers this callback.
+    */
     virtual void onFirstLocalVideoFrame(int width, int height, int elapsed) {
-        // Placeholder; actual implementation would use width, height, and elapsed.
         (void)width;
         (void)height;
         (void)elapsed;
     }
 
-    /**
-     * Invoked when the first remote video frame is rendered.
+    /** Occurs when the first remote video frame is received and decoded.
      *
-     * @param uid The remote user's ID who is sending the video stream.
-     * @param width Width of the video frame in pixels.
-     * @param height Height of the video stream in pixels.
-     * @param elapsed Time in milliseconds from the local user joining the channel until this callback.
+     * @deprecated
+     * This callback is deprecated and replaced by the
+     * \ref onRemoteVideoStateChanged() "onRemoteVideoStateChanged" callback
+     * with the following parameters:
+     * - #REMOTE_VIDEO_STATE_STARTING (1)
+     * - #REMOTE_VIDEO_STATE_DECODING (2)
+     *
+     * This callback is triggered in either of the following scenarios:
+     *
+     * - The remote user joins the channel and sends the video stream.
+     * - The remote user stops sending the video stream and re-sends it after
+     * 15 seconds. Reasons for such an interruption include:
+     *  - The remote user leaves the channel.
+     *  - The remote user drops offline.
+     *  - The remote user calls the
+     * \ref bb::rtc::IRtcEngine::muteLocalVideoStream "muteLocalVideoStream"
+     *  method to stop sending the video stream.
+     *  - The remote user calls the
+     * \ref bb::rtc::IRtcEngine::disableVideo "disableVideo" method to
+     * disable video.
+     *
+     * The application can configure the user view settings in this callback.
+     *
+     * @param uid User ID of the remote user sending the video stream.
+     * @param width Width (px) of the video stream.
+     * @param height Height (px) of the video stream.
+     * @param elapsed Time elapsed (ms) from the local user calling the
+     * \ref IRtcEngine::joinChannel "joinChannel" method until the SDK
+     * triggers this callback.
      */
+    virtual void onFirstRemoteVideoDecoded(uid_t uid, int width, int height, int elapsed) {
+        (void)uid;
+        (void)width;
+        (void)height;
+        (void)elapsed;
+    }
+
+    /** Occurs when the first remote video frame is rendered.
+
+    The SDK triggers this callback when the first frame of the remote video is displayed in the user's video window. The application can retrieve the time elapsed from a user joining the channel until the first video frame is displayed.
+
+    @param uid User ID of the remote user sending the video stream.
+    @param width Width (px) of the video frame.
+    @param height Height (px) of the video stream.
+    @param elapsed Time elapsed (ms) from the local user calling the \ref IRtcEngine::joinChannel "joinChannel" method until the SDK triggers this callback.
+    */
     virtual void onFirstRemoteVideoFrame(uid_t uid, int width, int height, int elapsed) {
-        // Function body is a placeholder and does not process the parameters.
         (void)uid;
         (void)width;
         (void)height;
         (void)elapsed;
     }
 
-    /**
-     * Signals when a remote user mutes or unmutes their audio stream.
-     *
-     * @param uid The remote user's ID.
-     * @param muted True if the audio stream is muted; false if unmuted.
-     */
-    virtual void onUserMuteAudio(uid_t uid, bool muted) {}
+    /** Occurs when a remote user's audio stream playback pauses/resumes.
 
-    /**
-     * Reports changes in video dimensions or orientation for a specific user.
-     * 
-     * @param uid The user's ID (remote or local with 0 as local).
-     * @param width The new video width in pixels.
-     * @param height The new video height in pixels.
-     * @param rotation The new video rotation in degrees [0, 360).
+    The SDK triggers this callback when the remote user stops or resumes sending the audio stream by calling the \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream" method.
+     @note This callback returns invalid when the number of users in a channel exceeds 20.
+
+     @param uid User ID of the remote user.
+     @param muted Whether the remote user's audio stream is muted/unmuted:
+     - true: Muted.
+     - false: Unmuted.
      */
-    virtual void onVideoSizeChanged(uid_t uid, int width, int height, int rotation) {
+    virtual void onUserMuteAudio(uid_t uid, bool muted) {
         (void)uid;
-        (void)width;
-        (void)height;
-        (void)rotation;
+        (void)muted;
     }
 
-    /**
-     * Called when an audio effect playback finishes.
-     * @param soundId The unique identifier for the audio effect that has finished playing.
+    /** Occurs when a remote user's video stream playback pauses/resumes.
+     *
+     * You can also use the
+     * \ref onRemoteVideoStateChanged() "onRemoteVideoStateChanged" callback
+     * with the following parameters:
+     * - #REMOTE_VIDEO_STATE_STOPPED (0) and
+     * #REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED (5).
+     * - #REMOTE_VIDEO_STATE_DECODING (2) and
+     * #REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED (6).
+     *
+     * The SDK triggers this callback when the remote user stops or resumes
+     * sending the video stream by calling the
+     * \ref bb::rtc::IRtcEngine::muteLocalVideoStream
+     * "muteLocalVideoStream" method.
+     *
+     * @note This callback returns invalid when the number of users in a
+     * channel exceeds 20.
+     *
+     * @param uid User ID of the remote user.
+     * @param muted Whether the remote user's video stream playback is
+     * paused/resumed:
+     * - true: Paused.
+     * - false: Resumed.
      */
-    virtual void onAudioEffectFinished(int soundId){}
+    virtual void onUserMuteVideo(uid_t uid, bool muted) {
+        (void)uid;
+        (void)muted;
+    }
 
-    /**
-     * Notifies the application of a change in the camera's exposure area.
-     * @param x The x-coordinate of the top-left corner of the exposure area.
-     * @param y The y-coordinate of the top-left corner of the exposure area.
-     * @param width The width of the exposure area.
-     * @param height The height of the exposure area.
+    /** Occurs when a specific remote user enables/disables the video
+     * module.
+     *
+     * @deprecated
+     * This callback is deprecated and replaced by the
+     * \ref onRemoteVideoStateChanged() "onRemoteVideoStateChanged" callback
+     * with the following parameters:
+     * - #REMOTE_VIDEO_STATE_STOPPED (0) and
+     * #REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED (5).
+     * - #REMOTE_VIDEO_STATE_DECODING (2) and
+     * #REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED (6).
+     *
+     * Once the video module is disabled, the remote user can only use a
+     * voice call. The remote user cannot send or receive any video from
+     * other users.
+     *
+     * The SDK triggers this callback when the remote user enables or disables
+     * the video module by calling the
+     * \ref bb::rtc::IRtcEngine::enableVideo "enableVideo" or
+     * \ref bb::rtc::IRtcEngine::disableVideo "disableVideo" method.
+     *
+     * @note This callback returns invalid when the number of users in a
+     * channel exceeds 20.
+     *
+     * @param uid User ID of the remote user.
+     * @param enabled Whether the remote user enables/disables the video
+     * module:
+     * - true: Enable. The remote user can enter a video session.
+     * - false: Disable. The remote user can only enter a voice session, and
+     * cannot send or receive any video stream.
      */
-    virtual void onCameraExposureAreaChanged(int x,
-                                             int y,
-                                             int width,
-                                             int height) {}
+    virtual void onUserEnableVideo(uid_t uid, bool enabled) {
+        (void)uid;
+        (void)enabled;
+    }
 
-    /**
-     * Called to notify the application of changes in the state of audio mixing.
-     * @param state The current state of the audio mixing. See AUDIO_MIXING_STATE_TYPE for possible values.
-     * @param errorCode The reason for the state change, if any. See AUDIO_MIXING_REASON_TYPE for possible values.
+    /** Occurs when the audio device state changes.
+
+     This callback notifies the application that the system's audio device state is changed. For example, a headset is unplugged from the device.
+
+     @param deviceId Pointer to the device ID.
+     @param deviceType Device type: #MEDIA_DEVICE_TYPE.
+     @param deviceState Device state: #MEDIA_DEVICE_STATE_TYPE.
      */
-    virtual void onAudioMixingStateChanged(AUDIO_MIXING_STATE_TYPE state, AUDIO_MIXING_REASON_TYPE errorCode) = 0;
+    virtual void onAudioDeviceStateChanged(const char* deviceId, int deviceType, int deviceState) {
+        (void)deviceId;
+        (void)deviceType;
+        (void)deviceState;
+    }
 
-    /**
-     * Called when the first remote audio stream is decoded.
-     * @param uid The user ID of the remote user whose audio stream has been decoded.
-     * @param elapsed The time in milliseconds it took for the first remote audio to be decoded.
+    /** Occurs when the volume of the playback device, microphone, or application changes.
+
+     @param deviceType Device type: #MEDIA_DEVICE_TYPE.
+     @param volume Volume of the device. The value ranges between 0 and 255.
+     @param muted
+     - true: The audio device is muted.
+     - false: The audio device is not muted.
      */
-    virtual void onFirstRemoteAudioDecoded(uid_t uid, int elapsed) {}
+    virtual void onAudioDeviceVolumeChanged(MEDIA_DEVICE_TYPE deviceType, int volume, bool muted) {
+        (void)deviceType;
+        (void)volume;
+        (void)muted;
+    }
 
-    /**
-     * Called when the local video state changes.
-     * @param localVideoState The new state of the local video stream. See LOCAL_VIDEO_STREAM_STATE for possible values.
-     * @param error The error code indicating the cause of the state change, if any. See LOCAL_VIDEO_STREAM_ERROR for possible values.
+    /** **DEPRECATED** Occurs when the camera turns on and is ready to capture the video.
+
+     If the camera fails to turn on, fix the error reported in the \ref IRtcEngineEventHandler::onError "onError" callback.
+
+     Deprecated as of v2.4.1. Use #LOCAL_VIDEO_STREAM_STATE_CAPTURING (1) in the \ref bb::rtc::IRtcEngineEventHandler::onLocalVideoStateChanged "onLocalVideoStateChanged" callback instead.
      */
-    virtual void onLocalVideoStateChanged(
-        LOCAL_VIDEO_STREAM_STATE localVideoState,
-        LOCAL_VIDEO_STREAM_ERROR error){}
+    virtual void onCameraReady() {}
 
-    /**
-     * Called when the camera's focus area is changed.
-     * This event is triggered whenever there is a change in the camera's focus area, which can affect image clarity.
-     * @param x The new focus area's x-coordinate.
-     * @param y The new focus area's y-coordinate.
-     * @param width The new focus area's width.
-     * @param height The new focus area's height.
+    /** Occurs when the camera focus area changes.
+
+     The SDK triggers this callback when the local user changes the camera focus position by calling the setCameraFocusPositionInPreview method.
+
+     @note This callback is for Android and iOS only.
+
+     @param x x coordinate of the changed camera focus area.
+     @param y y coordinate of the changed camera focus area.
+     @param width Width of the changed camera focus area.
+     @param height Height of the changed camera focus area.
      */
     virtual void onCameraFocusAreaChanged(int x, int y, int width, int height) {
         (void)x;
@@ -3388,13 +3890,138 @@ public:
         (void)height;
     }
 
+    /** Occurs when the camera exposure area changes.
+
+    The SDK triggers this callback when the local user changes the camera exposure position by calling the setCameraExposurePosition method.
+
+     @note This callback is for Android and iOS only.
+
+     @param x x coordinate of the changed camera exposure area.
+     @param y y coordinate of the changed camera exposure area.
+     @param width Width of the changed camera exposure area.
+     @param height Height of the changed camera exposure area.
+     */
+    virtual void onCameraExposureAreaChanged(int x, int y, int width, int height) {
+        (void)x;
+        (void)y;
+        (void)width;
+        (void)height;
+    }
+
+    /** Occurs when the audio mixing file playback finishes.
+
+     **DEPRECATED**  use onAudioMixingStateChanged instead.
+
+     You can start an audio mixing file playback by calling the \ref IRtcEngine::startAudioMixing "startAudioMixing" method. The SDK triggers this callback when the audio mixing file playback finishes.
+
+     If the *startAudioMixing* method call fails, an error code returns in the \ref IRtcEngineEventHandler::onError "onError" callback.
+
+     */
+    virtual void onAudioMixingFinished() {
+    }
+
+    /** Occurs when the state of the local user's audio mixing file changes.
+
+    - When the audio mixing file plays, pauses playing, or stops playing, this callback returns 710, 711, or 713 in @p state, and 0 in @p errorCode.
+    - When exceptions occur during playback, this callback returns 714 in @p state and an error in @p errorCode.
+    - If the local audio mixing file does not exist, or if the SDK does not support the file format or cannot access the music file URL, the SDK returns WARN_AUDIO_MIXING_OPEN_ERROR = 701.
+
+    @param state The state code. See #AUDIO_MIXING_STATE_TYPE.
+    @param errorCode The error code. See #AUDIO_MIXING_ERROR_TYPE.
+    */
+    virtual void onAudioMixingStateChanged(AUDIO_MIXING_STATE_TYPE state, AUDIO_MIXING_REASON_TYPE reason){
+    }
+    /** Occurs when a remote user starts audio mixing.
+
+     When a remote user calls \ref IRtcEngine::startAudioMixing "startAudioMixing" to play the background music, the SDK reports this callback.
+     */
+    virtual void onRemoteAudioMixingBegin() {
+    }
+    /** Occurs when a remote user finishes audio mixing.
+     */
+    virtual void onRemoteAudioMixingEnd() {
+    }
+
+    /** Occurs when the local audio effect playback finishes.
+
+     The SDK triggers this callback when the local audio effect file playback finishes.
+
+     @param soundId ID of the local audio effect. Each local audio effect has a unique ID.
+     */
+    virtual void onAudioEffectFinished(int soundId) {
+    }
+
 
     /**
-     * Called when the state of the remote video changes.
-     * @param uid The user ID of the remote user whose video state has changed.
-     * @param state The new state of the remote video. See REMOTE_VIDEO_STATE for possible values.
-     * @param reason The reason for the change in the remote video state. See REMOTE_VIDEO_STATE_REASON for more information.
-     * @param elapsed The time in milliseconds since the local user joined the channel until this callback is triggered.
+     Occurs when the SDK decodes the first remote audio frame for playback.
+
+     This callback is triggered in either of the following scenarios:
+
+     - The remote user joins the channel and sends the audio stream.
+     - The remote user stops sending the audio stream and re-sends it after 15 seconds. Reasons for such an interruption include:
+         - The remote user leaves channel.
+         - The remote user drops offline.
+         - The remote user calls the \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream" method to stop sending the local audio stream.
+         - The remote user calls the \ref bb::rtc::IRtcEngine::disableAudio "disableAudio" method to disable audio.
+
+     @param uid User ID of the remote user sending the audio stream.
+     @param elapsed Time elapsed (ms) from the local user calling the \ref IRtcEngine::joinChannel "joinChannel" method until the SDK triggers this callback.
+     */
+    virtual void onFirstRemoteAudioDecoded(uid_t uid, int elapsed) {
+        (void)uid;
+        (void)elapsed;
+    }
+
+    /** Occurs when the video device state changes.
+
+     @note On a Windows device with an external camera for video capturing, the video disables once the external camera is unplugged.
+
+     @param deviceId Pointer to the device ID of the video device that changes state.
+     @param deviceType Device type: #MEDIA_DEVICE_TYPE.
+     @param deviceState Device state: #MEDIA_DEVICE_STATE_TYPE.
+     */
+    virtual void onVideoDeviceStateChanged(const char* deviceId, int deviceType, int deviceState) {
+        (void)deviceId;
+        (void)deviceType;
+        (void)deviceState;
+    }
+
+    /** Occurs when the local video stream state changes.
+
+     This callback indicates the state of the local video stream, including camera capturing and video encoding, and allows you to troubleshoot issues when exceptions occur.
+
+     @note For some device models, the SDK will not trigger this callback when the state of the local video changes while the local video capturing device is in use, so you have to make your own timeout judgment.
+
+     @param localVideoState State type #LOCAL_VIDEO_STREAM_STATE. When the state is LOCAL_VIDEO_STREAM_STATE_FAILED (3), see the `error` parameter for details.
+     @param error The detailed error information: #LOCAL_VIDEO_STREAM_ERROR.
+     */
+    virtual void onLocalVideoStateChanged(LOCAL_VIDEO_STREAM_STATE localVideoState, LOCAL_VIDEO_STREAM_ERROR error) {
+        (void)localVideoState;
+        (void)error;
+    }
+
+    /** Occurs when the video size or rotation of a specified user changes.
+
+     @param uid User ID of the remote user or local user (0) whose video size or rotation changes.
+     @param width New width (pixels) of the video.
+     @param height New height (pixels) of the video.
+     @param rotation New rotation of the video [0 to 360).
+     */
+    virtual void onVideoSizeChanged(uid_t uid, int width, int height, int rotation) {
+        (void)uid;
+        (void)width;
+        (void)height;
+        (void)rotation;
+    }
+    /** Occurs when the remote video state changes.
+     *
+     * @param uid ID of the remote user whose video state changes.
+     * @param state State of the remote video. See #REMOTE_VIDEO_STATE.
+     * @param reason The reason of the remote video state change. See
+     * #REMOTE_VIDEO_STATE_REASON.
+     * @param elapsed Time elapsed (ms) from the local user calling the
+     * \ref bb::rtc::IRtcEngine::joinChannel "joinChannel" method until the
+     * SDK triggers this callback.
      */
     virtual void onRemoteVideoStateChanged(uid_t uid, REMOTE_VIDEO_STATE state, REMOTE_VIDEO_STATE_REASON reason, int elapsed) {
         (void)uid;
@@ -3403,13 +4030,48 @@ public:
         (void)elapsed;
     }
 
-    /**
-     * Called when the local user receives a data stream message from a remote user within five seconds.
-     * @param uid The User ID of the remote user who sent the message.
-     * @param streamId The ID of the data stream.
-     * @param data A pointer to the data received.
-     * @param length The length of the data in bytes.
+    /** Occurs when a specified remote user enables/disables the local video
+     * capturing function.
+     *
+     * @deprecated
+     * This callback is deprecated and replaced by the
+     * \ref onRemoteVideoStateChanged() "onRemoteVideoStateChanged" callback
+     * with the following parameters:
+     * - #REMOTE_VIDEO_STATE_STOPPED (0) and
+     * #REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED (5).
+     * - #REMOTE_VIDEO_STATE_DECODING (2) and
+     * #REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED (6).
+     *
+     * This callback is only applicable to the scenario when the user only
+     * wants to watch the remote video without sending any video stream to the
+     * other user.
+     *
+     * The SDK triggers this callback when the remote user resumes or stops
+     * capturing the video stream by calling the
+     * \ref bb::rtc::IRtcEngine::enableLocalVideo "enableLocalVideo" method.
+     *
+     * @param uid User ID of the remote user.
+     * @param enabled Whether the specified remote user enables/disables the
+     * local video capturing function:
+     * - true: Enable. Other users in the channel can see the video of this
+     * remote user.
+     * - false: Disable. Other users in the channel can no longer receive the
+     * video stream from this remote user, while this remote user can still
+     * receive the video streams from other users.
      */
+    virtual void onUserEnableLocalVideo(uid_t uid, bool enabled) {
+        (void)uid;
+        (void)enabled;
+    }
+
+    /** Occurs when the local user receives the data stream from the remote user within five seconds.
+
+    The SDK triggers this callback when the local user receives the stream message that the remote user sends by calling the \ref bb::rtc::IRtcEngine::sendStreamMessage "sendStreamMessage" method.
+    @param uid User ID of the remote user sending the message.
+    @param streamId Stream ID.
+    @param data Pointer to the data received by the local user.
+    @param length Length of the data in bytes.
+    */
     virtual void onStreamMessage(uid_t uid, int streamId, const char* data, size_t length) {
         (void)uid;
         (void)streamId;
@@ -3417,13 +4079,14 @@ public:
         (void)length;
     }
 
-    /**
-     * Called when the local user fails to receive a data stream message from a remote user within five seconds.
-     * @param uid The User ID of the remote user who attempted to send the message.
-     * @param streamId The ID of the data stream.
-     * @param code The error code. See ERROR_CODE_TYPE for possible values.
-     * @param missed The number of messages that were not received.
-     * @param cached The number of messages cached while the data stream was interrupted.
+    /** Occurs when the local user does not receive the data stream from the remote user within five seconds.
+
+     The SDK triggers this callback when the local user fails to receive the stream message that the remote user sends by calling the \ref bb::rtc::IRtcEngine::sendStreamMessage "sendStreamMessage" method.
+     @param uid User ID of the remote user sending the message.
+     @param streamId Stream ID.
+     @param code Error code: #ERROR_CODE_TYPE.
+     @param missed Number of lost messages.
+     @param cached Number of incoming cached messages when the data stream is interrupted.
      */
     virtual void onStreamMessageError(uid_t uid, int streamId, int code, int missed, int cached) {
         (void)uid;
@@ -3433,190 +4096,411 @@ public:
         (void)cached;
     }
 
-    // ... Additional methods with updated comments ...
-
-    /**
-     * Called when the media engine successfully loads.
-     */
+    /** Occurs when the media engine loads.*/
     virtual void onMediaEngineLoadSuccess() {
     }
-
-    /**
-     * Called when the media engine call starts successfully.
-     */
+    /** Occurs when the media engine call starts.*/
     virtual void onMediaEngineStartCallSuccess() {
     }
 
-    /**
-     * Called when the state of the media stream relay changes.
-     * @param state The new state of the media stream relay. See CHANNEL_MEDIA_RELAY_STATE for possible values.
-     * @param code The error code associated with the state change. See CHANNEL_MEDIA_RELAY_ERROR for possible values.
+    /** Occurs when the state of the media stream relay changes.
+     *
+     * The SDK returns the state of the current media relay with any error
+     * message.
+     *
+     * @param state The state code in #CHANNEL_MEDIA_RELAY_STATE.
+     * @param code The error code in #CHANNEL_MEDIA_RELAY_ERROR.
      */
-    virtual void onChannelMediaRelayStateChanged(CHANNEL_MEDIA_RELAY_STATE state, CHANNEL_MEDIA_RELAY_ERROR code) {
+    virtual void onChannelMediaRelayStateChanged(CHANNEL_MEDIA_RELAY_STATE state,CHANNEL_MEDIA_RELAY_ERROR code) {
     }
 
-    /**
-     * Reports events that occur during the media stream relay.
-     * @param code The event code that indicates the type of event that occurred. See CHANNEL_MEDIA_RELAY_EVENT for possible values.
+    /** Reports events during the media stream relay.
+     *
+     * @param code The event code in #CHANNEL_MEDIA_RELAY_EVENT.
      */
     virtual void onChannelMediaRelayEvent(CHANNEL_MEDIA_RELAY_EVENT code) {
     }
 
+    /** Occurs when the engine sends the first local audio frame.
 
-    /**
-     * Called when the engine sends the first local audio frame.
-     * @param elapsed The time in milliseconds elapsed from the local user calling joinChannel until this callback is triggered.
-     */
+    @param elapsed Time elapsed (ms) from the local user calling \ref IRtcEngine::joinChannel "joinChannel" until the SDK triggers this callback.
+    */
     virtual void onFirstLocalAudioFrame(int elapsed) {
         (void)elapsed;
     }
 
-    /**
-     * Called when the engine receives the first audio frame from a specific remote user.
-     * @param uid The user ID of the remote user.
-     * @param elapsed The time in milliseconds elapsed from the remote user calling joinChannel until this callback is triggered.
-     */
+    /** Occurs when the engine receives the first audio frame from a specific remote user.
+
+    @param uid User ID of the remote user.
+    @param elapsed Time elapsed (ms) from the remote user calling \ref IRtcEngine::joinChannel "joinChannel" until the SDK triggers this callback.
+    */
     virtual void onFirstRemoteAudioFrame(uid_t uid, int elapsed) {
         (void)uid;
         (void)elapsed;
     }
 
-    /**
-     * Called when the state of the RTMP streaming changes.
-     * This callback is triggered by the SDK to report the result of the local user calling addPublishStreamUrl or removePublishStreamUrl.
-     * @param url The RTMP URL address.
-     * @param state The current RTMP streaming state. See RTMP_STREAM_PUBLISH_STATE for possible values.
-     * @param errCode The detailed error information for the streaming. See RTMP_STREAM_PUBLISH_ERROR for possible values.
-     */
-    virtual void onRtmpStreamingStateChanged(const char *url, RTMP_STREAM_PUBLISH_STATE state, RTMP_STREAM_PUBLISH_ERROR errCode) {
-        (void)url;
-        (void)state;
-        (void)errCode;
-    }
+  /**
+   Occurs when the state of the RTMP streaming changes.
 
-    /**
-     * Reports the result of calling the addPublishStreamUrl method for CDN live streaming.
-     * @param url The RTMP URL address to which the stream is being published.
-     * @param error The error code. See ERROR_CODE_TYPE for possible values. An error code of #ERR_OK (0) indicates success.
+   The SDK triggers this callback to report the result of the local user calling the \ref bb::rtc::IRtcEngine::addPublishStreamUrl "addPublishStreamUrl" or \ref bb::rtc::IRtcEngine::removePublishStreamUrl "removePublishStreamUrl" method.
+
+   This callback indicates the state of the RTMP streaming. When exceptions occur, you can troubleshoot issues by referring to the detailed error descriptions in the *errCode* parameter.
+
+   @param url The RTMP URL address.
+   @param state The RTMP streaming state. See: #RTMP_STREAM_PUBLISH_STATE.
+   @param errCode The detailed error information for streaming. See: #RTMP_STREAM_PUBLISH_ERROR.
+   */
+  virtual void onRtmpStreamingStateChanged(const char *url, RTMP_STREAM_PUBLISH_STATE state, RTMP_STREAM_PUBLISH_ERROR errCode) {
+    (void) url;
+    (void) state;
+    (void) errCode;
+  }
+
+    /** Reports the result of calling the \ref IRtcEngine::addPublishStreamUrl "addPublishStreamUrl" method. (CDN live only.)
+
+     @param url The RTMP URL address.
+     @param error Error code: #ERROR_CODE_TYPE. Main errors include:
+     - #ERR_OK (0): The publishing succeeds.
+     - #ERR_FAILED (1): The publishing fails.
+     - #ERR_INVALID_ARGUMENT (2): Invalid argument used. If, for example, you did not call \ref bb::rtc::IRtcEngine::setLiveTranscoding "setLiveTranscoding" to configure LiveTranscoding before calling \ref bb::rtc::IRtcEngine::addPublishStreamUrl "addPublishStreamUrl", the SDK reports #ERR_INVALID_ARGUMENT.
+     - #ERR_TIMEDOUT (10): The publishing timed out.
+     - #ERR_ALREADY_IN_USE (19): The chosen URL address is already in use for CDN live streaming.
+     - #ERR_RESOURCE_LIMITED (22): The backend system does not have enough resources for the CDN live streaming.
+     - #ERR_ENCRYPTED_STREAM_NOT_ALLOWED_PUBLISH (130): You cannot publish an encrypted stream.
+     - #ERR_PUBLISH_STREAM_CDN_ERROR (151)
+     - #ERR_PUBLISH_STREAM_NUM_REACH_LIMIT (152)
+     - #ERR_PUBLISH_STREAM_NOT_AUTHORIZED (153)
+     - #ERR_PUBLISH_STREAM_INTERNAL_SERVER_ERROR (154)
+     - #ERR_PUBLISH_STREAM_FORMAT_NOT_SUPPORTED (156)
      */
     virtual void onStreamPublished(const char *url, int error) {
         (void)url;
         (void)error;
     }
+    /** Reports the result of calling the \ref bb::rtc::IRtcEngine::removePublishStreamUrl "removePublishStreamUrl" method. (CDN live only.)
 
-    /**
-     * Reports the result of calling the removePublishStreamUrl method for CDN live streaming.
-     * @param url The RTMP URL address from which the stream has been removed.
+     This callback indicates whether you have successfully removed an RTMP stream from the CDN.
+
+     @param url The RTMP URL address.
      */
     virtual void onStreamUnpublished(const char *url) {
         (void)url;
     }
-
-    /**
-     * Called when the publisher's transcoding settings are updated.
-     * The SDK triggers this callback to report update information to the local host after changes to the LiveTranscoding class.
-     * @note The SDK does not trigger this callback if setLiveTranscoding is called for the first time.
+    /** Occurs when the publisher's transcoding is updated.
+     *
+     * When the `LiveTranscoding` class in the \ref bb::rtc::IRtcEngine::setLiveTranscoding "setLiveTranscoding" method updates, the SDK triggers the `onTranscodingUpdated` callback to report the update information to the local host.
+     *
+     * @note If you call the `setLiveTranscoding` method to set the LiveTranscoding class for the first time, the SDK does not trigger the `onTranscodingUpdated` callback.
+     *
      */
     virtual void onTranscodingUpdated() {
     }
+    /** Occurs when a voice or video stream URL address is added to a live broadcast.
 
-    /**
-     * Called when a voice or video stream URL is added to a live broadcast.
-     * @param url The URL address of the externally injected stream.
-     * @param uid The user ID associated with the stream.
-     * @param status The status of the injected stream. See INJECT_STREAM_STATUS for possible values.
-     */
+    @param url Pointer to the URL address of the externally injected stream.
+    @param uid User ID.
+    @param status State of the externally injected stream: #INJECT_STREAM_STATUS.
+    */
     virtual void onStreamInjectedStatus(const char* url, uid_t uid, int status) {
         (void)url;
         (void)uid;
         (void)status;
     }
 
-    /**
-     * Called when the local audio route changes.
-     * The SDK triggers this callback when the audio route is switched to an earpiece, speakerphone, headset, or Bluetooth device.
-     * @note This callback is for Android and iOS only.
-     * @param routing The new audio output routing. See AUDIO_ROUTE_TYPE for possible values.
+    /** Occurs when the local audio route changes.
+
+     The SDK triggers this callback when the local audio route switches to an earpiece, speakerphone, headset, or Bluetooth device.
+
+     @note This callback is for Android and iOS only.
+
+     @param routing Audio output routing. See: #AUDIO_ROUTE_TYPE.
      */
     virtual void onAudioRouteChanged(AUDIO_ROUTE_TYPE routing) {
         (void)routing;
     }
 
+   /** Occurs when the locally published media stream falls back to an audio-only stream due to poor network conditions or switches back to the video after the network conditions improve.
 
+    If you call \ref IRtcEngine::setLocalPublishFallbackOption "setLocalPublishFallbackOption" and set *option* as #STREAM_FALLBACK_OPTION_AUDIO_ONLY, the SDK triggers this callback when the locally published stream falls back to audio-only mode due to poor uplink conditions, or when the audio stream switches back to the video after the uplink network condition improves.
 
-    /**
-     * Called when the locally published media stream falls back to audio-only due to poor network conditions or switches back to video when the network improves.
-     * @param isFallbackOrRecover true if the stream has fallen back to audio-only; false if it has switched back to video.
-     */
+    @param isFallbackOrRecover Whether the locally published stream falls back to audio-only or switches back to the video:
+    - true: The locally published stream falls back to audio-only due to poor network conditions.
+    - false: The locally published stream switches back to the video after the network conditions improve.
+    */
     virtual void onLocalPublishFallbackToAudioOnly(bool isFallbackOrRecover) {
         (void)isFallbackOrRecover;
     }
 
-    /**
-     * Called when the remote media stream falls back to audio-only due to poor network conditions or switches back to video when the network improves.
-     * @param uid The user ID of the remote user whose media stream has changed.
-     * @param isFallbackOrRecover true if the remote stream has fallen back to audio-only; false if it has switched back to video.
+    /** Occurs when the remote media stream falls back to audio-only stream
+     * due to poor network conditions or switches back to the video stream
+     * after the network conditions improve.
+     *
+     * If you call
+     * \ref IRtcEngine::setRemoteSubscribeFallbackOption
+     * "setRemoteSubscribeFallbackOption" and set
+     * @p option as #STREAM_FALLBACK_OPTION_AUDIO_ONLY, the SDK triggers this
+     * callback when the remote media stream falls back to audio-only mode due
+     * to poor uplink conditions, or when the remote media stream switches
+     * back to the video after the uplink network condition improves.
+     *
+     * @note Once the remote media stream switches to the low stream due to
+     * poor network conditions, you can monitor the stream switch between a
+     * high and low stream in the RemoteVideoStats callback.
+     *
+     * @param uid ID of the remote user sending the stream.
+     * @param isFallbackOrRecover Whether the remotely subscribed media stream
+     * falls back to audio-only or switches back to the video:
+     * - true: The remotely subscribed media stream falls back to audio-only
+     * due to poor network conditions.
+     * - false: The remotely subscribed media stream switches back to the
+     * video stream after the network conditions improved.
      */
     virtual void onRemoteSubscribeFallbackToAudioOnly(uid_t uid, bool isFallbackOrRecover) {
         (void)uid;
         (void)isFallbackOrRecover;
     }
 
-    /**
-     * Deprecated: Replaced by the onRemoteVideoStats callback.
-     * Called to report the transport-layer statistics of each remote video stream, such as packet loss rate and network delay.
-     * @param uid The user ID of the remote user sending the video packet.
-     * @param delay The network delay from when the video packet was sent to when it was received.
-     * @param lost The packet loss rate of the received video packet.
-     * @param rxKBitRate The received bitrate of the received video packet.
+    /** Reports the transport-layer statistics of each remote audio stream.
+     *
+     * @deprecated
+     * This callback is deprecated and replaced by the
+     * \ref onRemoteAudioStats() "onRemoteAudioStats" callback.
+     *
+     * This callback reports the transport-layer statistics, such as the
+     * packet loss rate and network time delay, once every two seconds after
+     * the local user receives an audio packet from a remote user.
+     *
+     * @param uid  User ID of the remote user sending the audio packet.
+     * @param delay Network time delay (ms) from the remote user sending the
+     * audio packet to the local user.
+     * @param lost Packet loss rate (%) of the audio packet sent from the
+     * remote user.
+     * @param rxKBitRate  Received bitrate (Kbps) of the audio packet sent
+     * from the remote user.
      */
-    virtual void onRemoteVideoTransportStats(uid_t uid, unsigned short delay, unsigned short lost, unsigned short rxKBitRate) {
+    virtual void onRemoteAudioTransportStats(
+        uid_t uid, unsigned short delay, unsigned short lost,
+        unsigned short rxKBitRate) {
         (void)uid;
         (void)delay;
         (void)lost;
         (void)rxKBitRate;
     }
 
-    /**
-     * Deprecated: Use onLocalAudioStateChanged with LOCAL_AUDIO_STREAM_STATE_STOPPED or LOCAL_AUDIO_STREAM_STATE_RECORDING.
-     * Called when the local audio capturing is enabled or disabled.
-     * @param enabled true if the microphone is enabled; false if it is disabled.
+    /** Reports the transport-layer statistics of each remote video stream.
+     *
+     * @deprecated
+     * This callback is deprecated and replaced by the
+     * \ref onRemoteVideoStats() "onRemoteVideoStats" callback.
+     *
+     * This callback reports the transport-layer statistics, such as the
+     * packet loss rate and network time delay, once every two seconds after
+     * the local user receives a video packet from a remote user.
+     *
+     * @param uid User ID of the remote user sending the video packet.
+     * @param delay Network time delay (ms) from the remote user sending the
+     * video packet to the local user.
+     * @param lost Packet loss rate (%) of the video packet sent from the
+     * remote user.
+     * @param rxKBitRate Received bitrate (Kbps) of the video packet sent
+     * from the remote user.
+     */
+    virtual void onRemoteVideoTransportStats(
+        uid_t uid, unsigned short delay, unsigned short lost,
+        unsigned short rxKBitRate) {
+        (void)uid;
+        (void)delay;
+        (void)lost;
+        (void)rxKBitRate;
+    }
+
+    /** **DEPRECATED** Occurs when the microphone is enabled/disabled.
+     *
+     * The \ref onMicrophoneEnabled() "onMicrophoneEnabled" callback is
+     * deprecated. Use #LOCAL_AUDIO_STREAM_STATE_STOPPED (0) or
+     * #LOCAL_AUDIO_STREAM_STATE_RECORDING (1) in the
+     * \ref onLocalAudioStateChanged() "onLocalAudioStateChanged" callback
+     * instead.
+     *
+     * The SDK triggers this callback when the local user resumes or stops
+     * capturing the local audio stream by calling the
+     * \ref bb::rtc::IRtcEngine::enableLocalAudio "enbaleLocalAudio" method.
+     *
+     * @param enabled Whether the microphone is enabled/disabled:
+     * - true: Enabled.
+     * - false: Disabled.
      */
     virtual void onMicrophoneEnabled(bool enabled) {
         (void)enabled;
     }
+    /** Occurs when the connection state between the SDK and the server changes.
 
-    /**
-     * Called when the connection state between the SDK and the server changes.
-     * @param state The new connection state. See CONNECTION_STATE_TYPE for possible values.
-     * @param reason The reason for the connection state change. See CONNECTION_CHANGED_REASON_TYPE for possible values.
+     @param state See #CONNECTION_STATE_TYPE.
+     @param reason See #CONNECTION_CHANGED_REASON_TYPE.
      */
-    virtual void onConnectionStateChanged(CONNECTION_STATE_TYPE state, CONNECTION_CHANGED_REASON_TYPE reason) {
-        (void)state;
-        (void)reason;
+    virtual void onConnectionStateChanged(
+        CONNECTION_STATE_TYPE state, CONNECTION_CHANGED_REASON_TYPE reason) {
+      (void)state;
+      (void)reason;
     }
 
-    /**
-     * Called when the local network type changes, indicating if the network connection is interrupted due to a network type change or poor conditions.
-     * @param type The new local network type. See NETWORK_TYPE for possible values.
+    /** Occurs when the local network type changes.
+
+    When the network connection is interrupted, this callback indicates whether the interruption is caused by a network type change or poor network conditions.
+
+     @param type See #NETWORK_TYPE.
      */
     virtual void onNetworkTypeChanged(NETWORK_TYPE type) {
-        (void)type;
+      (void)type;
     }
+    /** Occurs when the local user successfully registers a user account by calling the \ref bb::rtc::IRtcEngine::registerLocalUserAccount "registerLocalUserAccount" method or joins a channel by calling the \ref bb::rtc::IRtcEngine::joinChannelWithUserAccount "joinChannelWithUserAccount" method.This callback reports the user ID and user account of the local user.
 
-    /**
-     * Called when the SDK chorus starts.
+     @param uid The ID of the local user.
+     @param userAccount The user account of the local user.
      */
-    virtual void onChorusStart() {
+    virtual void onLocalUserRegistered(uid_t uid, const char* userAccount) {
+      (void)uid;
+      (void)userAccount;
     }
+    /** Occurs when the SDK gets the user ID and user account of the remote user.
 
-    /**
-     * Called when the SDK chorus stops.
+     After a remote user joins the channel, the SDK gets the UID and user account of the remote user,
+     caches them in a mapping table object (`userInfo`), and triggers this callback on the local client.
+
+     @param uid The ID of the remote user.
+     @param info The `UserInfo` object that contains the user ID and user account of the remote user.
      */
-    virtual void onChorusStop() {
+    virtual void onUserInfoUpdated(uid_t uid, const UserInfo& info) {
+      (void)uid;
+      (void)info;
+    }
+    /** Occurs when the SDK chorus start.
+
+    */
+    virtual void onChorusStart(){
+
+    }
+    /** Occurs when the SDK chorus stop.
+
+    */
+    virtual void onChorusStop(){
+
     }
 
-// ... Additional methods with updated comments ...
+    /** Remote SEI information callback.
+
+    @param uid The ID of the send user.
+    @param data SEI content
+    @param length SEI content length
+    */
+    virtual void onRecvSEI(uid_t uid, const char* data, int length){}
+};
+
+/**
+* Video device collection methods.
+
+ The IVideoDeviceCollection interface class retrieves the video device information.
+*/
+class IVideoDeviceCollection
+{
+protected:
+    virtual ~IVideoDeviceCollection(){}
+public:
+    /** Retrieves the total number of the indexed video devices in the system.
+
+    @return Total number of the indexed video devices:
+    */
+    virtual int getCount() = 0;
+
+    /** Retrieves a specified piece of information about an indexed video device.
+
+     @param index The specified index of the video device that must be less than the return value of \ref IVideoDeviceCollection::getCount "getCount".
+     @param deviceName Pointer to the video device name.
+     @param deviceId Pointer to the video device ID.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int getDevice(int index, char deviceName[MAX_DEVICE_ID_LENGTH], char deviceId[MAX_DEVICE_ID_LENGTH]) = 0;
+
+    /** Sets the device with the device ID.
+
+     @param deviceId Device ID of the device.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setDevice(const char deviceId[MAX_DEVICE_ID_LENGTH]) = 0;
+
+    /** Releases all IVideoDeviceCollection resources.
+    */
+    virtual void release() = 0;
+};
+
+/** Video device management methods.
+
+ The IVideoDeviceManager interface class tests the video device interfaces. Instantiate an AVideoDeviceManager class to retrieve an IVideoDeviceManager interface.
+*/
+class IVideoDeviceManager
+{
+protected:
+    virtual ~IVideoDeviceManager(){}
+public:
+
+    /** Enumerates the video devices.
+
+     This method returns an IVideoDeviceCollection object including all video devices in the system. With the IVideoDeviceCollection object, the application can enumerate the video devices. The application must call the \ref IVideoDeviceCollection::release "release" method to release the returned object after using it.
+
+     @return
+     - An IVideoDeviceCollection object including all video devices in the system: Success.
+     - NULL: Failure.
+     */
+    virtual IVideoDeviceCollection* enumerateVideoDevices() = 0;
+
+    /** Starts the video-capture device test.
+
+     This method tests whether the video-capture device works properly. Before calling this method, ensure that you have already called the \ref IRtcEngine::enableVideo "enableVideo" method, and the window handle (*hwnd*) parameter is valid.
+
+     @param hwnd The window handle used to display the screen.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int startDeviceTest(view_t hwnd) = 0;
+
+    /** Stops the video-capture device test.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int stopDeviceTest() = 0;
+
+    /** Sets a device with the device ID.
+
+     @param deviceId Pointer to the video-capture device ID. Call the \ref IVideoDeviceManager::enumerateVideoDevices "enumerateVideoDevices" method to retrieve it.
+
+     @note Plugging or unplugging the device does not change the device ID.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setDevice(const char deviceId[MAX_DEVICE_ID_LENGTH]) = 0;
+
+    /** Retrieves the video-capture device that is in use.
+
+     @param deviceId Pointer to the video-capture device ID.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int getDevice(char deviceId[MAX_DEVICE_ID_LENGTH]) = 0;
+
+    /** Releases all IVideoDeviceManager resources.
+    */
+    virtual void release() = 0;
 };
 
 /** Audio device collection methods.
@@ -3775,7 +4659,7 @@ public:
      */
     virtual int setRecordingDevice(const char deviceId[MAX_DEVICE_ID_LENGTH]) = 0;
 
-    
+
   /**
    * Sets the audio playback device used by the SDK to follow the system default audio playback device (for macOS and Windows only).
    *
@@ -4026,6 +4910,77 @@ struct RtcEngineContext
     {}
 };
 
+/** Definition of IMetadataObserver
+*/
+class IMetadataObserver
+{
+public:
+    /** Metadata type of the observer.
+     @note We only support video metadata for now.
+     */
+    enum METADATA_TYPE
+    {
+        /** -1: the metadata type is unknown.
+         */
+        UNKNOWN_METADATA = -1,
+        /** 0: the metadata type is video.
+         */
+        VIDEO_METADATA = 0,
+    };
+
+    struct Metadata
+    {
+        /** The User ID.
+
+         - For the receiver: the ID of the user who sent the metadata.
+         - For the sender: ignore it.
+         */
+        unsigned int uid;
+        /** Buffer size of the sent or received Metadata.
+         */
+        unsigned int size;
+        /** Buffer address of the sent or received Metadata.
+         */
+        unsigned char *buffer;
+        /** Time statmp of the frame following the metadata.
+         */
+        long long timeStampMs;
+    };
+
+    virtual ~IMetadataObserver() {}
+
+    /** Occurs when the SDK requests the maximum size of the Metadata.
+
+     The metadata includes the following parameters:
+     - `uid`: ID of the user who sends the metadata.
+     - `size`: The size of the sent or received metadata.
+     - `buffer`: The sent or received metadata.
+     - `timeStampMs`: The timestamp of the metadata.
+
+     The SDK triggers this callback after you successfully call the \ref bb::rtc::IRtcEngine::registerMediaMetadataObserver "registerMediaMetadataObserver" method. You need to specify the maximum size of the metadata in the return value of this callback.
+
+     @return The maximum size of the buffer of the metadata that you want to use. The highest value is 1024 bytes. Ensure that you set the return value.
+     */
+    virtual int getMaxMetadataSize() = 0;
+
+    /** Occurs when the SDK is ready to receive and send metadata.
+
+     @note Ensure that the size of the metadata does not exceed the value set in the \ref bb::rtc::IMetadataObserver::getMaxMetadataSize "getMaxMetadataSize" callback.
+
+     @param metadata The Metadata to be sent.
+     @return
+     - true:  Send.
+     - false: Do not send.
+     */
+    virtual bool onReadyToSendMetadata(Metadata &metadata) = 0;
+
+    /** Occurs when the local user receives the metadata.
+
+     @param metadata The received Metadata.
+     */
+    virtual void onMetadataReceived(const Metadata &metadata) = 0;
+};
+
 /** The channel media options.
  */
 struct ChannelMediaOptions {
@@ -4075,1533 +5030,2673 @@ public:
     virtual ~IRtcEngine() {}
 public:
 
-    /** 
-     * Initializes the Aopa Real-Time Communication (RTC) service.
+    /** Initializes the Aopa service.
      *
-     * **Prerequisite:** This method must be called after \ref bb::rtc::IRtcEngine::createAopaRtcEngine "createAopaRtcEngine",
-     * and before invoking any other APIs to ensure proper setup of the RTC engine.
+     * Ensure that you call the
+     * \ref bb::rtc::IRtcEngine::createAopaRtcEngine
+     * "createAopaRtcEngine" and \ref bb::rtc::IRtcEngine::initialize
+     * "initialize" methods before calling any other API.
      *
-     * @param context A reference to the RTC engine context which holds initialization parameters. Refer to RtcEngineContext for details.
+     * @param context Pointer to the RTC engine context. See RtcEngineContext.
      *
      * @return
-     * - 0: Initialization successful.
-     * - < 0: Initialization failed.
-     *   - `ERR_INVALID_APP_ID (101)`: The provided App ID is invalid. Verify the format.
+     * - 0: Success.
+     * - < 0: Failure.
+     *  - `ERR_INVALID_APP_ID (101)`: The app ID is invalid. Check if it is in the correct format.
      */
     virtual int initialize(const RtcEngineContext& context) = 0;
 
-    /**
-     * Releases all resources associated with the IRtcEngine instance.
-     *
-     * @param sync Determines the mode of operation:
-     * - true: Synchronous release. The function blocks until resource release is complete. Avoid using in SDK callback scopes to prevent deadlock; the SDK may auto-convert to async to bypass deadlock, introducing test delays.
-     * - false: Asynchronous release. Returns immediately without waiting for resource cleanup to finish.
-     *
-     * @note Post-call, avoid immediate removal of the SDK's dynamic library to prevent crashes from the cleanup thread not terminating properly.
+    /** Releases all IRtcEngine resources.
+
+     @param sync
+     - true: (Synchronous call) The result returns after the IRtcEngine resources are released. The application should not call this method in the SDK generated callbacks. Otherwise, the SDK must wait for the callbacks to return to recover the associated IRtcEngine resources, resulting in a deadlock. The SDK automatically detects the deadlock and converts this method into an asynchronous call, causing the test to take additional time.
+     - false: (Asynchronous call) The result returns immediately, even when the IRtcEngine resources have not been released. The SDK releases all resources.
+
+     @note Do not immediately uninstall the SDK's dynamic library after the call, or it may cause a crash due to the SDK clean-up thread not quitting.
      */
     virtual void release(bool sync) = 0;
 
-    /**
-     * Configures the channel profile for the Aopa RtcEngine.
-     *
-     * The RtcEngine optimizes performance based on the specified channel profile,
-     * e.g., emphasizing low latency for voice calls or high video quality for broadcasts.
-     *
-     * @note
-     * - Ensure all participants in a channel use the same profile for optimal real-time communication.
-     * - This method must be invoked before \ref IRtcEngine::joinChannel "joinChannel".
-     *   Once in a channel, the profile cannot be altered.
-     *
-     * @param profile The desired channel profile. Refer to #CHANNEL_PROFILE_TYPE for options.
-     *
-     * @return
-     * - 0: The profile was set successfully.
-     * - < 0: An error occurred.
+    /** Sets the channel profile of the Aopa RtcEngine.
+
+     The Aopa RtcEngine differentiates channel profiles and applies optimization algorithms accordingly.
+     For example, it prioritizes smoothness and low latency for a video call, and prioritizes video quality for a video broadcast.
+
+     @note
+     - To ensure the quality of real-time communication, we recommend that all users in a channel use the same channel profile.
+     - Call this method before calling \ref IRtcEngine::joinChannel "joinChannel" . You cannot set the channel profile once you have joined the channel.
+
+     @param profile The channel profile of the Aopa RtcEngine. See #CHANNEL_PROFILE_TYPE
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setChannelProfile(CHANNEL_PROFILE_TYPE profile) = 0;
 
-    /**
-     * Assigns or alters the user role in a live broadcast channel.
-     *
-     * This function allows role switching post-channel join, applicable for live streaming scenarios.
-     *
-     * In a live broadcast, a successful role change via \ref bb::rtc::IRtcEngine::setClientRole "setClientRole"
-     * will notify clients via these callbacks:
-     * - Local client: \ref bb::rtc::IRtcEngineEventHandler::onClientRoleChanged "onClientRoleChanged".
-     * - Remote clients: \ref bb::rtc::IRtcEngineEventHandler::onUserJoined "onUserJoined" or
-     *   \ref bb::rtc::IRtcEngineEventHandler::onUserOffline "onUserOffline" (when becoming an audience).
-     *
-     * @note Restricted to the Live Broadcast profile.
-     *
-     * @param role The new role for the user. See #CLIENT_ROLE_TYPE for definitions.
-     *
-     * @return
-     * - 0: Role updated successfully.
-     * - < 0: Update failed.
+    /** Clear the local audio cache.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int clearCache() = 0;
+
+    /** Sets the storage size (MB).
+     @param maxCacheSize Maximum size (MB) of the local audio cache. The default storage size is 1024 MB.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setMaxCacheSize(int maxCacheSize) = 0;
+
+    /** Sets the role of the user, such as a host or an audience (default), before joining a channel in a live broadcast.
+
+     This method can be used to switch the user role in a live broadcast after the user joins a channel.
+
+     In the Live Broadcast profile, when a user switches user roles after joining a channel, a successful \ref bb::rtc::IRtcEngine::setClientRole "setClientRole" method call triggers the following callbacks:
+     - The local client: \ref bb::rtc::IRtcEngineEventHandler::onClientRoleChanged "onClientRoleChanged"
+     - The remote client: \ref bb::rtc::IRtcEngineEventHandler::onUserJoined "onUserJoined" or \ref bb::rtc::IRtcEngineEventHandler::onUserOffline "onUserOffline" (BECOME_AUDIENCE)
+
+     @note
+     This method applies only to the Live-broadcast profile.
+
+     @param role Sets the role of the user. See #CLIENT_ROLE_TYPE.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setClientRole(CLIENT_ROLE_TYPE role) = 0;
 
-    /**
-     * Designates the KTV chorus role for the user.
-     *
-     * @note
-     * - Invoke this method after successfully joining a channel.
-     * - Designed for KTV-style applications where synchronized singing is a feature.
-     *
-     * @param role The KTV chorus role to assign. Refer to #CLIENT_ROLE_CHORUS_TYPE.
-     *
-     * @return
-     * - 0: Role set successfully.
-     * - < 0: An error occurred.
+    /** Sets KTV chorus the role of the user
+
+     @note
+     This method after joining the channel.
+
+     @param role Sets KTV chorus the role of the user. See #CLIENT_ROLE_CHORUS_TYPE.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setChorusRole(CLIENT_ROLE_CHORUS_TYPE role) = 0;
 
-    /**
-     * Retrieves the current playing position of the chorus in milliseconds.
-     *
-     * @note
-     * - Should be called after joining a channel with active chorus functionality.
-     *
-     * @return
-     * - >= 0: The current chorus play position in milliseconds.
-     * - < 0: An error occurred or the position could not be retrieved.
+    /** Get the chorus playing position(ms)
+
+     @note
+     This method after joining the channel.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int getChorusPosition() = 0;
 
-        
-    /**
-     * Joins a channel with the specified user ID for audio/video communication.
-     *
-     * Users in the same channel can communicate with each other. To join a channel,
-     * you must first call the \ref IRtcEngine::leaveChannel "leaveChannel" method to exit any
-     * current channel.
-     *
-     * A successful join will trigger the \ref IRtcEngineEventHandler::onJoinChannelSuccess "onJoinChannelSuccess"
-     * callback on the local client and the \ref IRtcEngineEventHandler::onUserJoined "onUserJoined" callback
-     * on remote clients, depending on the user role.
-     *
-     * @note Ensure each user has a unique user ID. The system assigns a user ID if \p uid is set to 0.
-     * @warning Use the same App ID for token generation as used in the \ref IRtcEngine::initialize "initialize" method.
-     *
-     * @param token Pointer to the token string generated by the application server.
-     * @param channelId Pointer to the unique channel name string, with a maximum length of 63 bytes.
-     * @param info Optional additional channel information.
-     * @param uid User ID; must be unique and within the range of 1 to 2^32-1.
-     * @return
-     * - 0: Success
-     * - < 0: Failure (See error codes for details)
+    /** Joins a channel with the user ID.
+
+     Users in the same channel can talk to each other, and multiple users in the same channel can start a group chat. Users with different App IDs cannot call each other.
+
+
+     You must call the \ref IRtcEngine::leaveChannel "leaveChannel" method to exit the current call before entering another channel.
+
+     A successful \ref bb::rtc::IRtcEngine::joinChannel "joinChannel" method call triggers the following callbacks:
+     - The local client: \ref bb::rtc::IRtcEngineEventHandler::onJoinChannelSuccess "onJoinChannelSuccess"
+     - The remote client: \ref bb::rtc::IRtcEngineEventHandler::onUserJoined "onUserJoined" , if the user joining the channel is in the Communication profile, or is a BROADCASTER in the Live Broadcast profile.
+
+     When the connection between the client and Aopa's server is interrupted due to poor network conditions, the SDK tries reconnecting to the server. When the local client successfully rejoins the channel, the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onRejoinChannelSuccess "onRejoinChannelSuccess" callback on the local client.
+
+     @note A channel does not accept duplicate uids, such as two users with the same @p uid. If you set @p uid as 0, the system automatically assigns a @p uid. If you want to join a channel from different devices, ensure that each device has a different uid.
+     @warning Ensure that the App ID used for creating the token is the same App ID used by the \ref IRtcEngine::initialize "initialize" method for initializing the RTC engine. Otherwise, the CDN live streaming may fail.
+
+     @param token Pointer to the token generated by the application server. In most circumstances, a static App ID suffices. For added security, use a Channel Key.
+     - If the user uses a static App ID, *token* is optional and can be set as NULL.
+     - If the user uses a Channel Key, Aopa issues an additional App Certificate for you to generate a user key based on the algorithm and App Certificate for user authentication on the server.
+     @param channelId Pointer to the unique channel name for the Aopa RTC session in the string format smaller than 64 bytes. Supported characters:
+     - The 26 lowercase English letters: a to z
+     - The 26 uppercase English letters: A to Z
+     - The 10 numbers: 0 to 9
+     - The space
+     - "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ","
+     @param info (Optional) Pointer to additional information about the channel. This parameter can be set to NULL or contain channel related information. Other users in the channel will not receive this message.
+     @param uid (Optional) User ID. A 32-bit unsigned integer with a value ranging from 1 to 2<sup>32</sup>-1. The @p uid must be unique. If a @p uid is not assigned (or set to 0), the SDK assigns and returns a @p uid in the \ref IRtcEngineEventHandler::onJoinChannelSuccess "onJoinChannelSuccess" callback. Your application must record and maintain the returned *uid* since the SDK does not do so.
+
+     @return
+     - 0: Success.
+     - < 0: Failure:
+        - #ERR_INVALID_ARGUMENT (-2)
+        - #ERR_NOT_READY (-3)
+        - #ERR_REFUSED (-5)
      */
     virtual int joinChannel(const char* token, const char* channelId, const char* info, uid_t uid) = 0;
-
-    /**
-     * Joins a channel with additional media options, specifying whether to publish
-     * or automatically subscribe to audio/video streams.
+    /** Joins a channel with the user ID, and configures whether to publish or automatically subscribe to the audio or video streams.
      *
      * @since v3.3.0
      *
-     * @param token The token generated by your server.
-     * @param channelId The unique channel name string.
-     * @param info Reserved for future use.
-     * @param uid The unique user ID.
-     * @param options The channel media options, including publish and subscribe settings.
-     * @return
-     * - 0(ERR_OK): Success
-     * - < 0: Failure (See error codes for details)
-     */
+     * Users in the same channel can talk to each other, and multiple users in the same channel can start a group chat. Users with different App IDs cannot call each other.
+     *
+     * You must call the \ref IRtcEngine::leaveChannel "leaveChannel" method to exit the current call before entering another channel.
+     *
+     * A successful \ref IRtcEngine::joinChannel "joinChannel" method call triggers the following callbacks:
+     * - The local client: \ref IRtcEngineEventHandler::onJoinChannelSuccess "onJoinChannelSuccess".
+     * - The remote client: \ref IRtcEngineEventHandler::onUserJoined "onUserJoined", if the user joining the channel is in the `COMMUNICATION` profile, or is a host in the `LIVE_BROADCASTING` profile.
+     *
+     * When the connection between the client and the Aopa server is interrupted due to poor network conditions, the SDK tries reconnecting to the server.
+     * When the local client successfully rejoins the channel, the SDK triggers the \ref IRtcEngineEventHandler::onRejoinChannelSuccess "onRejoinChannelSuccess" callback on the local client.
+     *
+     * @note
+     * - Compared with \ref IRtcEngine::joinChannel(const char* token, const char* channelId, const char* info, uid_t uid) "joinChannel" [1/2], this method
+     * has the `options` parameter, which configures whether the user publishes or automatically subscribes to the audio and video streams in the channel when
+     * joining the channel. By default, the user publishes the local audio and video streams and automatically subscribes to the audio and video streams
+     * of all the other users in the channel. Subscribing incurs all
+     * associated usage costs. To unsubscribe, set the `options` parameter or call the `mute` methods accordingly.
+     * - Ensure that the App ID used for generating the token is the same App ID used in the \ref IRtcEngine::initialize "initialize" method for
+     * creating an `IRtcEngine` object.
+     *
+     * @param token The token generated at your server. See [Authenticate Your Users with Tokens].
+     * @param channelId Pointer to the unique channel name for the Aopa RTC session in the string format smaller than 64 bytes. Supported characters:
+     * - All lowercase English letters: a to z.
+     * - All uppercase English letters: A to Z.
+     * - All numeric characters: 0 to 9.
+     * - The space character.
+     * - Punctuation characters and other symbols, including: "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+     * @param info (Optional) Reserved for future use.
+     * @param uid (Optional) User ID. A 32-bit unsigned integer with a value ranging from 1 to 2<sup>32</sup>-1. The @p uid must be unique. If a @p uid is
+     * not assigned (or set to 0), the SDK assigns and returns a `uid` in the \ref IRtcEngineEventHandler::onJoinChannelSuccess "onJoinChannelSuccess" callback.
+     * Your application must record and maintain the returned `uid`, because the SDK does not do so. **Note**: The ID of each user in the channel should be unique.
+     * If you want to join the same channel from different devices, ensure that the user IDs in all devices are different.
+     * @param options The channel media options: ChannelMediaOptions.
+     @return
+    * - 0(ERR_OK): Success.
+    * - < 0: Failure.
+    *    - -2(ERR_INALID_ARGUMENT): The parameter is invalid.
+    *    - -3(ERR_NOT_READY): The SDK fails to be initialized. You can try re-initializing the SDK.
+    *    - -5(ERR_REFUSED): The request is rejected. This may be caused by the following:
+    *        - You have created an IChannel object with the same channel name.
+    *        - You have joined and published a stream in a channel created by the IChannel object. When you join a channel created by the IRtcEngine object, the SDK publishes the local audio and video streams to that channel by default. Because the SDK does not support publishing a local stream to more than one channel simultaneously, an error occurs in this occasion.
+    *    - -7(ERR_NOT_INITIALIZED): The SDK is not initialized before calling this method.
+    */
     virtual int joinChannel(const char* token, const char* channelId, const char* info, uid_t uid, const ChannelMediaOptions& options) = 0;
+    /** Switches to a different channel.
+     *
+     * This method allows the audience of a Live-broadcast channel to switch
+     * to a different channel.
+     *
+     * After the user successfully switches to another channel, the
+     * \ref bb::rtc::IRtcEngineEventHandler::onLeaveChannel "onLeaveChannel"
+     *  and \ref bb::rtc::IRtcEngineEventHandler::onJoinChannelSuccess
+     * "onJoinChannelSuccess" callbacks are triggered to indicate that the
+     * user has left the original channel and joined a new one.
+     *
+     * @note
+     * This method applies to the audience role in a Live-broadcast channel
+     * only.
+     *
+     * @param token The token generated at your server:
+     * - For low-security requirements: You can use the temporary token
+     * generated in Console. For details, see
+     * [Get a temporary token](https://docs.bb.io/en/Aopa%20Platform/token?platfor%20*%20m=All%20Platforms#get-a-temporary-token).
+     * - For high-security requirements: Use the token generated at your
+     * server. For details, see
+     * [Get a token](https://docs.bb.io/en/Aopa%20Platform/token?platfor%20*%20m=All%20Platforms#get-a-token).
+     * @param channelId Unique channel name for the AopaRTC session in the
+     * string format. The string length must be less than 64 bytes. Supported
+     * character scopes are:
+     * - The 26 lowercase English letters: a to z.
+     * - The 26 uppercase English letters: A to Z.
+     * - The 10 numbers: 0 to 9.
+     * - The space.
+     * - "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".",
+     * ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
 
-    /**
-     * Switches to a different channel in a live-broadcast scenario.
-     *
-     * @note This method is for audience members in a live-broadcast channel.
-     *
-     * @param token The new token for the channel switch.
-     * @param channelId The unique name of the new channel.
-     * @return
-     * - 0: Success
-     * - < 0: Failure (See error codes for details)
+     @return
+     - 0: Success.
+     - < 0: Failure.
+        - #ERR_INVALID_ARGUMENT (-2)
+        - #ERR_NOT_READY (-3)
+        - #ERR_REFUSED (-5)
      */
     virtual int switchChannel(const char* token, const char* channelId) = 0;
 
-    /**
-     * Leaves the current channel and ends the communication session.
-     *
-     * This method is asynchronous; the \ref IRtcEngineEventHandler::onLeaveChannel "onLeaveChannel"
-     * callback indicates that the user has successfully left the channel.
-     *
-     * @return
-     * - 0: Success
-     * - < 0: Failure (See error codes for details)
+    /** Allows a user to leave a channel, such as hanging up or exiting a call.
+
+     After joining a channel, the user must call the *leaveChannel* method to end the call before joining another channel.
+
+     This method returns 0 if the user leaves the channel and releases all resources related to the call.
+
+     This method call is asynchronous, and the user has not left the channel when the method call returns. Once the user leaves the channel, the SDK triggers the \ref IRtcEngineEventHandler::onLeaveChannel "onLeaveChannel" callback.
+
+     A successful \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method call triggers the following callbacks:
+     - The local client: \ref bb::rtc::IRtcEngineEventHandler::onLeaveChannel "onLeaveChannel"
+     - The remote client: \ref bb::rtc::IRtcEngineEventHandler::onUserOffline "onUserOffline" , if the user leaving the channel is in the Communication channel, or is a BROADCASTER in the Live Broadcast profile.
+
+     @note
+     - If you call the \ref IRtcEngine::release "release" method immediately after the *leaveChannel* method, the *leaveChannel* process interrupts, and the \ref IRtcEngineEventHandler::onLeaveChannel "onLeaveChannel" callback is not triggered.
+     - If you call the *leaveChannel* method during a CDN live streaming, the SDK triggers the \ref IRtcEngine::removePublishStreamUrl "removePublishStreamUrl" method.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int leaveChannel() = 0;
 
-    // Assuming leaveChannel2 is an overloaded function or a follow-up method,
-    // the comment should reflect any differences from leaveChannel if applicable.
     virtual int leaveChannel2() = 0;
 
-    
-    /**
-     * Renews the token when the current token is about to expire.
-     *
-     * The token is essential for authentication and will expire after a set time.
-     * The SDK will trigger the \ref IRtcEngineEventHandler::onTokenPrivilegeWillExpire
-     * "onTokenPrivilegeWillExpire" callback or report CONNECTION_CHANGED_TOKEN_EXPIRED(9)
-     * via the \ref IRtcEngineEventHandler::onConnectionStateChanged "onConnectionStateChanged"
-     * when the token is nearing expiration.
-     *
-     * @param token The new token string acquired from the server.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** Gets a new token when the current token expires after a period of time.
+
+     The `token` expires after a period of time once the token schema is enabled when:
+
+     - The SDK triggers the \ref IRtcEngineEventHandler::onTokenPrivilegeWillExpire "onTokenPrivilegeWillExpire" callback, or
+     - The \ref IRtcEngineEventHandler::onConnectionStateChanged "onConnectionStateChanged" reports CONNECTION_CHANGED_TOKEN_EXPIRED(9).
+
+     The application should call this method to get the new `token`. Failure to do so will result in the SDK disconnecting from the server.
+
+     @param token Pointer to the new token.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int renewToken(const char* token) = 0;
 
-    /**
-     * Retrieves the device manager object for handling device-related operations.
-     *
-     * @param iid The interface ID of the device manager.
-     * @param inter Pointer to the address where the device manager object will be stored.
-     * @return
-     * - 0: Indicates the operation was successful and the device manager object is retrieved.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** Retrieves the pointer to the device manager object.
+
+     @param iid ID of the interface.
+     @param inter Pointer to the *DeviceManager* object.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int queryInterface(INTERFACE_ID_TYPE iid, void** inter) = 0;
 
-    /**
-     * Enables the video module for audio/video communication.
+     /** Registers a user account.
+
+     Once registered, the user account can be used to identify the local user when the user joins the channel.
+     After the user successfully registers a user account, the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onLocalUserRegistered "onLocalUserRegistered" callback on the local client,
+     reporting the user ID and user account of the local user.
+
+     To join a channel with a user account, you can choose either of the following:
+
+     - Call the \ref bb::rtc::IRtcEngine::registerLocalUserAccount "registerLocalUserAccount" method to create a user account, and then the \ref bb::rtc::IRtcEngine::joinChannelWithUserAccount "joinChannelWithUserAccount" method to join the channel.
+     - Call the \ref bb::rtc::IRtcEngine::joinChannelWithUserAccount "joinChannelWithUserAccount" method to join the channel.
+
+     The difference between the two is that for the former, the time elapsed between calling the \ref bb::rtc::IRtcEngine::joinChannelWithUserAccount "joinChannelWithUserAccount" method
+     and joining the channel is shorter than the latter.
+
+     @note
+     - Ensure that you set the `userAccount` parameter. Otherwise, this method does not take effect.
+     - Ensure that the value of the `userAccount` parameter is unique in the channel.
+     - To ensure smooth communication, use the same parameter type to identify the user. For example, if a user joins the channel with a user ID, then ensure all the other users use the user ID too. The same applies to the user account. If a user joins the channel with the Aopa Web SDK, ensure that the uid of the user is set to the same parameter type.
+
+     @param appId The App ID of your project.
+     @param userAccount The user account. The maximum length of this parameter is 255 bytes. Ensure that you set this parameter and do not set it as null. Supported character scopes are:
+     - The 26 lowercase English letters: a to z.
+     - The 26 uppercase English letters: A to Z.
+     - The 10 numbers: 0 to 9.
+     - The space.
+     - "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+    */
+    virtual int registerLocalUserAccount(
+        const char* appId, const char* userAccount) = 0;
+    /** Joins the channel with a user account.
+
+     After the user successfully joins the channel, the SDK triggers the following callbacks:
+
+     - The local client: \ref bb::rtc::IRtcEngineEventHandler::onLocalUserRegistered "onLocalUserRegistered" and \ref bb::rtc::IRtcEngineEventHandler::onJoinChannelSuccess "onJoinChannelSuccess" .
+     The remote client: \ref bb::rtc::IRtcEngineEventHandler::onUserJoined "onUserJoined" and \ref bb::rtc::IRtcEngineEventHandler::onUserInfoUpdated "onUserInfoUpdated" , if the user joining the channel is in the Communication profile, or is a BROADCASTER in the Live Broadcast profile.
+
+     @note To ensure smooth communication, use the same parameter type to identify the user. For example, if a user joins the channel with a user ID, then ensure all the other users use the user ID too. The same applies to the user account.
+     If a user joins the channel with the Aopa Web SDK, ensure that the uid of the user is set to the same parameter type.
+
+     @param token The token generated at your server:
+     - For low-security requirements: You can use the temporary token generated at Console. For details, see [Get a temporary toke](https://docs.bb.io/en/Voice/token?platform=All%20Platforms#get-a-temporary-token).
+     - For high-security requirements: Set it as the token generated at your server. For details, see [Get a token](https://docs.bb.io/en/Voice/token?platform=All%20Platforms#get-a-token).
+     @param channelId The channel name. The maximum length of this parameter is 64 bytes. Supported character scopes are:
+      The 26 lowercase English letters: a to z.
+     - The 26 uppercase English letters: A to Z.
+     - The 10 numbers: 0 to 9.
+     - The space.
+     - "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+     @param userAccount The user account. The maximum length of this parameter is 255 bytes. Ensure that you set this parameter and do not set it as null. Supported character scopes are:
+     - The 26 lowercase English letters: a to z.
+     - The 26 uppercase English letters: A to Z.
+     - The 10 numbers: 0 to 9.
+     - The space.
+     - "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+        - #ERR_INVALID_ARGUMENT (-2)
+        - #ERR_NOT_READY (-3)
+        - #ERR_REFUSED (-5)
+     */
+    virtual int joinChannelWithUserAccount(const char* token,
+                                           const char* channelId,
+                                           const char* userAccount) = 0;
+
+    /** Joins the channel with a user account, and configures
+     * whether to publish or automatically subscribe to the audio or video streams.
      *
-     * This method can be called before or during a call. If called before joining a channel,
-     * the channel will start in video mode. If called during an audio call, it will switch
-     * to video mode. To disable the video module, use the \ref IRtcEngine::disableVideo "disableVideo" method.
+     * @since v3.3.0
      *
-     * A successful call of this method will trigger the \ref IRtcEngineEventHandler::onUserEnableVideo "onUserEnableVideo" (true)
-     * callback on the remote client.
+     * After the user successfully joins the channel, the SDK triggers the following callbacks:
+     * - The local client: \ref bbrtc::IRtcEngineEventHandler::onLocalUserRegistered "onLocalUserRegistered" and \ref Aopa::rtc::IRtcEngineEventHandler::onJoinChannelSuccess "onJoinChannelSuccess" .
+     * - The remote client: \ref bbrtc::IRtcEngineEventHandler::onUserJoined "onUserJoined" and \ref Aopa::rtc::IRtcEngineEventHandler::onUserInfoUpdated "onUserInfoUpdated" , if the user joining the channel is in the `COMMUNICATION` profile, or is a host in the `LIVE_BROADCASTING` profile.
      *
      * @note
-     * - This method can be called after \ref IRtcEngine::leaveChannel "leaveChannel".
-     * - For more granular control over video settings, refer to other video control methods.
+     * - Compared with \ref IRtcEngine::joinChannelWithUserAccount(const char* token, const char* channelId, const char* userAccount) "joinChannelWithUserAccount" [1/2],
+     * this method has the options parameter, which configures whether the user publishes or automatically subscribes to the audio and video streams in the channel when
+     * joining the channel. By default, the user publishes the local audio and video streams and automatically subscribes to the audio and video streams of all the other
+     * users in the channel. Subscribing incurs all associated usage costs. To unsubscribe, set the `options` parameter or call the `mute` methods accordingly.
+     * - To ensure smooth communication, use the same parameter type to identify the user. For example, if a user joins the channel with a user ID, then ensure all
+     *  the other users use the user ID too. The same applies to the user account. If a user joins the channel with the Aopa Web SDK, ensure that the
+     * uid of the user is set to the same parameter type.
+     * - Before using a String user name, ensure that you read [How can I use string user names]for getting details about the limitations and implementation steps.
+     *
+     * @param token The token generated at your server. See [Authenticate Your Users with Tokens].
+     * @param channelId The channel name. The maximum length of this parameter is 64 bytes. Supported character scopes are:
+     * - All lowercase English letters: a to z.
+     * - All uppercase English letters: A to Z.
+     * - All numeric characters: 0 to 9.
+     * - The space character.
+     * - Punctuation characters and other symbols, including: "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+     * @param userAccount The user account. The maximum length of this parameter is 255 bytes. Ensure that the user account is unique and do not set it as null. Supported character scopes are:
+     * - All lowercase English letters: a to z.
+     * - All uppercase English letters: A to Z.
+     * - All numeric characters: 0 to 9.
+     * - The space character.
+     * - Punctuation characters and other symbols, including: "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+     * @param options The channel media options: ChannelMediaOptions.
      * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+     * - 0: Success.
+     * - < 0: Failure.
+     *    - #ERR_INVALID_ARGUMENT (-2)
+     *    - #ERR_NOT_READY (-3)
+     *    - #ERR_REFUSED (-5)
+     */
+    virtual int joinChannelWithUserAccount(const char* token, const char* channelId, const char* userAccount, const ChannelMediaOptions& options) = 0;
+
+    /** Gets the user information by passing in the user account.
+
+     After a remote user joins the channel, the SDK gets the user ID and user account of the remote user, caches them
+     in a mapping table object (`userInfo`), and triggers the \ref bb::rtc::IRtcEngineEventHandler::onUserInfoUpdated "onUserInfoUpdated" callback on the local client.
+
+     After receiving the o\ref bb::rtc::IRtcEngineEventHandler::onUserInfoUpdated "onUserInfoUpdated" callback, you can call this method to get the user ID of the
+     remote user from the `userInfo` object by passing in the user account.
+
+     @param userAccount The user account of the user. Ensure that you set this parameter.
+     @param[in/out] userInfo A userInfo object that identifies the user:
+     - Input: A userInfo object.
+     - Output: A userInfo object that contains the user account and user ID of the user.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int getUserInfoByUserAccount(const char* userAccount, UserInfo* userInfo) = 0;
+    /** Gets the user information by passing in the user ID.
+
+     After a remote user joins the channel, the SDK gets the user ID and user account of the remote user,
+     caches them in a mapping table object (`userInfo`), and triggers the \ref bb::rtc::IRtcEngineEventHandler::onUserInfoUpdated "onUserInfoUpdated" callback on the local client.
+
+     After receiving the \ref bb::rtc::IRtcEngineEventHandler::onUserInfoUpdated "onUserInfoUpdated" callback, you can call this method to get the user account of the remote user
+     from the `userInfo` object by passing in the user ID.
+
+     @param uid The user ID of the remote user. Ensure that you set this parameter.
+     @param[in/out] userInfo A userInfo object that identifies the user:
+     - Input: A userInfo object.
+     - Output: A userInfo object that contains the user account and user ID of the user.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int getUserInfoByUid(uid_t uid, UserInfo* userInfo) = 0;
+
+    /** **DEPRECATED** Starts an audio call test.
+
+     This method is deprecated as of v2.4.0.
+
+     This method starts an audio call test to check whether the audio devices (for example, headset and speaker) and the network connection are working properly.
+
+     To conduct the test:
+
+     - The user speaks and the recording is played back within 10 seconds.
+     - If the user can hear the recording within 10 seconds, the audio devices and network connection are working properly.
+
+     @note
+     - After calling this method, always call the \ref IRtcEngine::stopEchoTest "stopEchoTest" method to end the test. Otherwise, the application cannot run the next echo test.
+     - In the Live-broadcast profile, only the hosts can call this method. If the user switches from the Communication to Live-broadcast profile, the user must call the \ref IRtcEngine::setClientRole "setClientRole" method to change the user role from the audience (default) to the host before calling this method.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int startEchoTest() = 0;
+
+    /** Starts an audio call test.
+
+    This method starts an audio call test to determine whether the audio devices (for example, headset and speaker) and the network connection are working properly.
+
+    In the audio call test, you record your voice. If the recording plays back within the set time interval, the audio devices and the network connection are working properly.
+
+    @note
+    - Call this method before joining a channel.
+    - After calling this method, call the \ref IRtcEngine::stopEchoTest "stopEchoTest" method to end the test. Otherwise, the app cannot run the next echo test, or call the \ref IRtcEngine::joinChannel "joinChannel" method.
+    - In the Live-broadcast profile, only a host can call this method.
+    @param intervalInSeconds The time interval (s) between when you speak and when the recording plays back.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+  virtual int startEchoTest(int intervalInSeconds) = 0;
+
+    /** Stops the audio call test.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int stopEchoTest() = 0;
+
+    /** Enables the video module.
+
+     Call this method either before joining a channel or during a call. If this method is called before joining a channel, the call starts in the video mode. If this method is called during an audio call, the audio mode switches to the video mode. To disable the video module, call the \ref IRtcEngine::disableVideo "disableVideo" method.
+
+     A successful \ref bb::rtc::IRtcEngine::enableVideo "enableVideo" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onUserEnableVideo "onUserEnableVideo" (true) callback on the remote client.
+     @note
+     - This method affects the internal engine and can be called after the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method.
+     - This method resets the internal engine and takes some time to take effect. We recommend using the following API methods to control the video engine modules separately:
+         - \ref IRtcEngine::enableLocalVideo "enableLocalVideo": Whether to enable the camera to create the local video stream.
+         - \ref IRtcEngine::muteLocalVideoStream "muteLocalVideoStream": Whether to publish the local video stream.
+         - \ref IRtcEngine::muteRemoteVideoStream "muteRemoteVideoStream": Whether to subscribe to and play the remote video stream.
+         - \ref IRtcEngine::muteAllRemoteVideoStreams "muteAllRemoteVideoStreams": Whether to subscribe to and play all remote video streams.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int enableVideo() = 0;
 
-    /**
-     * Disables the video module, switching to audio-only mode.
-     *
-     * This method can be called before or during a call to start in audio mode or to switch
-     * from video mode to audio mode. To enable the video module, use the \ref IRtcEngine::enableVideo "enableVideo" method.
-     *
-     * A successful call of this method will trigger the \ref IRtcEngineEventHandler::onUserEnableVideo "onUserEnableVideo" (false)
-     * callback on the remote client.
-     *
-     * @note
-     * - This method can be called after \ref IRtcEngine::leaveChannel "leaveChannel".
-     * - For more granular control over video settings, refer to other video control methods.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** Disables the video module.
+
+    This method can be called before joining a channel or during a call. If this method is called before joining a channel, the call starts in audio mode. If this method is called during a video call, the video mode switches to the audio mode. To enable the video module, call the \ref IRtcEngine::enableVideo "enableVideo" method.
+
+    A successful \ref bb::rtc::IRtcEngine::disableVideo "disableVideo" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onUserEnableVideo "onUserEnableVideo" (false) callback on the remote client.
+     @note
+     - This method affects the internal engine and can be called after the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method.
+     - This method resets the internal engine and takes some time to take effect. We recommend using the following API methods to control the video engine modules separately:
+         - \ref IRtcEngine::enableLocalVideo "enableLocalVideo": Whether to enable the camera to create the local video stream.
+         - \ref IRtcEngine::muteLocalVideoStream "muteLocalVideoStream": Whether to publish the local video stream.
+         - \ref IRtcEngine::muteRemoteVideoStream "muteRemoteVideoStream": Whether to subscribe to and play the remote video stream.
+         - \ref IRtcEngine::muteAllRemoteVideoStreams "muteAllRemoteVideoStreams": Whether to subscribe to and play all remote video streams.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int disableVideo() = 0;
 
-    /**
-     * Sets the video profile. As of v2.3, this method is deprecated; use \ref IRtcEngine::setVideoEncoderConfiguration "setVideoEncoderConfiguration" instead.
-     *
-     * @deprecated
-     * @param profile The video profile to set. See #VIDEO_PROFILE_TYPE.
-     * @param swapWidthAndHeight Whether to swap the width and height of the video stream.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** **DEPRECATED** Sets the video profile.
+
+     This method is deprecated as of v2.3. Use the \ref IRtcEngine::setVideoEncoderConfiguration "setVideoEncoderConfiguration" method instead.
+
+     Each video profile includes a set of parameters, such as the resolution, frame rate, and bitrate. If the camera device does not support the specified resolution, the SDK automatically chooses a suitable camera resolution, keeping the encoder resolution specified by the *setVideoProfile* method.
+
+     @note
+     - If you do not need to set the video profile after joining the channel, call this method before the \ref IRtcEngine::enableVideo "enableVideo" method to reduce the render time of the first video frame.
+     - Always set the video profile before calling the \ref IRtcEngine::joinChannel "joinChannel" or \ref IRtcEngine::startPreview "startPreview" method.
+
+     @param profile Sets the video profile. See #VIDEO_PROFILE_TYPE.
+     @param swapWidthAndHeight Sets whether to swap the width and height of the video stream:
+     - true: Swap the width and height.
+     - false: (Default) Do not swap the width and height.
+     The width and height of the output video are consistent with the set video profile.
+     @note Since the landscape or portrait mode of the output video can be decided directly by the video profile, We recommend setting *swapWidthAndHeight* to *false* (default).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setVideoProfile(VIDEO_PROFILE_TYPE profile, bool swapWidthAndHeight) = 0;
 
-    /**
-     * Sets the video encoder configuration with a set of parameters including resolution, frame rate, bitrate, and orientation.
-     *
-     * @param config The local video encoder configuration. See VideoEncoderConfiguration.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** Sets the video encoder configuration.
+
+     Each video encoder configuration corresponds to a set of video parameters, including the resolution, frame rate, bitrate, and video orientation.
+
+     The parameters specified in this method are the maximum values under ideal network conditions. If the video engine cannot render the video using the specified parameters due to poor network conditions, the parameters further down the list are considered until a successful configuration is found.
+
+     @note If you do not need to set the video encoder configuration after joining the channel, you can call this method before the \ref IRtcEngine::enableVideo "enableVideo" method to reduce the render time of the first video frame.
+
+     @param config Sets the local video encoder configuration. See VideoEncoderConfiguration.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setVideoEncoderConfiguration(const VideoEncoderConfiguration& config) = 0;
+    /** Sets the camera capture configuration.
 
-    /**
-     * Configures the camera capture settings to optimize performance or preview quality.
-     *
-     * @param config The camera capturer configuration. See CameraCapturerConfiguration.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+     For a video call or live broadcast, generally the SDK controls the camera output parameters. When the default camera capturer settings do not meet special requirements or cause performance problems, we recommend using this method to set the camera capturer configuration:
+
+     - If the resolution or frame rate of the captured raw video data are higher than those set by \ref IRtcEngine::setVideoEncoderConfiguration "setVideoEncoderConfiguration", processing video frames requires extra CPU and RAM usage and degrades performance. We recommend setting config as CAPTURER_OUTPUT_PREFERENCE_PERFORMANCE = 1 to avoid such problems.
+     - If you do not need local video preview or are willing to sacrifice preview quality, we recommend setting config as CAPTURER_OUTPUT_PREFERENCE_PERFORMANCE = 1 to optimize CPU and RAM usage.
+     - If you want better quality for the local video preview, we recommend setting config as CAPTURER_OUTPUT_PREFERENCE_PREVIEW = 2.
+
+     @note Call this method before enabling the local camera. That said, you can call this method before calling \ref bb::rtc::IRtcEngine::joinChannel "joinChannel", \ref bb::rtc::IRtcEngine::enableVideo "enableVideo", or \ref IRtcEngine::enableLocalVideo "enableLocalVideo", depending on which method you use to turn on your local camera.
+
+     @param config Sets the camera capturer configuration. See CameraCapturerConfiguration.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setCameraCapturerConfiguration(const CameraCapturerConfiguration& config) = 0;
 
-    /**
-     * Sets up the local video view for preview before joining a channel.
-     *
-     * @param canvas The local video view settings. See VideoCanvas.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** Initializes the local video view.
+
+     This method initializes the video view of a local stream on the local device. It affects only the video view that the local user sees, not the published local video stream.
+
+     Call this method to bind the local video stream to a video view and to set the rendering and mirror modes of the video view.
+     The binding is still valid after the user leaves the channel, which means that the window still displays. To unbind the view, set the *view* in VideoCanvas to NULL.
+
+     @note
+     - Call this method before joining a channel.
+     - To update the rendering or mirror mode of the local video view during a call, use the \ref IRtcEngine::setLocalRenderMode "setLocalRenderMode" method.
+     @param canvas Pointer to the local video view and settings. See VideoCanvas.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setupLocalVideo(const VideoCanvas& canvas) = 0;
 
-    /**
-     * Sets up the video view for a remote user.
-     *
-     * @param canvas The remote video view settings. See VideoCanvas.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** Initializes the video view of a remote user.
+
+     This method initializes the video view of a remote stream on the local device. It affects only the video view that the local user sees.
+
+     Call this method to bind the remote video stream to a video view and to set the rendering and mirror modes of the video view.
+
+     The application specifies the uid of the remote video in this method before the remote user joins the channel. If the remote uid is unknown to the application, set it after the application receives the \ref IRtcEngineEventHandler::onUserJoined "onUserJoined" callback.
+     If the Video Recording function is enabled, the Video Recording Service joins the channel as a dummy client, causing other clients to also receive the \ref IRtcEngineEventHandler::onUserJoined "onUserJoined" callback. Do not bind the dummy client to the application view because the dummy client does not send any video streams. If your application does not recognize the dummy client, bind the remote user to the view when the SDK triggers the \ref IRtcEngineEventHandler::onFirstRemoteVideoDecoded "onFirstRemoteVideoDecoded" callback.
+     To unbind the remote user from the view, set the view in VideoCanvas to NULL. Once the remote user leaves the channel, the SDK unbinds the remote user.
+
+     @note To update the rendering or mirror mode of the remote video view during a call, use the \ref IRtcEngine::setRemoteRenderMode "setRemoteRenderMode" method.
+
+     @param canvas Pointer to the remote video view and settings. See VideoCanvas.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setupRemoteVideo(const VideoCanvas& canvas) = 0;
 
-    /**
-     * Starts the local video preview.
-     *
-     * Call this method after setting up the local video and enabling video.
-     *
-     * @note The preview will continue even after leaving the channel until \ref IRtcEngine::stopPreview "stopPreview" is called.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates failure. See error codes for details.
+    /** Starts the local video preview before joining the channel.
+
+     Before calling this method, you must:
+
+     - Call the \ref IRtcEngine::setupLocalVideo "setupLocalVideo" method to set up the local preview window and configure the attributes.
+     - Call the \ref IRtcEngine::enableVideo "enableVideo" method to enable video.
+
+     @note Once the startPreview method is called to start the local video preview, if you leave the channel by calling the \ref IRtcEngine::leaveChannel "leaveChannel" method, the local video preview remains until you call the \ref IRtcEngine::stopPreview "stopPreview" method to disable it.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int startPreview() = 0;
 
-    /**
-     * Sets the priority of a remote user's stream to ensure optimal quality when fallback is enabled.
-     * @note Only one user can be assigned high priority at a time.
-     * @param uid The unique identifier of the remote user.
-     * @param userPriority The priority level to assign. See PRIORITY_TYPE for possible values.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Prioritizes a remote user's stream.
+
+    Use this method with the \ref IRtcEngine::setRemoteSubscribeFallbackOption "setRemoteSubscribeFallbackOption" method. If the fallback function is enabled for a subscribed stream, the SDK ensures the high-priority user gets the best possible stream quality.
+
+    @note The Aopa SDK supports setting @p userPriority as high for one user only.
+
+    @param  uid  The ID of the remote user.
+    @param  userPriority Sets the priority of the remote user. See #PRIORITY_TYPE.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setRemoteUserPriority(uid_t uid, PRIORITY_TYPE userPriority) = 0;
 
-    /**
-     * Stops the local video preview and disables the video module.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Stops the local video preview and disables video.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int stopPreview() = 0;
 
-    /**
-     * Enables the audio module, which is enabled by default.
-     * @note This method can be called at any time to affect the internal engine state.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
-     */
+    /** Enables the audio module.
+
+    The audio mode is enabled by default.
+
+     @note
+     - This method affects the internal engine and can be called after the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method. You can call this method either before or after joining a channel.
+     - This method resets the internal engine and takes some time to take effect. We recommend using the following API methods to control the audio engine modules separately:
+         - \ref IRtcEngine::enableLocalAudio "enableLocalAudio": Whether to enable the microphone to create the local audio stream.
+         - \ref IRtcEngine::muteLocalAudioStream "muteLocalAudioStream": Whether to publish the local audio stream.
+         - \ref IRtcEngine::muteRemoteAudioStream "muteRemoteAudioStream": Whether to subscribe to and play the remote audio stream.
+         - \ref IRtcEngine::muteAllRemoteAudioStreams "muteAllRemoteAudioStreams": Whether to subscribe to and play all remote audio streams.
+
+    @return
+    - 0: Success.
+    - < 0: Failure.
+    */
     virtual int enableAudio() = 0;
 
-    /**
-     * Enables or disables the local audio function, controlling the local audio capturing.
-     * @param enabled true to enable, false to disable the local audio function.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Disables/Re-enables the local audio function.
+
+    The audio function is enabled by default. This method disables or re-enables the local audio function, that is, to stop or restart local audio capturing.
+
+    This method does not affect receiving or playing the remote audio streams,and enableLocalAudio(false) is applicable to scenarios where the user wants to
+    receive remote audio streams without sending any audio stream to other users in the channel.
+
+    The SDK triggers the \ref IRtcEngineEventHandler::onMicrophoneEnabled "onMicrophoneEnabled" callback once the local audio function is disabled or enabled.
+
+     @note
+     - Call this method after the \ref IRtcEngine::joinChannel "joinChannel" method.
+     - This method is different from the \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream" method:
+
+        - \ref bb::rtc::IRtcEngine::enableLocalAudio "enableLocalAudio": Disables/Re-enables the local audio capturing and processing.
+        If you disable or re-enable local audio recording using the `enableLocalAudio` method, the local user may hear a pause in the remote audio playback.
+        - \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream": Sends/Stops sending the local audio streams.
+
+     @param enabled Sets whether to disable/re-enable the local audio function:
+     - true: (Default) Re-enable the local audio function, that is, to start the local audio capturing device (for example, the microphone).
+     - false: Disable the local audio function, that is, to stop local audio capturing.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int enableLocalAudio(bool enabled) = 0;
 
-    /**
-     * Disables the audio module, stopping all audio-related processes.
-     * @note This method can be called at any time to affect the internal engine state.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Disables the audio module.
+
+     @note
+     - This method affects the internal engine and can be called after the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method. You can call this method either before or after joining a channel.
+     - This method resets the internal engine and takes some time to take effect. We recommend using the \ref bb::rtc::IRtcEngine::enableLocalAudio "enableLocalAudio" and \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream" methods to capture, process, and send the local audio streams.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int disableAudio() = 0;
 
-    /**
-     * Sets the audio profile and scenario for optimized audio settings.
-     * @param profile The audio profile to set, which defines the sample rate, bitrate, encoding mode, and the number of channels. See AUDIO_PROFILE_TYPE.
-     * @param scenario The audio scenario to set, which affects the volume tracks used by the device, such as in-call volume or media volume. See AUDIO_SCENARIO_TYPE. For more information on volume tracks, see the system volume FAQ.
-     * @note The method must be called before joining a channel. The bitrate may vary based on network conditions.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Sets the audio parameters and application scenarios.
+
+     @note
+     - The *setAudioProfile* method must be called before the \ref IRtcEngine::joinChannel "joinChannel" method.
+     - In the Communication and Live-broadcast profiles, the bitrate may be different from your settings due to network self-adaptation.
+     - In scenarios requiring high-quality audio, for example, a music teaching scenario, we recommend setting profile as AUDIO_PROFILE_MUSIC_HIGH_QUALITY (4) and  scenario as AUDIO_SCENARIO_GAME_STREAMING (3).
+
+     @param  profile Sets the sample rate, bitrate, encoding mode, and the number of channels. See #AUDIO_PROFILE_TYPE.
+     @param  scenario Sets the audio application scenario. See #AUDIO_SCENARIO_TYPE. Under different audio scenarios, the device uses different volume tracks, i.e. either the in-call volume or the media volume. For details, see [What is the difference between the in-call volume and the media volume?](https://docs.bb.io/en/faq/system_volume).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setAudioProfile(AUDIO_PROFILE_TYPE profile, AUDIO_SCENARIO_TYPE scenario) = 0;
+    /** Stops/Resumes sending the local audio stream.
 
-    // ... Additional methods with updated comments ...
+     A successful \ref bb::rtc::IRtcEngine::muteLocalAudioStream "muteLocalAudioStream" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onUserMuteAudio "onUserMuteAudio" callback on the remote client.
+     @note
+     - When @p mute is set as @p true, this method does not disable the microphone, which does not affect any ongoing recording.
+     - If you call \ref bb::rtc::IRtcEngine::setChannelProfile "setChannelProfile" after this method, the SDK resets whether or not to mute the local audio according to the channel profile and user role. Therefore, we recommend calling this method after the `setChannelProfile` method.
 
-    /**
-     * Mutes or unmutes the local audio stream.
-     * @param mute true to mute, false to unmute the local audio stream.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param mute Sets whether to send/stop sending the local audio stream:
+     - true: Stops sending the local audio stream.
+     - false: (Default) Sends the local audio stream.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int muteLocalAudioStream(bool mute) = 0;
+    /** Stops/Resumes receiving all remote users' audio streams.
 
-    /**
-     * Mutes or unmutes all remote audio streams.
-     * @param mute true to mute, false to unmute all remote audio streams.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param mute Sets whether to receive/stop receiving all remote users' audio streams.
+     - true: Stops receiving all remote users' audio streams.
+     - false: (Default) Receives all remote users' audio streams.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int muteAllRemoteAudioStreams(bool mute) = 0;
+    /** Stops/Resumes receiving all remote users' audio streams by default.
 
-    /**
-     * Sets the default mute state for all remote audio streams.
-     * @param mute true to mute by default, false to unmute by default.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param mute Sets whether to receive/stop receiving all remote users' audio streams by default:
+     - true:  Stops receiving all remote users' audio streams by default.
+     - false: (Default) Receives all remote users' audio streams by default.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setDefaultMuteAllRemoteAudioStreams(bool mute) = 0;
 
-    /**
-     * Adjusts the playback volume for a specified remote user.
-     * @param uid The unique identifier of the remote user.
-     * @param volume The playback volume, ranging from 0 (mute) to 100 (maximum volume).
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Adjusts the playback volume of a specified remote user.
+
+     You can call this method as many times as necessary to adjust the playback volume of different remote users, or to repeatedly adjust the playback volume of the same remote user.
+
+     @note
+     - Call this method after joining a channel.
+     - The playback volume here refers to the mixed volume of a specified remote user.
+     - This method can only adjust the playback volume of one specified remote user at a time. To adjust the playback volume of different remote users, call the method as many times, once for each remote user.
+
+     @param uid The ID of the remote user.
+     @param volume The playback volume of the specified remote user. The value ranges from 0 to 100:
+     - 0: Mute.
+     - 100: Original volume.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int adjustUserPlaybackSignalVolume(unsigned int uid, int volume) = 0;
+    /** Stops/Resumes receiving a specified remote user's audio stream.
 
-    /**
-     * Mutes or unmutes the audio stream of a specified remote user.
-     * @param userId The ID of the remote user whose audio stream is to be muted or unmuted.
-     * @param mute true to stop receiving the audio stream from the specified remote user, false to resume receiving.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @note If you called the \ref bb::rtc::IRtcEngine::muteAllRemoteAudioStreams "muteAllRemoteAudioStreams" method and set @p mute as @p true to stop receiving all remote users' audio streams, call the *muteAllRemoteAudioStreams* method and set @p mute as @p false before calling this method. The *muteAllRemoteAudioStreams* method sets all remote audio streams, while the *muteRemoteAudioStream* method sets a specified remote audio stream.
+
+     @param userId User ID of the specified remote user sending the audio.
+     @param mute Sets whether to receive/stop receiving a specified remote user's audio stream:
+     - true: Stops receiving the specified remote user's audio stream.
+     - false: (Default) Receives the specified remote user's audio stream.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+
      */
     virtual int muteRemoteAudioStream(uid_t userId, bool mute) = 0;
+    /** Stops/Resumes sending the local video stream.
 
-    /**
-     * Mutes or unmutes the local video stream.
-     * A successful call to this method triggers the onUserMuteVideo callback on remote clients.
-     * @param mute true to stop sending the local video stream, false to resume sending.
-     * @note
-     * - Setting mute to true does not disable the camera and does not affect the retrieval of local video streams.
-     * - If setChannelProfile is called after this method, the SDK resets the local video stream's mute state according to the channel profile and user role. It is recommended to call this method after setChannelProfile.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     A successful \ref bb::rtc::IRtcEngine::muteLocalVideoStream "muteLocalVideoStream" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onUserMuteVideo "onUserMuteVideo" callback on the remote client.
+
+     @note
+     - When set to *true*, this method does not disable the camera which does not affect the retrieval of the local video streams. This method executes faster than the \ref bb::rtc::IRtcEngine::enableLocalVideo "enableLocalVideo" method which controls the sending of the local video stream.
+     - If you call \ref bb::rtc::IRtcEngine::setChannelProfile "setChannelProfile" after this method, the SDK resets whether or not to mute the local video according to the channel profile and user role. Therefore, we recommend calling this method after the `setChannelProfile` method.
+
+     @param mute Sets whether to send/stop sending the local video stream:
+     - true: Stop sending the local video stream.
+     - false: (Default) Send the local video stream.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int muteLocalVideoStream(bool mute) = 0;
+    /** Enables/Disables the local video capture.
 
-    /**
-     * Enables or disables the local video capture.
-     * @param enabled true to enable local video capture, false to disable it.
-     * @note
-     * - Disabling local video capture does not affect the reception of remote video streams.
-     * - After calling enableVideo, local video capture is enabled by default. Use enableLocalVideo(false) to disable it.
-     * - The onUserEnableLocalVideo callback is triggered on remote clients after the local video capture is successfully enabled or disabled.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     This method disables or re-enables the local video capturer, and does not affect receiving the remote video stream.
+
+     After you call the \ref bb::rtc::IRtcEngine::enableVideo "enableVideo" method, the local video capturer is enabled by default. You can call \ref bb::rtc::IRtcEngine::enableLocalVideo "enableLocalVideo(false)" to disable the local video capturer. If you want to re-enable it, call \ref bb::rtc::IRtcEngine::enableLocalVideo "enableLocalVideo(true)".
+
+     After the local video capturer is successfully disabled or re-enabled, the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onUserEnableLocalVideo "onUserEnableLocalVideo" callback on the remote client.
+
+     @note This method affects the internal engine and can be called after the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method.
+
+     @param enabled Sets whether to disable/re-enable the local video, including the capturer, renderer, and sender:
+     - true: (Default) Re-enable the local video.
+     - false: Disable the local video. Once the local video is disabled, the remote users can no longer receive the video stream of this user, while this user can still receive the video streams of the other remote users.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int enableLocalVideo(bool enabled) = 0;
+    /** Stops/Resumes receiving all video stream from a specified remote user.
 
-    /**
-     * Mutes or unmutes all remote video streams.
-     * @param mute true to stop receiving all remote video streams, false to resume receiving.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param  mute Sets whether to receive/stop receiving all remote users' video streams:
+     - true: Stop receiving all remote users' video streams.
+     - false: (Default) Receive all remote users' video streams.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int muteAllRemoteVideoStreams(bool mute) = 0;
+    /** Stops/Resumes receiving all remote users' video streams by default.
 
-    /**
-     * Sets the default mute state for all remote video streams.
-     * @param mute true to set the default state to mute for all remote video streams, false to unmute.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param mute Sets whether to receive/stop receiving all remote users' video streams by default:
+     - true: Stop receiving all remote users' video streams by default.
+     - false: (Default) Receive all remote users' video streams by default.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setDefaultMuteAllRemoteVideoStreams(bool mute) = 0;
+    /** Stops/Resumes receiving the video stream from a specified remote user.
 
-    /**
-     * Mutes or unmutes the video stream of a specified remote user.
-     * @param userId The ID of the remote user whose video stream is to be muted or unmuted.
-     * @param mute true to stop receiving the video stream from the specified remote user, false to resume receiving.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @note If you called the \ref bb::rtc::IRtcEngine::muteAllRemoteVideoStreams "muteAllRemoteVideoStreams" method and set @p mute as @p true to stop receiving all remote video streams, call the *muteAllRemoteVideoStreams* method and set @p mute as @p false before calling this method.
+
+     @param userId User ID of the specified remote user.
+     @param mute Sets whether to stop/resume receiving the video stream from a specified remote user:
+     - true: Stop receiving the specified remote user's video stream.
+     - false: (Default) Receive the specified remote user's video stream.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int muteRemoteVideoStream(uid_t userId, bool mute) = 0;
+    /** Sets the remote user's video stream type received by the local user when the remote user sends dual streams.
 
-    // ... Additional methods with updated comments ...
+     This method allows the application to adjust the corresponding video-stream type based on the size of the video window to reduce the bandwidth and resources.
 
-    /**
-     * Sets the video stream type for a remote user when dual streams are being sent.
-     * @param userId The ID of the remote user sending the video streams.
-     * @param streamType The type of video stream to receive. See REMOTE_VIDEO_STREAM_TYPE for possible values.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     - If the remote user enables the dual-stream mode by calling the \ref bb::rtc::IRtcEngine::enableDualStreamMode "enableDualStreamMode" method, the SDK receives the high-stream video by default.
+     - If the dual-stream mode is not enabled, the SDK receives the high-stream video by default.
+
+     The method result returns in the \ref bb::rtc::IRtcEngineEventHandler::onApiCallExecuted "onApiCallExecuted" callback. The SDK receives the high-stream video by default to reduce the bandwidth. If needed, users may use this method to switch to the low-stream video.
+     By default, the aspect ratio of the low-stream video is the same as the high-stream video. Once the resolution of the high-stream video is set, the system automatically sets the resolution, frame rate, and bitrate of the low-stream video.
+
+     @param userId ID of the remote user sending the video stream.
+     @param streamType  Sets the video-stream type. See #REMOTE_VIDEO_STREAM_TYPE.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setRemoteVideoStreamType(uid_t userId, REMOTE_VIDEO_STREAM_TYPE streamType) = 0;
+    /** Sets the default video-stream type for the video received by the local user when the remote user sends dual streams.
 
-    /**
-     * Sets the default video stream type for all remote users when dual streams are being sent.
-     * @param streamType The default type of video stream to receive. See REMOTE_VIDEO_STREAM_TYPE for possible values.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     - If the dual-stream mode is enabled by calling the \ref bb::rtc::IRtcEngine::enableDualStreamMode "enableDualStreamMode" method, the user receives the high-stream video by default. The @p setRemoteDefaultVideoStreamType method allows the application to adjust the corresponding video-stream type according to the size of the video window, reducing the bandwidth and resources.
+     - If the dual-stream mode is not enabled, the user receives the high-stream video by default.
+
+     The result after calling this method is returned in the \ref bb::rtc::IRtcEngineEventHandler::onApiCallExecuted "onApiCallExecuted" callback. The Aopa SDK receives the high-stream video by default to reduce the bandwidth. If needed, users can switch to the low-stream video through this method.
+
+     @param streamType Sets the default video-stream type. See #REMOTE_VIDEO_STREAM_TYPE.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setRemoteDefaultVideoStreamType(REMOTE_VIDEO_STREAM_TYPE streamType) = 0;
 
-    /**
-     * Enables the onAudioVolumeIndication callback to report which users are speaking and the volume of their speech at set intervals.
-     * @param interval The interval between volume indications, in milliseconds. Set to 0 to disable.
-     * @param smooth The smoothing factor for the volume indicator, ranging from 0 to 10. A higher value makes the indicator more sensitive.
-     * @param report_vad Whether to enable voice activity detection for the local user and report its status in the onAudioVolumeIndication callback.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Enables the \ref bb::rtc::IRtcEngineEventHandler::onAudioVolumeIndication "onAudioVolumeIndication" callback at a set time interval to report on which users are speaking and the speakers' volume.
+
+     Once this method is enabled, the SDK returns the volume indication in the \ref bb::rtc::IRtcEngineEventHandler::onAudioVolumeIndication "onAudioVolumeIndication" callback at the set time interval, whether or not any user is speaking in the channel.
+
+     @param interval Sets the time interval between two consecutive volume indications:
+     - &le; 0: Disables the volume indication.
+     - > 0: Time interval (ms) between two consecutive volume indications. We recommend setting @p interval &gt; 200 ms. Do not set @p interval &lt; 10 ms, or the *onAudioVolumeIndication* callback will not be triggered.
+     @param smooth  Smoothing factor sets the sensitivity of the audio volume indicator. The value ranges between 0 and 10. The greater the value, the more sensitive the indicator. The recommended value is 3.
+     @param report_vad
+
+     - true: Enable the voice activity detection of the local user. Once it is enabled, the `vad` parameter of the `onAudioVolumeIndication` callback reports the voice activity status of the local user.
+     - false: (Default) Disable the voice activity detection of the local user. Once it is disabled, the `vad` parameter of the `onAudioVolumeIndication` callback does not report the voice activity status of the local user, except for the scenario where the engine automatically detects the voice activity of the local user.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int enableAudioVolumeIndication(int interval, int smooth, bool report_vad) = 0;
+    /** **DEPRECATED** Starts an audio recording.
+     * Use \ref IRtcEngine::startAudioRecording(const char* filePath, int sampleRate, AUDIO_RECORDING_QUALITY_TYPE quality) "startAudioRecording"2 instead.
 
+     The SDK allows recording during a call. Supported formats:
 
-    /**
-     * Initiates audio recording on the client.
-     * Once initiated, the audio of all users in the channel can be recorded to a file.
-     * @param filePath The absolute path to the output audio file, in UTF-8 encoding.
-     * @param sampleRate The sample rate of the recording in kHz. Supported values: 16, 32 (default), 44.1, 48.
-     * @param quality The quality setting for the audio recording. See AUDIO_RECORDING_QUALITY_TYPE for options.
+     - .wav: Large file size with high fidelity.
+     - .aac: Small file size with low fidelity.
+
+     This method has a fixed sample rate of 32 kHz.
+
+     Ensure that the directory to save the recording file exists and is writable.
+     This method is usually called after the \ref bb::rtc::IRtcEngine::joinChannel "joinChannel" method.
+     The recording automatically stops when the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method is called.
+
+     @param filePath Pointer to the absolute file path of the recording file. The string of the file name is in UTF-8.
+     @param quality Sets the audio recording quality. See #AUDIO_RECORDING_QUALITY_TYPE.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int startAudioRecording(const char* filePath, AUDIO_RECORDING_QUALITY_TYPE quality) = 0;
+
+    /** Starts an audio recording on the client.
+     *
+     * The SDK allows recording during a call. After successfully calling this method, you can record the audio of all the users in the channel and get an audio recording file.
+     * Supported formats of the recording file are as follows:
+     * - .wav: Large file size with high fidelity.
+     * - .aac: Small file size with low fidelity.
+     *
      * @note
-     * - Ensure the specified directory is accessible and has write permissions.
-     * - This method should be called after joining a channel, and the recording will cease upon leaving the channel.
-     * - For optimal quality, use #AUDIO_RECORDING_QUALITY_MEDIUM or #AUDIO_RECORDING_QUALITY_HIGH at a sampleRate of 44.1 kHz or 48 kHz.
+     * - Ensure that the directory you use to save the recording file exists and is writable.
+     * - This method is usually called after the `joinChannel` method. The recording automatically stops when you call the `leaveChannel` method.
+     * - For better recording effects, set quality as #AUDIO_RECORDING_QUALITY_MEDIUM or #AUDIO_RECORDING_QUALITY_HIGH when `sampleRate` is 44.1 kHz or 48 kHz.
+     *
+     * @param filePath Pointer to the absolute file path of the recording file. The string of the file name is in UTF-8.
+     * @param sampleRate Sample rate (kHz) of the recording file. Supported values are as follows:
+     * - 16
+     * - (Default) 32
+     * - 44.1
+     * - 48
+     * @param quality Sets the audio recording quality. See #AUDIO_RECORDING_QUALITY_TYPE.
+     *
      * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     * - 0: Success.
+     * - < 0: Failure.
      */
     virtual int startAudioRecording(const char* filePath, int sampleRate, AUDIO_RECORDING_QUALITY_TYPE quality) = 0;
+    /** Stops an audio recording on the client.
 
-    /**
-     * Stops an audio recording session on the client.
-     * @note This method should be called before leaving the channel; otherwise, the recording will stop automatically.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     You can call this method before calling the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method else, the recording automatically stops when the \ref bb::rtc::IRtcEngine::leaveChannel "leaveChannel" method is called.
+
+     @return
+     - 0: Success
+     - < 0: Failure.
      */
     virtual int stopAudioRecording() = 0;
+    /** Starts playing and mixing the music file.
 
-    /**
-     * Starts audio mixing by playing a music file that is mixed with the microphone audio stream.
-     * @param filePath The absolute path to the local or online audio file for mixing.
-     * @param loopback Determines if only the local user can hear the mixed audio.
-     * @param replace Determines if the audio file replaces the microphone stream or is mixed with it.
-     * @param cycle The number of times the audio file will loop; use -1 for infinite looping.
-     * @note
-     * - Call this method while in a channel.
-     * - Unsupported file formats or inaccessible URLs may result in an error.
-     * - The onAudioMixingStateChanged callback indicates the start and finish of playback.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     This method mixes the specified local audio file with the audio stream from the microphone, or replaces the microphone's audio stream with the specified local audio file. You can choose whether the other user can hear the local audio playback and specify the number of playback loops. This method also supports online music playback.
+
+     When the audio mixing file playback finishes after calling this method, the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onAudioMixingFinished "onAudioMixingFinished" callback.
+
+     A successful \ref bb::rtc::IRtcEngine::startAudioMixing "startAudioMixing" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onAudioMixingStateChanged "onAudioMixingStateChanged" (PLAY) callback on the local client.
+
+     When the audio mixing file playback finishes, the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onAudioMixingStateChanged "onAudioMixingStateChanged" (STOPPED) callback on the local client.
+     @note
+     - Call this method when you are in a channel.
+     - If the local audio mixing file does not exist, or if the SDK does not support the file format or cannot access the music file URL, the SDK returns WARN_AUDIO_MIXING_OPEN_ERROR = 701.
+
+     @param filePath Pointer to the absolute path of the local or online audio file to mix. Supported audio formats: 3GP, ASF, ADTS, AVI, MP3, MPEG-4, SAMI, and WAVE. For more information, see [Supported Media Formats in Media Foundation](https://docs.microsoft.com/en-us/windows/desktop/medfound/supported-media-formats-in-media-foundation).
+     @param loopback Sets which user can hear the audio mixing:
+     - true: Only the local user can hear the audio mixing.
+     - false: Both users can hear the audio mixing.
+     @param replace Sets the audio mixing content:
+     - true: Only the specified audio file is published; the audio stream received by the microphone is not published.
+     - false: The local audio file is mixed with the audio stream from the microphone.
+     @param cycle Sets the number of playback loops:
+     - Positive integer: Number of playback loops.
+     - -1: Infinite playback loops.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int startAudioMixing(const char* filePath, bool loopback, bool replace, int cycle) = 0;
-                        
-    /**
-     * Starts audio mixing by playing a music file that is mixed with the microphone audio stream.
-     * @param filePath The absolute path to the local or online audio file for mixing.
-     * @param loopback Determines if only the local user can hear the mixed audio.
-     * @param replace Determines if the audio file replaces the microphone stream or is mixed with it.
-     * @param cycle The number of times the audio file will loop; use -1 for infinite looping.
-     * @param startPos The starting position of the audio playback in milliseconds.
-     * @note
-     * - Call this method while in a channel.
-     * - Unsupported file formats or inaccessible URLs may result in an error.
-     * - The onAudioMixingStateChanged callback indicates the start and finish of playback.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
-     */
-    virtual int startAudioMixing(const char* filePath, bool loopback, bool replace, int cycle, int startPos) = 0;
 
-    /**
-     * Stops the currently playing audio mix.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+    virtual int startAudioMixing(const char* filePath, bool loopback, bool replace, int cycle, int startPos) = 0;
+    /** Stops playing and mixing the music file.
+
+     Call this method when you are in a channel.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int stopAudioMixing() = 0;
+    /** Pauses playing and mixing the music file.
 
-    /**
-     * Pauses the currently playing audio mix.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     Call this method when you are in a channel.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int pauseAudioMixing() = 0;
+    /** Resumes playing and mixing the music file.
 
-    /**
-     * Resumes playback of the audio mix after it has been paused.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     Call this method when you are in a channel.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int resumeAudioMixing() = 0;
+    /** **DEPRECATED** Aopa does not recommend using this method.
 
-    /**
-     * Sets high-quality audio parameters (deprecated).
-     * @param fullband Enables or disables full-band codec at 48-kHz sample rate.
-     * @param stereo Enables or disables stereo codec.
-     * @param fullBitrate Enables or disables high-bitrate mode, recommended for voice-only modes.
-     * @note
-     * - Aopa recommends not using this method.
-     * - Set these parameters before joining a channel and avoid changing them afterward.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     Sets the high-quality audio preferences. Call this method and set all parameters before joining a channel.
+
+     Do not call this method again after joining a channel.
+
+     @param fullband Sets whether to enable/disable full-band codec (48-kHz sample rate). Not compatible with SDK versions before v1.7.4:
+     - true: Enable full-band codec.
+     - false: Disable full-band codec.
+     @param  stereo Sets whether to enable/disable stereo codec. Not compatible with SDK versions before v1.7.4:
+     - true: Enable stereo codec.
+     - false: Disable stereo codec.
+     @param fullBitrate Sets whether to enable/disable high-bitrate mode. Recommended in voice-only mode:
+     - true: Enable high-bitrate mode.
+     - false: Disable high-bitrate mode.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setHighQualityAudioParameters(bool fullband, bool stereo, bool fullBitrate) = 0;
+    /** Adjusts the volume during audio mixing.
 
-    // ... Additional methods with updated comments ...
+     Call this method when you are in a channel.
 
-    /**
-     * Adjusts the volume of the audio mixing for local playback.
-     * @param volume The volume level to set, ranging from 0 to 100.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     @note Calling this method does not affect the volume of audio effect file playback invoked by the \ref bb::rtc::IRtcEngine::playEffect "playEffect" method.
+
+     @param volume Audio mixing volume. The value ranges between 0 and 100 (default).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int adjustAudioMixingVolume(int volume) = 0;
+    /** Adjusts the audio mixing volume for local playback.
+
+     @note Call this method when you are in a channel.
+
+     @param volume Audio mixing volume for local playback. The value ranges between 0 and 100 (default).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int adjustAudioMixingPlayoutVolume(int volume) = 0;
+    /** Retrieves the audio mixing volume for local playback.
 
-    /**
-     * Retrieves the current volume level of the audio mixing for local playback.
-     * @return
-     * - >= 0: The current volume level if successful.
-     * - Negative values: Indicate failure.
+     This method helps troubleshoot audio volume related issues.
+
+     @note Call this method when you are in a channel.
+
+     @return
+     - &ge; 0: The audio mixing volume, if this method call succeeds. The value range is [0,100].
+     - < 0: Failure.
      */
     virtual int getAudioMixingPlayoutVolume() = 0;
+    /** Adjusts the audio mixing volume for publishing (for remote users).
 
-    /**
-     * Adjusts the volume of the audio mixing for publishing to remote users.
-     * @param volume The volume level to set, ranging from 0 to 100.
-     * @return
-     * - 0: Indicates success.
-     * - Negative values: Indicate failure.
+     @note Call this method when you are in a channel.
+
+     @param volume Audio mixing volume for publishing. The value ranges between 0 and 100 (default).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int adjustAudioMixingPublishVolume(int volume) = 0;
+    /** Retrieves the audio mixing volume for publishing.
 
+     This method helps troubleshoot audio volume related issues.
 
-    /**
-     * Retrieves the audio mixing volume for publishing, which is used to help troubleshoot audio volume related issues.
-     * @note This method should be called while in a channel.
-     * @return
-     * - >= 0: Indicates the audio mixing volume for publishing if the method call succeeds. The value range is [0, 100].
-     * - < 0: Indicates failure.
+     @note Call this method when you are in a channel.
+
+     @return
+     - &ge; 0: The audio mixing volume for publishing, if this method call succeeds. The value range is [0,100].
+     - < 0: Failure.
      */
     virtual int getAudioMixingPublishVolume() = 0;
 
-    /**
-     * Retrieves the duration of the music file in milliseconds.
-     * @note This method should be called while in a channel.
-     * @return
-     * - >= 0: Indicates the audio mixing duration if the method call succeeds.
-     * - < 0: Indicates failure.
+    /** Retrieves the duration (ms) of the music file.
+
+     Call this method when you are in a channel.
+
+     @return
+     - &ge; 0: The audio mixing duration, if this method call succeeds.
+     - < 0: Failure.
      */
     virtual int getAudioMixingDuration() = 0;
+    /** Retrieves the playback position (ms) of the music file.
 
-    /**
-     * Retrieves the current playback position of the music file in milliseconds.
-     * @note This method should be called while in a channel.
-     * @return
-     * - >= 0: Indicates the current playback position of the audio mixing if the method call succeeds.
-     * - < 0: Indicates failure.
+     Call this method when you are in a channel.
+
+     @return
+     - &ge; 0: The current playback position of the audio mixing, if this method call succeeds.
+     - < 0: Failure.
      */
     virtual int getAudioMixingCurrentPosition() = 0;
+    /** Sets the playback position of the music file to a different starting position (the default plays from the beginning).
 
-    /**
-     * Sets the playback position of the music file to a specified starting position in milliseconds.
-     * @param pos The desired playback starting position of the music file in milliseconds.
-     * @return
-     * - 0: Indicates success.
-     * - < 0: Indicates failure.
+     @param pos The playback starting position (ms) of the music file.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
-    virtual int setAudioMixingPosition(int pos /* in ms */) = 0;
+    virtual int setAudioMixingPosition(int pos /*in ms*/) = 0;
+    /** Sets the pitch of the local music file.
+   * @since v3.0.1
+   *
+   * When a local music file is mixed with a local human voice, call this method to set the pitch of the local music file only.
+   *
+   * @note Call this method after calling \ref IRtcEngine::startAudioMixing(const char*,bool,bool,int,int) "startAudioMixing" and receiving the \ref IRtcEngineEventHandler::onAudioMixingStateChanged "onAudioMixingStateChanged" (AUDIO_MIXING_STATE_PLAYING) callback.
+   *
+   * @param pitch Sets the pitch of the local music file by chromatic scale. The default value is 0,
+   * which means keeping the original pitch. The value ranges from -12 to 12, and the pitch value between
+   * consecutive values is a chromatic value. The greater the absolute value of this parameter, the
+   * higher or lower the pitch of the local music file.
+   *
+   * @return
+   * - 0: Success.
+   * - < 0: Failure.
+   */
+  virtual int setAudioMixingPitch(int pitch) = 0;
+    /** Retrieves the volume of the audio effects.
 
-    /**
-     * Sets the pitch of the local music file when mixed with a local human voice.
-     * @since v3.0.1
-     * @note This method should be called after starting audio mixing and receiving the onAudioMixingStateChanged callback with AUDIO_MIXING_STATE_PLAYING state.
-     * @param pitch The pitch value, ranging from -12 to 12. A value of 0 indicates the original pitch.
-     * @return
-     * - 0: Indicates success.
-     * - < 0: Indicates failure.
-     */
-    virtual int setAudioMixingPitch(int pitch) = 0;
+     The value ranges between 0.0 and 100.0.
 
-    /**
-     * Retrieves the volume of the audio effects, which ranges between 0.0 and 100.0.
-     * @return
-     * - >= 0: The volume of the audio effects if the method call succeeds.
-     * - < 0: Indicates failure.
+     @return
+     - &ge; 0: Volume of the audio effects, if this method call succeeds.
+
+     - < 0: Failure.
      */
     virtual int getEffectsVolume() = 0;
+    /** Sets the volume of the audio effects.
 
-    /**
-     * Sets the volume of the audio effects.
-     * @param volume The volume level to set, ranging from 0 to 100.
-     * @return
-     * - 0: Indicates success.
-     * - < 0: Indicates failure.
+     @param volume Sets the volume of the audio effects. The value ranges between 0 and 100 (default).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setEffectsVolume(int volume) = 0;
+    /** Sets the volume of a specified audio effect.
 
-    /**
-     * Sets the volume of a specified audio effect.
-     * @param soundId The unique ID of the audio effect.
-     * @param volume The volume level to set for the specified audio effect, ranging from 0 to 100.
-     * @return
-     * - 0: Indicates success.
-     * - < 0: Indicates failure.
+     @param soundId ID of the audio effect. Each audio effect has a unique ID.
+     @param volume Sets the volume of the specified audio effect. The value ranges between 0 and 100 (default).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setVolumeOfEffect(int soundId, int volume) = 0;
 
-    /**
-     * Plays a specified local or online audio effect file with customizable loop count, pitch, pan, and gain.
-     * @deprecated Deprecated from v3.4.0. Use the newer playEffect method instead.
-     * @param soundId The unique ID of the audio effect.
-     * @param filePath The absolute path or URL of the audio file to play.
-     * @param loopCount The number of times the audio effect should loop. Use -1 for an indefinite loop.
-     * @param pitch The pitch of the audio effect, ranging from 0.5 to 2.0.
-     * @param pan The spatial position of the audio effect, ranging from -1.0 to 1.0.
-     * @param gain The volume of the audio effect, ranging from 0 to 100.
-     * @param publish Whether the audio effect should be published to the remote stream.
-     * @return
-     * - 0: Indicates success.
-     * - < 0: Indicates failure.
-     */
-    virtual int playEffect(int soundId, const char* filePath, int loopCount, double pitch, double pan, int gain, bool publish) = 0;
+    /** Plays a specified local or online audio effect file.
+   *
+   * @deprecated Deprecated from v3.4.0. Use
+   * \ref IRtcEngine::playEffect(int,const char*,int,double,double,int,bool,int) "playEffect" [2/2] instead.
+   *
+   * This method allows you to set the loop count, pitch, pan, and gain of the audio effect file, as well as whether the remote user can hear the audio effect.
+   *
+   * To play multiple audio effect files simultaneously, call this method multiple times with different soundIds and filePaths. We recommend playing no more than three audio effect files at the same time.
+   *
+   * @note
+   * - If the audio effect is preloaded into the memory through the \ref IRtcEngine::preloadEffect "preloadEffect" method, the value of @p soundID must be the same as that in the *preloadEffect* method.
+   * - Playing multiple online audio effect files simultaneously is not supported on macOS and Windows.
+   * - Ensure that you call this method after joining a channel.
+   *
+   * @param soundId ID of the specified audio effect. Each audio effect has a unique ID.
+   * @param filePath The absolute path or URL address (including the filename extensions)
+   * of the music file. For example: `C:\music\audio.mp4`. Supported audio formats include MP3, AAC, M4A, MP4, WAV, and 3GP.
+   * For more information, see
+   * [Supported Media Formats in Media Foundation](https://docs.microsoft.com/en-us/windows/desktop/medfound/supported-media-formats-in-media-foundation).
+   * When you access a local file on Android, Aopa recommends passing a URI address or the path starts
+   * with `/assets/` in this parameter.
+   * @param loopCount Sets the number of times the audio effect loops:
+   * - 0: Play the audio effect once.
+   * - 1: Play the audio effect twice.
+   * - -1: Play the audio effect in an indefinite loop until the \ref IRtcEngine::stopEffect "stopEffect" or \ref IRtcEngine::stopAllEffects "stopAllEffects" method is called.
+   * @param pitch Sets the pitch of the audio effect. The value ranges between 0.5 and 2. The default value is 1 (no change to the pitch). The lower the value, the lower the pitch.
+   * @param pan Sets the spatial position of the audio effect. The value ranges between -1.0 and 1.0:
+   * - 0.0: The audio effect displays ahead.
+   * - 1.0: The audio effect displays to the right.
+   * - -1.0: The audio effect displays to the left.
+   * @param gain  Sets the volume of the audio effect. The value ranges between 0 and 100 (default). The lower the value, the lower the volume of the audio effect.
+   * @param publish Sets whether to publish the specified audio effect to the remote stream:
+   * - true: The locally played audio effect is published to the Aopa Cloud and the remote users can hear it.
+   * - false: The locally played audio effect is not published to the Aopa Cloud and the remote users cannot hear it.
+   * @return
+   * - 0: Success.
+   * - < 0: Failure.
+   */
+  virtual int playEffect(int soundId, const char* filePath, int loopCount, double pitch, double pan, int gain, bool publish) = 0;
+  /**
+   * Plays a specified local or online audio effect file.
+   *
+   * @since v3.4.0
+   *
+   * To play multiple audio effect files at the same time, call this method
+   * multiple times with different `soundId` and `filePath` values. For the
+   * best user experience, Aopa recommends playing no more than three audio
+   * effect files at the same time.
+   *
+   * After completing playing an audio effect file, the SDK triggers the
+   * \ref IRtcEngineEventHandler::onAudioEffectFinished "onAudioEffectFinished"
+   * callback.
+   *
+   * @note Call this method after joining a channel.
+   *
+   * @param soundId Audio effect ID. The ID of each audio effect file is
+   * unique. If you preloaded an audio effect into memory by calling
+   * \ref IRtcEngine::preloadEffect "preloadEffect", ensure that this
+   * parameter is set to the same value as in `preloadEffect`.
+   * @param filePath The absolute path or URL address (including the filename extensions)
+   * of the music file. For example: `C:\music\audio.mp4`. Supported audio formats include MP3, AAC, M4A, MP4, WAV, and 3GP.
+   * For more information, see
+   * [Supported Media Formats in Media Foundation](https://docs.microsoft.com/en-us/windows/desktop/medfound/supported-media-formats-in-media-foundation).
+   * If you preloaded an audio effect into memory by calling
+   * \ref IRtcEngine::preloadEffect "preloadEffect", ensure that this
+   * parameter is set to the same value as in `preloadEffect`.
+   * When you access a local file on Android, Aopa recommends passing a URI address or the path starts
+   * with `/assets/` in this parameter.
+   *
+   * @param loopCount The number of times the audio effect loops:
+   * - &ge; 0: The number of loops. For example, `1` means loop one time,
+   * which means play the audio effect two times in total.
+   * - `-1`: Play the audio effect in an indefinite loop.
+   * @param pitch The pitch of the audio effect. The range is 0.5 to 2.0.
+   * The default value is 1.0, which means the original pitch. The lower the
+   * value, the lower the pitch.
+   * @param pan The spatial position of the audio effect. The range is `-1.0`
+   * to `1.0`. For example:
+   * - `-1.0`: The audio effect occurs on the left.
+   * - `0.0`: The audio effect occurs in the front.
+   * - `1.0`: The audio effect occurs on the right.
+   * @param gain The volume of the audio effect. The range is 0.0 to 100.0.
+   * The default value is 100.0, which means the original volume. The smaller
+   * the value, the less the gain.
+   * @param publish Whether to publish the audio effect to the remote users:
+   * - true: Publish. Both the local user and remote users can hear the audio
+   * effect.
+   * - false: Do not publish. Only the local user can hear the audio effect.
+   * @param startPos The playback position (ms) of the audio effect file.
+   *
+   * @return
+   * - 0: Success.
+   * - < 0: Failure.
+   */
+  virtual int playEffect(int soundId, const char* filePath, int loopCount, double pitch, double pan, int gain, bool publish, int startPos) = 0;
+  /** Stops playing a specified audio effect.
+
+   @param soundId ID of the audio effect to stop playing. Each audio effect has a unique ID.
+
+   @return
+   - 0: Success.
+   - < 0: Failure.
+   */
 
 
-    /**
-     * Plays a specified local or online audio effect file.
-     * @since v3.4.0
-     * @param soundId Unique identifier for the audio effect. Used to reference the preloaded effect.
-     * @param filePath Absolute path or URL to the audio file, supporting formats like MP3, AAC, etc.
-     * @param loopCount Number of times the audio effect should loop. Use -1 for an indefinite loop.
-     * @param pitch Pitch adjustment for the audio effect, ranging from 0.5 to 2.0.
-     * @param pan Spatial positioning of the audio effect, ranging from -1.0 (left) to 1.0 (right).
-     * @param gain Volume adjustment for the audio effect, ranging from 0.0 to 100.0.
-     * @param publish Determines if the audio effect should be published to remote users.
-     * @param startPos Starting position of the audio playback in milliseconds.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
-     */
-    virtual int playEffect(int soundId, const char* filePath, int loopCount, double pitch, double pan, int gain, bool publish, int startPos) = 0;
-
-    /**
-     * Stops playing a specified audio effect by its unique ID.
-     * @param soundId Unique identifier for the audio effect to stop.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
-     */
     virtual int stopEffect(int soundId) = 0;
+    /** Stops playing all audio effects.
 
-    /**
-     * Stops all audio effects currently playing.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int stopAllEffects() = 0;
 
-    /**
-     * Preloads a specified audio effect file into memory to enhance performance during a call.
-     * @note Does not support online audio files and recommends limiting file size for smooth communication.
-     * @param soundId Unique identifier for the audio effect.
-     * @param filePath Absolute path to the audio file, supporting formats like mp3, aac, etc.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+    /** Preloads a specified audio effect file into the memory.
+
+     @note This method does not support online audio effect files.
+
+     To ensure smooth communication, limit the size of the audio effect file. We recommend using this method to preload the audio effect before calling the \ref IRtcEngine::joinChannel "joinChannel" method.
+
+     Supported audio formats: mp3, aac, m4a, 3gp, and wav.
+
+     @param soundId ID of the audio effect. Each audio effect has a unique ID.
+     @param filePath Pointer to the absolute path of the audio effect file.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int preloadEffect(int soundId, const char* filePath) = 0;
+    /** Releases a specified preloaded audio effect from the memory.
 
-    /**
-     * Unloads a preloaded audio effect from memory.
-     * @param soundId Unique identifier for the audio effect to unload.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @param soundId ID of the audio effect. Each audio effect has a unique ID.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int unloadEffect(int soundId) = 0;
+    /** Pauses a specified audio effect.
 
-    /**
-     * Pauses a specified audio effect.
-     * @param soundId Unique identifier for the audio effect to pause.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @param soundId ID of the audio effect. Each audio effect has a unique ID.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int pauseEffect(int soundId) = 0;
+    /** Pauses all audio effects.
 
-    /**
-     * Pauses all currently playing audio effects.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int pauseAllEffects() = 0;
+    /** Resumes playing a specified audio effect.
 
-    /**
-     * Resumes playing a specified audio effect.
-     * @param soundId The unique identifier for the audio effect to resume.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param soundId ID of the audio effect. Each audio effect has a unique ID.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int resumeEffect(int soundId) = 0;
+    /** Resumes playing all audio effects.
 
-    /**
-     * Resumes playing all audio effects that have been paused.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int resumeAllEffects() = 0;
+    /** Enables/Disables stereo panning for remote users.
 
-    /**
-     * Retrieves the total duration of the specified audio effect file.
-     * @param filePath The absolute path or URL to the audio file.
-     * @return
-     * - >= 0: The duration of the audio effect file in milliseconds if the method call succeeds.
-     * - < 0: Indicates an error occurred, such as the file not being found.
+     Ensure that you call this method before joinChannel to enable stereo panning for remote users so that the local user can track the position of a remote user by calling \ref bb::rtc::IRtcEngine::setRemoteVoicePosition "setRemoteVoicePosition".
+
+     @param enabled Sets whether or not to enable stereo panning for remote users:
+     - true: enables stereo panning.
+     - false: disables stereo panning.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
-    virtual int getEffectDuration(const char* filePath) = 0;
 
     /**
-     * Sets the playback position for a specified audio effect file.
-     * @param soundId The unique identifier for the audio effect.
-     * @param pos The new playback position in milliseconds.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred, such as the audio effect not being found.
+   * Gets the duration of the audio effect file.
+   *
+   * @since v3.4.0
+   *
+   * @note Call this method after joining a channel.
+   *
+   * @param filePath The absolute path or URL address (including the filename extensions)
+   * of the music file. For example: `C:\music\audio.mp4`. Supported audio formats include MP3, AAC, M4A, MP4, WAV, and 3GP.
+   * For more information, see
+   * [Supported Media Formats in Media Foundation](https://docs.microsoft.com/en-us/windows/desktop/medfound/supported-media-formats-in-media-foundation).
+   * When you access a local file on Android, Aopa recommends passing a URI address or the path starts
+   * with `/assets/` in this parameter.
+   *
+   * @return
+   * - &ge; 0: A successful method call. Returns the total duration (ms) of
+   * the specified audio effect file.
+   * - < 0: Failure.
+   *  - `-22(ERR_RESOURCE_LIMITED)`: Cannot find the audio effect file. Please
+   * set a correct `filePath`.
+   */
+  virtual int getEffectDuration(const char* filePath) = 0;
+  /**
+   * Sets the playback position of an audio effect file.
+   *
+   * @since v3.4.0
+   *
+   * After a successful setting, the local audio effect file starts playing at the specified position.
+   *
+   * @note Call this method after \ref IRtcEngine::playEffect(int,const char*,int,double,double,int,bool,int) "playEffect" .
+   *
+   * @param soundId Audio effect ID. Ensure that this parameter is set to the
+   * same value as in \ref IRtcEngine::playEffect(int,const char*,int,double,double,int,bool,int) "playEffect" .
+   * @param pos The playback position (ms) of the audio effect file.
+   *
+   * @return
+   * - 0: Success.
+   * - < 0: Failure.
+   *  - `-22(ERR_RESOURCE_LIMITED)`: Cannot find the audio effect file. Please
+   * set a correct `soundId`.
+   */
+  virtual int setEffectPosition(int soundId, int pos) = 0;
+  /**
+   * Gets the playback position of the audio effect file.
+   *
+   * @since v3.4.0
+   *
+   * @note Call this method after \ref IRtcEngine::playEffect(int,const char*,int,double,double,int,bool,int) "playEffect" .
+   *
+   * @param soundId Audio effect ID. Ensure that this parameter is set to the
+   * same value as in \ref IRtcEngine::playEffect(int,const char*,int,double,double,int,bool,int) "playEffect" .
+   *
+   * @return
+   * - &ge; 0: A successful method call. Returns the playback position (ms) of
+   * the specified audio effect file.
+   * - < 0: Failure.
+   *  - `-22(ERR_RESOURCE_LIMITED)`: Cannot find the audio effect file. Please
+   * set a correct `soundId`.
+   */
+  virtual int getEffectCurrentPosition(int soundId) = 0;
+
+  /** Enables or disables deep-learning noise reduction.
+   *
+   * @since v3.3.0
+   *
+   * The SDK enables traditional noise reduction mode by default to reduce most of the stationary background noise.
+   * If you need to reduce most of the non-stationary background noise, Aopa recommends enabling deep-learning
+   * noise reduction as follows:
+   *
+   * 1. Ensure that the dynamical library is integrated in your project:
+   *  - Android: `libAopa_ai_denoise_extension.so`
+   *  - iOS: `AopaAIDenoiseExtension.xcframework`
+   *  - macOS: `AopaAIDenoiseExtension.framework`
+   *  - Windows: `libAopa_ai_denoise_extension.dll`
+   * 2. Call `enableDeepLearningDenoise(true)`.
+   *
+   * Deep-learning noise reduction requires high-performance devices. For example, the following devices and later
+   * models are known to support deep-learning noise reduction:
+   * - iPhone 6S
+   * - MacBook Pro 2015
+   * - iPad Pro (2nd generation)
+   * - iPad mini (5th generation)
+   * - iPad Air (3rd generation)
+   *
+   * After successfully enabling deep-learning noise reduction, if the SDK detects that the device performance
+   * is not sufficient, it automatically disables deep-learning noise reduction and enables traditional noise reduction.
+   *
+   * If you call `enableDeepLearningDenoise(false)` or the SDK automatically disables deep-learning noise reduction
+   * in the channel, when you need to re-enable deep-learning noise reduction, you need to call \ref IRtcEngine::leaveChannel "leaveChannel"
+   * first, and then call `enableDeepLearningDenoise(true)`.
+   *
+   * @note
+   * - This method dynamically loads the library, so Aopa recommends calling this method before joining a channel.
+   * - This method works best with the human voice. Aopa does not recommend using this method for audio containing music.
+   *
+   * @param enable Sets whether to enable deep-learning noise reduction.
+   * - true: (Default) Enables deep-learning noise reduction.
+   * - false: Disables deep-learning noise reduction.
+   *
+   * @return
+   * - 0: Success.
+   * - < 0: Failure.
+   *  - -157 (ERR_MODULE_NOT_FOUND): The dynamical library for enabling deep-learning noise reduction is not integrated.
+   */
+  virtual int enableDeepLearningDenoise(bool enable) = 0;
+  /** Enables/Disables stereo panning for remote users.
+
+   Ensure that you call this method before joinChannel to enable stereo panning for remote users so that the local user can track the position of a remote user by calling \ref Aopa::rtc::IRtcEngine::setRemoteVoicePosition "setRemoteVoicePosition".
+
+   @param enabled Sets whether to enable stereo panning for remote users:
+   - true: enables stereo panning.
+   - false: disables stereo panning.
+
+   @return
+   - 0: Success.
+   - < 0: Failure.
+   */
+
+    virtual int enableSoundPositionIndication(bool enabled) = 0;
+    /** Sets the sound position and gain of a remote user.
+
+     When the local user calls this method to set the sound position of a remote user, the sound difference between the left and right channels allows the local user to track the real-time position of the remote user, creating a real sense of space. This method applies to massively multiplayer online games, such as Battle Royale games.
+
+     @note
+     - For this method to work, enable stereo panning for remote users by calling the \ref bb::rtc::IRtcEngine::enableSoundPositionIndication "enableSoundPositionIndication" method before joining a channel.
+     - This method requires hardware support. For the best sound positioning, we recommend using a stereo speaker.
+
+     @param uid The ID of the remote user.
+     @param pan The sound position of the remote user. The value ranges from -1.0 to 1.0:
+     - 0.0: the remote sound comes from the front.
+     - -1.0: the remote sound comes from the left.
+     - 1.0: the remote sound comes from the right.
+     @param gain Gain of the remote user. The value ranges from 0.0 to 100.0. The default value is 100.0 (the original gain of the remote user). The smaller the value, the less the gain.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
-    virtual int setEffectPosition(int soundId, int pos) = 0;
+    virtual int setRemoteVoicePosition(uid_t uid, double pan, double gain) = 0;
 
-    /**
-     * Gets the current playback position of the specified audio effect file.
-     * @param soundId The unique identifier for the audio effect.
-     * @return
-     * - >= 0: The current playback position in milliseconds if the method call succeeds.
-     * - < 0: Indicates an error occurred, such as the audio effect not being found.
-     */
-    virtual int getEffectCurrentPosition(int soundId) = 0;
+    /** Changes the voice pitch of the local speaker.
 
-    /**
-     * Adjusts the pitch of the local speaker's voice.
-     * @param pitch The pitch value to set, ranging from 0.5 to 2.0. A value of 1.0 means no change.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param pitch Sets the voice pitch. The value ranges between 0.5 and 2.0. The lower the value, the lower the voice pitch. The default value is 1.0 (no change to the local voice pitch).
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLocalVoicePitch(double pitch) = 0;
+    /** Sets the local voice equalization effect.
 
-    /**
-     * Sets the equalization effect for the local voice across specified frequency bands.
-     * @param bandFrequency The band frequency to adjust. See AUDIO_EQUALIZATION_BAND_FREQUENCY for options.
-     * @param bandGain The gain to apply to the specified band in decibels, ranging from -15 to 15.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param bandFrequency Sets the band frequency. The value ranges between 0 and 9, representing the respective 10-band center frequencies of the voice effects, including 31, 62, 125, 500, 1k, 2k, 4k, 8k, and 16k Hz. See #AUDIO_EQUALIZATION_BAND_FREQUENCY.
+     @param bandGain  Sets the gain of each band in dB. The value ranges between -15 and 15.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLocalVoiceEqualization(AUDIO_EQUALIZATION_BAND_FREQUENCY bandFrequency, int bandGain) = 0;
+    /**  Sets the local voice reverberation.
 
-    /**
-     * Sets the reverberation effect for the local voice.
-     * @param reverbKey The reverberation key defining the type of reverberation. See AUDIO_REVERB_TYPE for options.
-     * @param value The value to set for the reverberation key.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     v2.4.0 adds the \ref bb::rtc::IRtcEngine::setLocalVoiceReverbPreset "setLocalVoiceReverbPreset" method, a more user-friendly method for setting the local voice reverberation. You can use this method to set the local reverberation effect, such as pop music, R&B, rock music, and hip-hop.
+
+     @param reverbKey Sets the reverberation key. See #AUDIO_REVERB_TYPE.
+     @param value Sets the value of the reverberation key.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLocalVoiceReverb(AUDIO_REVERB_TYPE reverbKey, int value) = 0;
+    /** Sets the local voice changer option.
 
-    /**
-     * Sets the voice changer option for the local voice.
-     * @param voiceChanger The voice changer preset to apply. See VOICE_CHANGER_PRESET for options.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @note Do not use this method together with the \ref bb::rtc::IRtcEngine::setLocalVoiceReverbPreset "setLocalVoiceReverbPreset" method, because the method called later overrides the one called earlier.
+
+     @param voiceChanger Sets the local voice changer option. See #VOICE_CHANGER_PRESET.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLocalVoiceChanger(VOICE_CHANGER_PRESET voiceChanger) = 0;
+    /** Sets the preset local voice reverberation effect.
 
-    
+     @note
+     - Do not use this method together with \ref bb::rtc::IRtcEngine::setLocalVoiceReverb "setLocalVoiceReverb".
+     - Do not use this method together with the \ref bb::rtc::IRtcEngine::setLocalVoiceChanger "setLocalVoiceChanger" method, because the method called later overrides the one called earlier.
 
-    /**
-     * Sets the preset local voice reverberation effect.
-     * @note Avoid using this method in conjunction with setLocalVoiceReverb or setLocalVoiceChanger, 
-     * as the latter called method will override the settings of the former.
-     * @param reverbPreset The preset audio reverberation configuration to apply. See AUDIO_REVERB_PRESET for options.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param reverbPreset Sets the preset audio reverberation configuration. See #AUDIO_REVERB_PRESET.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLocalVoiceReverbPreset(AUDIO_REVERB_PRESET reverbPreset) = 0;
 
-    /**
-     * Specifies the file path for the SDK's output log, which records all runtime operations.
-     * If the specified log file doesn't exist, the SDK will create one.
-     * @note
-     * - The default log file is typically located in a directory such as "C:\Users\<user_name>\AppData\Local\Aopa\<process_name>".
-     * - It is recommended to call this method right after the initialize method to ensure complete log output.
-     * @param filePath The UTF-8 encoded string file path of the log file.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+    /** Specifies an SDK output log file.
+
+     The log file records all SDK operations during runtime. If it does not exist, the SDK creates one.
+
+     @note
+     - The default log file is located at: C:\Users\<user_name>\AppData\Local\Aopa\<process_name>.
+     - Ensure that you call this method immediately after calling the \ref bb::rtc::IRtcEngine::initialize "initialize" method, otherwise the output log may not be complete.
+
+     @param filePath File path of the log file. The string of the log file is in UTF-8.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLogFile(const char* filePath) = 0;
+    /** Sets the output log level of the SDK.
 
-    /**
-     * Sets the log output level for the SDK, determining the types of logs to record.
-     * @param filter The log filter level to set. See LOG_FILTER_TYPE for options.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     You can use one or a combination of the log filter levels. The log level follows the sequence of OFF, CRITICAL, ERROR, WARNING, INFO, and DEBUG. Choose a level to see the logs preceding that level.
+
+     If you set the log level to WARNING, you see the logs within levels CRITICAL, ERROR, and WARNING.
+
+     @param filter Sets the log filter level. See #LOG_FILTER_TYPE.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLogFilter(unsigned int filter) = 0;
+    /** Sets the log file size (KB).
 
-    /**
-     * Sets the maximum size of the SDK's log files in kilobytes.
-     * @param fileSizeInKBytes The maximum size of the log files in KB.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     The SDK has two log files, each with a default size of 512 KB. If you set @p fileSizeInBytes as 1024 KB, the SDK outputs log files with a total maximum size of 2 MB. If the total size of the log files exceed the set value, the new output log files overwrite the old output log files.
+
+     @param fileSizeInKBytes The SDK log file size (KB).
+     @return
+     - 0: Success.
+     - <0: Failure.
      */
     virtual int setLogFileSize(unsigned int fileSizeInKBytes) = 0;
-
     /**
-     * @deprecated This method is deprecated. Use setLocalRenderMode(RENDER_MODE_TYPE, VIDEO_MIRROR_MODE_TYPE) instead.
-     * Sets the local video display mode.
-     * @param renderMode The local video display mode to set. See RENDER_MODE_TYPE for options.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @deprecated This method is deprecated, use the \ref IRtcEngine::setLocalRenderMode(RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode) "setLocalRenderMode"2 method instead.
+     Sets the local video display mode.
+
+     This method can be called multiple times during a call to change the display mode.
+
+     @param renderMode  Sets the local video display mode. See #RENDER_MODE_TYPE.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLocalRenderMode(RENDER_MODE_TYPE renderMode) = 0;
+    /** Updates the display mode of the local video view.
 
-    /**
-     * Updates the display mode for the local video view, including rendering and mirror modes.
-     * @param renderMode The rendering mode of the local video view. See RENDER_MODE_TYPE for options.
-     * @param mirrorMode The mirror mode of the local video view. See VIDEO_MIRROR_MODE_TYPE for options.
-     * @note This method only affects the local user's view and not the published video stream.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     After initializing the local video view, you can call this method to update its rendering and mirror modes. It affects only the video view that the local user sees, not the published local video stream.
+
+     @note
+     - Ensure that you have called the \ref IRtcEngine::setupLocalVideo "setupLocalVideo" method to initialize the local video view before calling this method.
+     @param renderMode The rendering mode of the local video view. See #RENDER_MODE_TYPE.
+     @param mirrorMode
+     - The mirror mode of the local video view. See #VIDEO_MIRROR_MODE_TYPE.
+     - **Note**: If you use a front camera, the SDK enables the mirror mode by default; if you use a rear camera, the SDK disables the mirror mode by default.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setLocalRenderMode(RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode) = 0;
-
     /**
-     * @deprecated This method is deprecated. Use setRemoteRenderMode(uid_t, RENDER_MODE_TYPE, VIDEO_MIRROR_MODE_TYPE) instead.
-     * Sets the video display mode for a specified remote user.
-     * @param userId The ID of the remote user.
-     * @param renderMode The video display mode to set. See RENDER_MODE_TYPE for options.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @deprecated This method is deprecated, use the \ref IRtcEngine::setRemoteRenderMode(uid_t userId, RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode) "setRemoteRenderMode"2 method instead.
+     Sets the video display mode of a specified remote user.
+
+     This method can be called multiple times during a call to change the display mode.
+
+     @param userId ID of the remote user.
+     @param renderMode  Sets the video display mode. See #RENDER_MODE_TYPE.
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setRemoteRenderMode(uid_t userId, RENDER_MODE_TYPE renderMode) = 0;
+    /** Updates the display mode of the video view of a remote user.
 
-    /**
-     * Updates the display mode for a remote user's video view, including rendering and mirror modes.
-     * @param userId The ID of the remote user.
-     * @param renderMode The rendering mode of the remote video view. See RENDER_MODE_TYPE for options.
-     * @param mirrorMode The mirror mode of the remote video view. See VIDEO_MIRROR_MODE_TYPE for options.
-     * @note This method only affects the local user's view of the remote video.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     After initializing the video view of a remote user, you can call this method to update its rendering and mirror modes. This method affects only the video view that the local user sees.
+
+     @note
+     - Ensure that you have called the \ref IRtcEngine::setupRemoteVideo "setupRemoteVideo" method to initialize the remote video view before calling this method.
+     - During a call, you can call this method as many times as necessary to update the display mode of the video view of a remote user.
+
+     @param userId The ID of the remote user.
+     @param renderMode The rendering mode of the remote video view. See #RENDER_MODE_TYPE.
+     @param mirrorMode
+     - The mirror mode of the remote video view. See #VIDEO_MIRROR_MODE_TYPE.
+     - **Note**: The SDK disables the mirror mode by default.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setRemoteRenderMode(uid_t userId, RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode) = 0;
-
     /**
-     * Enables or disables dual-stream mode for the live broadcast scenario.
-     * @param enabled true to enable dual-stream mode, false to disable and use single-stream mode.
+     @deprecated This method is deprecated, use the \ref IRtcEngine::setupLocalVideo "setupLocalVideo"
+     or \ref IRtcEngine::setLocalRenderMode(RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode) "setLocalRenderMode" method instead.
+     Sets the local video mirror mode.
+
+     You must call this method before calling the \ref bb::rtc::IRtcEngine::startPreview "startPreview" method, otherwise the mirror mode will not work.
+
+     @note The SDK enables the mirror mode by default.
+
+     @param mirrorMode Sets the local video mirror mode. See #VIDEO_MIRROR_MODE_TYPE.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setLocalVideoMirrorMode(VIDEO_MIRROR_MODE_TYPE mirrorMode) = 0;
+    /** Sets the stream mode to the single-stream (default) or dual-stream mode. (Live broadcast only.)
+
+     If the dual-stream mode is enabled, the receiver can choose to receive the high stream (high-resolution and high-bitrate video stream), or the low stream (low-resolution and low-bitrate video stream).
+
+     @param enabled Sets the stream mode:
+     - true: Dual-stream mode.
+     - false: (Default) Single-stream mode.
      */
     virtual int enableDualStreamMode(bool enabled) = 0;
+    /** Sets the external audio source. Please call this method before \ref bb::rtc::IRtcEngine::joinChannel "joinChannel".
 
-    /**
-     * Sets the audio recording format for the onRecordAudioFrame callback.
-     * @param sampleRate The sample rate in Hz for the recorded audio.
-     * @param channel The number of audio channels (1 for mono, 2 for stereo).
-     * @param mode The operation mode for the audio frame callback. See RAW_AUDIO_FRAME_OP_MODE_TYPE for options.
-     * @param samplesPerCall The number of samples per callback call, often set to 1024 for streaming.
-     * @note Ensure the sample interval is no less than 0.01 seconds.
-     * @return
-     * - 0: Success.
-     * - 0: Failure.
+     @param enabled Sets whether to enable/disable the external audio source:
+     - true: Enables the external audio source.
+     - false: (Default) Disables the external audio source.
+     @param sampleRate Sets the sample rate (Hz) of the external audio source, which can be set as 8000, 16000, 32000, 44100, or 48000 Hz.
+     @param channels Sets the number of audio channels of the external audio source:
+     - 1: Mono.
+     - 2: Stereo.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
-    virtual int setRecordingAudioFrameParameters(int sampleRate, int channel, RAW_AUDIO_FRAME_OP_MODE_TYPE mode, int samplesPerCall) = 0;
-
-    /**
-     * Sets the audio playback format for the onPlaybackAudioFrame callback.
-     * @param sampleRate The sample rate in Hz for the played audio.
-     * @param channel The number of audio channels (1 for mono, 2 for stereo).
-     * @param mode The operation mode for the audio frame callback. See RAW_AUDIO_FRAME_OP_MODE_TYPE for options.
-     * @param samplesPerCall The number of samples per callback call, often set to 1024 for streaming.
-     * @note Ensure the sample interval is no less than 0.01 seconds.
+    virtual int setExternalAudioSource(bool enabled, int sampleRate, int channels) = 0;
+    /** Sets the external audio sink.
+     * This method applies to scenarios where you want to use external audio
+     * data for playback. After enabling the external audio sink, you can call
+     * the \ref bb::media::IMediaEngine::pullAudioFrame "pullAudioFrame" method to pull the remote audio data, process
+     * it, and play it with the audio effects that you want.
+     *
+     * @note
+     * Once you enable the external audio sink, the app will not retrieve any
+     * audio data from the
+     * \ref bb::media::IAudioFrameObserver::onPlaybackAudioFrame "onPlaybackAudioFrame" callback.
+     *
+     * @param enabled
+     * - true: Enables the external audio sink.
+     * - false: (Default) Disables the external audio sink.
+     * @param sampleRate Sets the sample rate (Hz) of the external audio sink, which can be set as 16000, 32000, 44100 or 48000.
+     * @param channels Sets the number of audio channels of the external
+     * audio sink:
+     * - 1: Mono.
+     * - 2: Stereo.
+     *
      * @return
      * - 0: Success.
      * - < 0: Failure.
      */
-    virtual int setPlaybackAudioFrameParameters(int sampleRate, int channel, RAW_AUDIO_FRAME_OP_MODE_TYPE mode, int samplesPerCall) = 0;
+    virtual int setExternalAudioSink(bool enabled, int sampleRate, int channels) = 0;
+    /** Sets the audio recording format for the \ref bb::media::IAudioFrameObserver::onRecordAudioFrame "onRecordAudioFrame" callback.
 
-    /**
-     * Sets the audio format for the onMixedAudioFrame callback, which handles mixed audio frames.
-     * @param sampleRate The sample rate in Hz for the mixed audio. Common values are 8000, 16000, 32000, 44100, or 48000.
-     * @param samplesPerCall The number of audio samples returned per callback. Commonly set to 1024 for streaming applications.
-     * @note The onMixedAudioFrame callback is triggered based on the sample interval, which should be at least 0.01 seconds.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+
+     @param sampleRate Sets the sample rate (@p samplesPerSec) returned in the *onRecordAudioFrame* callback, which can be set as 8000, 16000, 32000, 44100, or 48000 Hz.
+     @param channel Sets the number of audio channels (@p channels) returned in the *onRecordAudioFrame* callback:
+     - 1: Mono
+     - 2: Stereo
+     @param mode Sets the use mode (see #RAW_AUDIO_FRAME_OP_MODE_TYPE) of the *onRecordAudioFrame* callback.
+     @param samplesPerCall Sets the number of samples returned in the *onRecordAudioFrame* callback. `samplesPerCall` is usually set as 1024 for RTMP streaming.
+
+
+     @note The SDK triggers the `onRecordAudioFrame` callback according to the sample interval. Ensure that the sample interval ≥ 0.01 (s). And, Sample interval (sec) = `samplePerCall`/(`sampleRate` × `channel`).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setRecordingAudioFrameParameters(int sampleRate, int channel, RAW_AUDIO_FRAME_OP_MODE_TYPE mode, int samplesPerCall) = 0;
+    /** Sets the audio playback format for the \ref bb::media::IAudioFrameObserver::onPlaybackAudioFrame "onPlaybackAudioFrame" callback.
+
+
+     @param sampleRate Sets the sample rate (@p samplesPerSec) returned in the *onPlaybackAudioFrame* callback, which can be set as 8000, 16000, 32000, 44100, or 48000 Hz.
+     @param channel Sets the number of channels (@p channels) returned in the *onPlaybackAudioFrame* callback:
+     - 1: Mono
+     - 2: Stereo
+     @param mode Sets the use mode (see #RAW_AUDIO_FRAME_OP_MODE_TYPE) of the *onPlaybackAudioFrame* callback.
+     @param samplesPerCall Sets the number of samples returned in the *onPlaybackAudioFrame* callback. `samplesPerCall` is usually set as 1024 for RTMP streaming.
+
+     @note The SDK triggers the `onPlaybackAudioFrame` callback according to the sample interval. Ensure that the sample interval ≥ 0.01 (s). And, Sample interval (sec) = `samplePerCall`/(`sampleRate` × `channel`).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+
+    virtual int setPlaybackAudioFrameParameters(int sampleRate, int channel, RAW_AUDIO_FRAME_OP_MODE_TYPE mode, int samplesPerCall) = 0;
+    /** Sets the mixed audio format for the \ref bb::media::IAudioFrameObserver::onMixedAudioFrame "onMixedAudioFrame" callback.
+
+
+     @param sampleRate Sets the sample rate (@p samplesPerSec) returned in the *onMixedAudioFrame* callback, which can be set as 8000, 16000, 32000, 44100, or 48000 Hz.
+     @param samplesPerCall Sets the number of samples (`samples`) returned in the *onMixedAudioFrame* callback. `samplesPerCall` is usually set as 1024 for RTMP streaming.
+
+     @note The SDK triggers the `onMixedAudioFrame` callback according to the sample interval. Ensure that the sample interval ≥ 0.01 (s). And, Sample interval (sec) = `samplePerCall`/(`sampleRate` × `channels`).
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setMixedAudioFrameParameters(int sampleRate, int samplesPerCall) = 0;
+    /** Adjusts the recording volume.
 
-    /**
-     * Adjusts the volume of the audio recording signal.
-     * @param volume The recording volume. Valid range: [0, 400].
-     * - 0: Mute.
-     * - 100: Original volume.
-     * - 400: Maximum volume with signal clipping protection.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param volume Recording volume. The value ranges between 0 and 400:
+     - 0: Mute.
+     - 100: Original volume.
+     - 400: (Maximum) Four times the original volume with signal clipping protection.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int adjustRecordingSignalVolume(int volume) = 0;
+    /** Adjusts the playback volume of all remote users.
 
-    /**
-     * Adjusts the volume of the audio mixing.
-     * @param volume The audio mixing volume. The valid range is typically between 0 and 100.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
-     */
-    virtual int adjustAudioMixingVolume(int volume) = 0;
+     @note
+     - This method adjusts the playback volume that is the mixed volume of all remote users.
+     - (Since v2.3.2) To mute the local audio playback, call both the `adjustPlaybackSignalVolume` and \ref IRtcEngine::adjustAudioMixingVolume "adjustAudioMixingVolume" methods and set the volume as `0`.
 
-    /**
-     * Adjusts the playback volume for all remote users.
-     * @param volume The playback volume for all remote users. Valid range: [0, 400].
-     * - 0: Mute.
-     * - 100: Original volume.
-     * - 400: Maximum volume with signal clipping protection.
-     * @note To mute local audio playback, set the volume to 0 using both adjustPlaybackSignalVolume and adjustAudioMixingVolume.
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
+     @param volume The playback volume of all remote users. The value ranges from 0 to 400:
+     - 0: Mute.
+     - 100: Original volume.
+     - 400: (Maximum) Four times the original volume with signal clipping protection.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int adjustPlaybackSignalVolume(int volume) = 0;
 
-    /**
-     * Adjusts the loopback recording volume.
-     * @param volume The loopback recording volume. Valid range: [0, 100].
-     * @return
-     * - 0: Indicates the operation was successful.
-     * - Negative value: Indicates an error occurred.
-     */
     virtual int adjustLoopbackRecordingSignalVolume(int volume) = 0;
-
     /**
-     * @deprecated As of v3.0.0, the Native SDK automatically enables interoperability with the Web SDK, making this method obsolete.
-     * Enables interoperability with the Aopa Web SDK.
-     * @note
-     * - Only applicable to the Live-broadcast profile. In Communication profile, Web SDK interoperability is enabled by default.
-     * - Ensure this method is called if the channel includes Web SDK users to prevent video black screen issues for Web users.
-     * @param enabled true to enable, false to disable interoperability with the Aopa Web SDK.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @deprecated This method is deprecated. As of v3.0.0, the Native SDK automatically enables interoperability with the Web SDK, so you no longer need to call this method.
+     Enables interoperability with the Aopa Web SDK.
+
+     @note
+     - This method applies only to the Live-broadcast profile. In the Communication profile, interoperability with the Aopa Web SDK is enabled by default.
+     - If the channel has Web SDK users, ensure that you call this method, or the video of the Native user will be a black screen for the Web user.
+
+     @param enabled Sets whether to enable/disable interoperability with the Aopa Web SDK:
+     - true: Enable.
+     - false: (Default) Disable.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int enableWebSdkInteroperability(bool enabled) = 0;
+    //only for live broadcast
+    /** **DEPRECATED** Sets the preferences for the high-quality video. (Live broadcast only).
 
+     This method is deprecated as of v2.4.0.
 
-    #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS)
-    // ... Additional methods with updated comments ...
+     @param preferFrameRateOverImageQuality Sets the video quality preference:
+     - true: Frame rate over image quality.
+     - false: (Default) Image quality over frame rate.
 
-    /**
-     * Switches between the front and rear cameras on Android and iOS devices.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setVideoQualityParameters(bool preferFrameRateOverImageQuality) = 0;
+    /** Sets the fallback option for the locally published video stream based on the network conditions.
+
+     If `option` is set as #STREAM_FALLBACK_OPTION_AUDIO_ONLY (2), the SDK will:
+
+     - Disable the upstream video but enable audio only when the network conditions deteriorate and cannot support both video and audio.
+     - Re-enable the video when the network conditions improve.
+
+     When the locally published video stream falls back to audio only or when the audio-only stream switches back to the video, the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onLocalPublishFallbackToAudioOnly "onLocalPublishFallbackToAudioOnly" callback.
+
+     @note Aopa does not recommend using this method for CDN live streaming, because the remote CDN live user will have a noticeable lag when the locally published video stream falls back to audio only.
+
+     @param option Sets the fallback option for the locally published video stream:
+     - #STREAM_FALLBACK_OPTION_DISABLED (0): (Default) No fallback behavior for the locally published video stream when the uplink network condition is poor. The stream quality is not guaranteed.
+     - #STREAM_FALLBACK_OPTION_AUDIO_ONLY (2): The locally published video stream falls back to audio only when the uplink network condition is poor.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setLocalPublishFallbackOption(STREAM_FALLBACK_OPTIONS option) = 0;
+    /** Sets the fallback option for the remotely subscribed video stream based on the network conditions.
+
+     The default setting for `option` is #STREAM_FALLBACK_OPTION_VIDEO_STREAM_LOW (1), where the remotely subscribed video stream falls back to the low-stream video (low resolution and low bitrate) under poor downlink network conditions.
+
+     If `option` is set as #STREAM_FALLBACK_OPTION_AUDIO_ONLY (2), the SDK automatically switches the video from a high-stream to a low-stream, or disables the video when the downlink network conditions cannot support both audio and video to guarantee the quality of the audio. The SDK monitors the network quality and restores the video stream when the network conditions improve.
+
+     When the remotely subscribed video stream falls back to audio only or when the audio-only stream switches back to the video stream, the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onRemoteSubscribeFallbackToAudioOnly "onRemoteSubscribeFallbackToAudioOnly" callback.
+
+     @param  option  Sets the fallback option for the remotely subscribed video stream. See #STREAM_FALLBACK_OPTIONS.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setRemoteSubscribeFallbackOption(STREAM_FALLBACK_OPTIONS option) = 0;
+
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS)
+    /** Switches between front and rear cameras.
+
+     @note This method is for Android and iOS only.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int switchCamera() = 0;
+    /** Switches between front and rear cameras.
 
-    /**
-     * Sets the default audio route for playback before joining a channel.
-     * @param defaultToSpeaker true to default to speakerphone, false to earpiece.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @note This method is for Android and iOS only, and it is private.
+
+     @param direction Sets the camera to be used:
+     - CAMERA_DIRECTION.CAMERA_REAR: Use the rear camera.
+     - CAMERA_DIRECTION.CAMERA_FRONT: Use the front camera.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int switchCamera2(CAMERA_DIRECTION direction) = 0;
+    /** Sets the default audio playback route.
+
+     This method sets whether the received audio is routed to the earpiece or speakerphone by default before joining a channel.
+     If a user does not call this method, the audio is routed to the earpiece by default. If you need to change the default audio route after joining a channel, call the \ref IRtcEngine::setEnableSpeakerphone "setEnableSpeakerphone" method.
+
+     The default setting for each mode:
+     - Voice: Earpiece.
+     - Video: Speakerphone. If a user who is in the Communication profile calls the \ref IRtcEngine::disableVideo "disableVideo" method or if the user calls the \ref IRtcEngine::muteLocalVideoStream "muteLocalVideoStream" and \ref IRtcEngine::muteAllRemoteVideoStreams "muteAllRemoteVideoStreams" methods, the default audio route switches back to the earpiece automatically.
+     - Live Broadcast: Speakerphone.
+     - Gaming Voice: Speakerphone.
+
+     @note
+     - This method is for Android and iOS only.
+     - This method only works in audio mode.
+     - Call this method before calling the \ref IRtcEngine::joinChannel "joinChannel" method.
+     - Regardless of whether the audio is routed to the speakerphone or earpiece by default, once a headset is plugged in or Bluetooth device is connected, the default audio route changes. The default audio route switches to the earpiece once removing the headset or disconnecting the Bluetooth device.
+
+     @param defaultToSpeaker Sets the default audio route:
+     - true: Speakerphone.
+     - false: (Default) Earpiece.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setDefaultAudioRouteToSpeakerphone(bool defaultToSpeaker) = 0;
+    /** Enables/Disables the audio playback route to the speakerphone.
 
-    /**
-     * Enables or disables the speakerphone as the audio route for playback.
-     * @param speakerOn true to use speakerphone, false to use earpiece.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     This method sets whether the audio is routed to the speakerphone or earpiece.
+
+     See the default audio route explanation in the \ref IRtcEngine::setDefaultAudioRouteToSpeakerphone "setDefaultAudioRouteToSpeakerphone" method and check whether it is necessary to call this method.
+
+     @note
+     - This method is for Android and iOS only.
+     - Ensure that you have successfully called the \ref IRtcEngine::joinChannel "joinChannel" method before calling this method.
+     - After calling this method, the SDK returns the \ref IRtcEngineEventHandler::onAudioRouteChanged "onAudioRouteChanged" callback to indicate the changes.
+     - This method does not take effect if a headset is used.
+
+     @param speakerOn Sets whether to route the audio to the speakerphone or earpiece:
+     - true: Route the audio to the speakerphone.
+     - false: Route the audio to the earpiece.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setEnableSpeakerphone(bool speakerOn) = 0;
+    /** Enables in-ear monitoring (for Android and iOS only).
+     @param enabled Sets whether to enable/disable in-ear monitoring:
+     - true: Enable.
+     - false: (Default) Disable.
 
-    /**
-     * Enables in-ear monitoring on Android and iOS devices.
-     * @param enabled true to enable, false to disable in-ear monitoring.
      * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int enableInEarMonitoring(bool enabled) = 0;
+    /** Sets the volume of the in-ear monitor.
 
-    /**
-     * Sets the volume of the in-ear monitor for Android and iOS devices.
-     * @param volume The volume level for the in-ear monitor, ranging from 0 to 100.
-     * @return
-     * - 0: Success.
-     * - < 0: Failure.
+     @param volume Sets the volume of the in-ear monitor. The value ranges between 0 and 100 (default).
+
+     @note This method is for Android and iOS only.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setInEarMonitoringVolume(int volume) = 0;
+    /** Checks whether the speakerphone is enabled.
 
-    /**
-     * Checks whether the speakerphone is currently enabled.
-     * @return true if the speakerphone is enabled, false otherwise.
+     @note This method is for Android and iOS only.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual bool isSpeakerphoneEnabled() = 0;
 #endif
 
+#if (defined(__APPLE__) && TARGET_OS_IOS)
+    /** Sets the audio session’s operational restriction.
 
-    #if (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || defined(_WIN32)
-        /**
-         * Enables or disables loopback recording, capturing the output of the sound card.
-         * When loopback recording is enabled, the audio output from the sound card is mixed into the
-         * audio stream that is sent to other users in the call.
-         * @param enabled true to enable loopback recording, false to disable it.
-         * @param deviceName Optional. The name of the sound card device to use for loopback recording.
-         *        If set to NULL (default), the system's default sound card is used.
-         * @note
-         * - This functionality is only supported on macOS and Windows operating systems.
-         * - macOS does not support loopback recording for the default sound card. For macOS, use a
-         *   virtual sound card like Soundflower, and provide its name as the deviceName parameter.
-         *   Aopa's testing recommends using Soundflower for the best experience on macOS.
-         * @return
-         * - 0: Indicates the operation was successful.
-         * - Negative value: Indicates an error occurred, such as an invalid device name or unsupported operation.
-         */
-        virtual int enableLoopbackRecording(bool enabled, const char* deviceName = nullptr) = 0;
-    #endif
+     The SDK and the app can both configure the audio session by default. The app may occasionally use other apps or third-party components to manipulate the audio session and restrict the SDK from doing so. This method allows the app to restrict the SDK’s manipulation of the audio session.
 
-    #if defined(_WIN32)
-        /**
-         * Sets a custom video source for the SDK, allowing the use of a non-default video input.
-         * By default, the SDK captures video from the built-in camera. This method enables the use of
-         * a custom video source, such as an external camera or a virtual camera, by implementing the IVideoSource interface.
-         *
-         * @param source A pointer to the custom video source object. If set to NULL, the SDK reverts to using the default video source.
-         *        See IVideoSource for more details on how to implement a custom video source.
-         * @note
-         * - The custom video source must be implemented with the IVideoSource interface.
-         * - This method can be called either before or after joining a channel to apply the custom video source.
-         * - The SDK takes ownership of the video source object and manages its lifecycle.
-         *
-         * @return
-         * - true: Indicates the custom video source was successfully added to the SDK.
-         * - false: Indicates a failure to add the custom video source to the SDK, possibly due to an invalid implementation or the object being already in use.
-         */
-        virtual bool setVideoSource(IVideoSource* source) = 0;
-    #endif
-    /**
-     * Retrieves the version number of the SDK.
-     * @param build If not NULL, the method also returns the build number of the SDK.
-     * @return A string representing the version of the current SDK, such as "2.3.1".
+     You can call this method at any time to return the control of the audio sessions to the SDK.
+
+     @note
+     - This method is for iOS only.
+     - This method restricts the SDK’s manipulation of the audio session. Any operation to the audio session relies solely on the app, other apps, or third-party components.
+
+     @param restriction The operational restriction (bit mask) of the SDK on the audio session. See #AUDIO_SESSION_OPERATION_RESTRICTION.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setAudioSessionOperationRestriction(AUDIO_SESSION_OPERATION_RESTRICTION restriction) = 0;
+#endif
+
+#if (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || defined(_WIN32)
+    /** Enables loopback recording.
+
+     If you enable loopback recording, the output of the sound card is mixed into the audio stream sent to the other end.
+
+     @param enabled Sets whether to enable/disable loopback recording.
+     - true: Enable loopback recording.
+     - false: (Default) Disable loopback recording.
+     @param deviceName Pointer to the device name of the sound card. The default value is NULL (the default sound card).
+
+     @note
+     - This method is for macOS and Windows only.
+     - macOS does not support loopback recording of the default sound card. If you need to use this method, please use a virtual sound card and pass its name to the deviceName parameter. Aopa has tested and recommends using soundflower.
+
+     */
+    virtual int enableLoopbackRecording(bool enabled, const char* deviceName) = 0;
+
+#if (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE)
+    /** Shares the whole or part of a screen by specifying the display ID.
+
+     @note This method is for macOS only.
+
+     @param  displayId The display ID of the screen to be shared. This parameter specifies which screen you want to share.
+     @param  regionRect (Optional) Sets the relative location of the region to the screen. NIL means sharing the whole screen. See Rectangle. If the specified region overruns the screen, the SDK shares only the region within it; if you set width or height as 0, the SDK shares the whole screen.
+     @param  captureParams Sets the screen sharing encoding parameters. See ScreenCaptureParameters.
+
+
+     @return
+     - 0: Success.
+     - < 0: Failure:
+        - ERR_INVALID_STATE: the screen sharing state is invalid, probably because another screen or window is being shared. Call \ref bb::rtc::IRtcEngine::stopScreenCapture "stopScreenCapture" to stop the current screen sharing.
+        - #ERR_INVALID_ARGUMENT: the argument is invalid.
+     */
+    virtual int startScreenCaptureByDisplayId(unsigned int displayId, const Rectangle& regionRect, const ScreenCaptureParameters& captureParams) = 0;
+#endif
+
+#if defined(_WIN32)
+    /** Shares the whole or part of a screen by specifying the screen rect.
+
+     @param  screenRect Sets the relative location of the screen to the virtual screen. For information on how to get screenRect, see [Share the Screen](https://docs.bb.io/en/Video/screensharing_windows?platform=Windows).
+     @param  regionRect (Optional) Sets the relative location of the region to the screen. NULL means sharing the whole screen. See Rectangle. If the specified region overruns the screen, the SDK shares only the region within it; if you set width or height as 0, the SDK shares the whole screen.
+     @param  captureParams Sets the screen sharing encoding parameters. See ScreenCaptureParameters.
+
+     @return
+     - 0: Success.
+     - < 0: Failure:
+        - ERR_INVALID_STATE: the screen sharing state is invalid, probably because another screen or window is being shared. Call \ref bb::rtc::IRtcEngine::stopScreenCapture "stopScreenCapture" to stop the current screen sharing.
+        - ERR_INVALID_ARGUMENT: the argument is invalid.
+     */
+    virtual int startScreenCaptureByScreenRect(const Rectangle& screenRect, const Rectangle& regionRect, const ScreenCaptureParameters& captureParams) = 0;
+#endif
+
+    /** Shares the whole or part of a window by specifying the window ID.
+
+     @param  windowId The ID of the window to be shared. For information on how to get the windowId, see [Share the Screen](https://docs.bb.io/en/Video/screensharing_windows?platform=Windows).
+     @param  regionRect (Optional) The relative location of the region to the window. NULL/NIL means sharing the whole window. See Rectangle. If the specified region overruns the window, the SDK shares only the region within it; if you set width or height as 0, the SDK shares the whole window.
+     @param  captureParams Window sharing encoding parameters. See ScreenCaptureParameters.
+
+     @return
+     - 0: Success.
+     - < 0: Failure:
+        - ERR_INVALID_STATE: the window sharing state is invalid, probably because another screen or window is being shared. Call \ref bb::rtc::IRtcEngine::stopScreenCapture "stopScreenCapture" to stop sharing the current window.
+        - #ERR_INVALID_ARGUMENT: the argument is invalid.
+     */
+    virtual int startScreenCaptureByWindowId(view_t windowId, const Rectangle& regionRect, const ScreenCaptureParameters& captureParams) = 0;
+
+    /** Sets the content hint for screen sharing.
+
+    A content hint suggests the type of the content being shared, so that the SDK applies different optimization algorithm to different types of content.
+
+     @param  contentHint Sets the content hint for screen sharing. See VideoContentHint.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setScreenCaptureContentHint(VideoContentHint contentHint) = 0;
+
+    /** Updates the screen sharing parameters.
+
+     @param  captureParams Sets the screen sharing encoding parameters. See ScreenCaptureParameters.
+
+     @return
+     - 0: Success.
+     - < 0: Failure:
+        - #ERR_NOT_READY: no screen or windows is being shared.
+     */
+    virtual int updateScreenCaptureParameters(const ScreenCaptureParameters& captureParams) = 0;
+
+    /** Updates the screen sharing region.
+
+     @param  regionRect Sets the relative location of the region to the screen or window. NULL means sharing the whole screen or window. See Rectangle. If the specified region overruns the screen or window, the SDK shares only the region within it; if you set width or height as 0, the SDK shares the whole screen or window.
+
+     @return
+     - 0: Success.
+     - < 0: Failure:
+        - #ERR_NOT_READY: no screen or window is being shared.
+     */
+    virtual int updateScreenCaptureRegion(const Rectangle& regionRect) = 0;
+
+    /** Stop screen sharing.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+    */
+    virtual int stopScreenCapture() = 0;
+
+#if defined(__APPLE__)
+    typedef unsigned int WindowIDType;
+#elif defined(_WIN32)
+    typedef HWND WindowIDType;
+#endif
+
+    /** **DEPRECATED** Starts screen sharing.
+
+     This method is deprecated as of v2.4.0. See the following methods instead:
+
+     - \ref bb::rtc::IRtcEngine::startScreenCaptureByDisplayId "startScreenCaptureByDisplayId"
+     - \ref bb::rtc::IRtcEngine::startScreenCaptureByScreenRect "startScreenCaptureByScreenRect"
+     - \ref bb::rtc::IRtcEngine::startScreenCaptureByWindowId "startScreenCaptureByWindowId"
+
+     This method shares the whole screen, specified window, or specified region:
+
+     - Whole screen: Set @p windowId as 0 and @p rect as NULL.
+     - Specified window: Set @p windowId as a value other than 0. Each window has a @p windowId that is not 0.
+     - Specified region: Set @p windowId as 0 and @p rect not as NULL. In this case, you can share the specified region, for example by dragging the mouse or implementing your own logic.
+
+     @note The specified region is a region on the whole screen. Currently, sharing a specified region in a specific window is not supported.
+     *captureFreq* is the captured frame rate once the screen-sharing function is enabled. The mandatory value ranges between 1 fps and 15 fps.
+
+     @param windowId Sets the screen sharing area. See WindowIDType.
+     @param captureFreq (Mandatory) The captured frame rate. The value ranges between 1 fps and 15 fps.
+     @param rect Specifies the screen-sharing region. @p rect is valid when @p windowsId is set as 0. When @p rect is set as NULL, the whole screen is shared.
+     @param bitrate The captured bitrate.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int startScreenCapture(WindowIDType windowId, int captureFreq, const Rect *rect, int bitrate) = 0;
+
+    /** **DEPRECATED** Updates the screen capture region.
+
+     @param rect Specifies the required region inside the screen or window.
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int updateScreenCaptureRegion(const Rect *rect) = 0;
+#endif
+
+#if defined(_WIN32)
+    /** Sets a custom video source.
+
+    During real-time communication, the SDK enables the default video input device, that is, the built-in camera to capture video. If you need a custom video source, implement theIVideoSource class first, and call this method to add the custom video source to the SDK.
+
+    @note You can call this method either before or after joining a channel.
+
+    @param source The custom video source. See IVideoSource.
+
+    @return
+    - true: The custom video source is added to the SDK.
+    - false: The custom video source is not added to the SDK.
+    */
+    virtual bool setVideoSource(IVideoSource* source) = 0;
+#endif
+
+    /** Retrieves the current call ID.
+
+     When a user joins a channel on a client, a @p callId is generated to identify the call from the client. Feedback methods, such as \ref IRtcEngine::rate "rate" and \ref IRtcEngine::complain "complain", must be called after the call ends to submit feedback to the SDK.
+
+     The \ref IRtcEngine::rate "rate" and \ref IRtcEngine::complain "complain" methods require the @p callId parameter retrieved from the *getCallId* method during a call. @p callId is passed as an argument into the \ref IRtcEngine::rate "rate" and \ref IRtcEngine::complain "complain" methods after the call ends.
+
+     @param callId Pointer to the current call ID.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int getCallId(char* callId, int size) = 0;
+
+    /** Allows a user to rate a call after the call ends.
+
+     @param callId Pointer to the ID of the call, retrieved from the \ref IRtcEngine::getCallId "getCallId" method.
+     @param rating  Rating of the call. The value is between 1 (lowest score) and 5 (highest score). If you set a value out of this range, the #ERR_INVALID_ARGUMENT (2) error returns.
+     @param description (Optional) Pointer to the description of the rating, with a string length of less than 800 bytes.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int rate(const char* callId, int rating, const char* description) = 0;
+
+    /** Allows a user to complain about the call quality after a call ends.
+
+    @param callId Pointer to the ID of the call, retrieved from the \ref IRtcEngine::getCallId "getCallId" method.
+    @param description (Optional) Pointer to the description of the complaint, with a string length of less than 800 bytes.
+
+    @return
+    - 0: Success.
+    - < 0: Failure.
+
+    */
+    virtual int complain(const char* callId, const char* description) = 0;
+
+    /** Retrieves the SDK version number.
+
+     @param build Pointer to the build number.
+     @return The version of the current SDK in the string format. For example, 2.3.1.
      */
     virtual const char* getVersion(int* build) = 0;
 
-    /**
-     * Enables built-in encryption for the SDK with a specified password before joining a channel.
-     * All users in the same channel must use the same encryption password, which is cleared upon leaving the channel.
-     * If no password is set, encryption is disabled.
-     * @note
-     * - Not recommended for CDN live streaming.
-     * - Ensure encrypted data size does not exceed original size + 16 bytes (AES encryption padding).
-     * @param secret The encryption password to be used.
-     * @return
-     * - 0: Indicates success.
-     * - Negative value: Indicates failure.
+    /**  Enables the network connection quality test.
+
+     This method tests the quality of the users' network connections and is disabled by default.
+
+     Before a user joins a channel or before an audience switches to a host, call this method to check the uplink network quality.
+
+     This method consumes additional network traffic, and hence may affect communication quality.
+
+     Call the \ref IRtcEngine::disableLastmileTest "disableLastmileTest" method to disable this test after receiving the \ref IRtcEngineEventHandler::onLastmileQuality "onLastmileQuality" callback, and before joining a channel.
+
+     @note
+     - Do not call any other methods before receiving the \ref IRtcEngineEventHandler::onLastmileQuality "onLastmileQuality" callback. Otherwise, the callback may be interrupted by other methods, and hence may not be triggered.
+     - A host should not call this method after joining a channel (when in a call).
+     - If you call this method to test the last-mile quality, the SDK consumes the bandwidth of a video stream, whose bitrate corresponds to the bitrate you set in the \ref bb::rtc::IRtcEngine::setVideoEncoderConfiguration "setVideoEncoderConfiguration" method. After you join the channel, whether you have called the `disableLastmileTest` method or not, the SDK automatically stops consuming the bandwidth.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int enableLastmileTest() = 0;
+
+    /** Disables the network connection quality test.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int disableLastmileTest() = 0;
+
+    /** Starts the last-mile network probe test.
+
+    This method starts the last-mile network probe test before joining a channel to get the uplink and downlink last-mile network statistics, including the bandwidth, packet loss, jitter, and round-trip time (RTT).
+
+    Call this method to check the uplink network quality before users join a channel or before an audience switches to a host.
+    Once this method is enabled, the SDK returns the following callbacks:
+    - \ref IRtcEngineEventHandler::onLastmileQuality "onLastmileQuality": the SDK triggers this callback within two seconds depending on the network conditions. This callback rates the network conditions and is more closely linked to the user experience.
+    - \ref IRtcEngineEventHandler::onLastmileProbeResult "onLastmileProbeResult": the SDK triggers this callback within 30 seconds depending on the network conditions. This callback returns the real-time statistics of the network conditions and is more objective.
+
+    @note
+    - This method consumes extra network traffic and may affect communication quality. We do not recommend calling this method together with enableLastmileTest.
+    - Do not call other methods before receiving the \ref IRtcEngineEventHandler::onLastmileQuality "onLastmileQuality" and \ref IRtcEngineEventHandler::onLastmileProbeResult "onLastmileProbeResult" callbacks. Otherwise, the callbacks may be interrupted.
+    - In the Live-broadcast profile, a host should not call this method after joining a channel.
+
+    @param config Sets the configurations of the last-mile network probe test. See LastmileProbeConfig.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int startLastmileProbeTest(const LastmileProbeConfig& config) = 0;
+
+    /** Stops the last-mile network probe test. */
+    virtual int stopLastmileProbeTest() = 0;
+
+    /** Retrieves the warning or error description.
+
+     @param code Warning code or error code returned in the \ref bb::rtc::IRtcEngineEventHandler::onWarning "onWarning" or \ref bb::rtc::IRtcEngineEventHandler::onError "onError" callback.
+
+     @return #WARN_CODE_TYPE or #ERROR_CODE_TYPE.
+     */
+    virtual const char* getErrorDescription(int code) = 0;
+
+    /** Enables built-in encryption with an encryption password before users join a channel.
+
+     All users in a channel must use the same encryption password. The encryption password is automatically cleared once a user leaves the channel.
+
+     If an encryption password is not specified, the encryption functionality will be disabled.
+
+     @note
+     - Do not use this method for CDN live streaming.
+     - For optimal transmission, ensure that the encrypted data size does not exceed the original data size + 16 bytes. 16 bytes is the maximum padding size for AES encryption.
+
+     @param secret Pointer to the encryption password.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setEncryptionSecret(const char* secret) = 0;
 
-    /**
-     * Sets the encryption mode for the built-in encryption feature of the SDK.
-     * @note
-     * - Call setEncryptionSecret first to enable encryption.
-     * - All users in the channel must use the same mode and password.
-     * @param encryptionMode The encryption mode to set (e.g., "aes-128-xts", "aes-128-ecb", "aes-256-xts").
-     * @return
-     * - 0: Indicates success.
-     * - Negative value: Indicates failure.
+    /** Sets the built-in encryption mode.
+
+     The Aopa SDK supports built-in encryption, which is set to the @p aes-128-xts mode by default. Call this method to use other encryption modes.
+
+     All users in the same channel must use the same encryption mode and password.
+
+     Refer to the information related to the AES encryption algorithm on the differences between the encryption modes.
+
+     @note Call the \ref IRtcEngine::setEncryptionSecret "setEncryptionSecret" method to enable the built-in encryption function before calling this method.
+
+     @param encryptionMode Pointer to the set encryption mode:
+     - "aes-128-xts": (Default) 128-bit AES encryption, XTS mode.
+     - "aes-128-ecb": 128-bit AES encryption, ECB mode.
+     - "aes-256-xts": 256-bit AES encryption, XTS mode.
+     - "": When encryptionMode is set as NULL, the encryption mode is set as "aes-128-xts" by default.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int setEncryptionMode(const char* encryptionMode) = 0;
 
-    /**
-     * Creates a data stream for sending and receiving data.
-     * @note
-     * - Up to five data streams can be created per user.
-     * - Set both reliable and ordered parameters consistently (both true or both false).
-     * @param streamId The ID assigned to the created data stream.
-     * @param reliable true if the data stream must be received by the recipient within 5 seconds; otherwise, false.
-     * @param ordered true if the data stream must be received in the sent order; otherwise, false.
-     * @return
-     * - 0: Indicates success.
-     * - Negative value: Indicates failure.
+    /** Registers a packet observer.
+
+     The Aopa SDK allows your application to register a packet observer to receive callbacks for voice or video packet transmission.
+
+     @note
+     - The size of the packet sent to the network after processing should not exceed 1200 bytes, otherwise, the packet may fail to be sent.
+     - Ensure that both receivers and senders call this method, otherwise, you may meet undefined behaviors such as no voice and black screen.
+     - When you use CDN live streaming, recording or storage functions, Aopa doesn't recommend calling this method.
+
+     @param observer Pointer to the registered packet observer. See IPacketObserver.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int registerPacketObserver(IPacketObserver* observer) = 0;
+
+    /** Creates a data stream.
+
+     Each user can create up to five data streams during the lifecycle of the IRtcEngine.
+
+     @note Set both the @p reliable and @p ordered parameters to true or false. Do not set one as true and the other as false.
+
+     @param streamId Pointer to the ID of the created data stream.
+     @param reliable Sets whether or not the recipients are guaranteed to receive the data stream from the sender within five seconds:
+     - true: The recipients receive the data stream from the sender within five seconds. If the recipient does not receive the data stream within five seconds, an error is reported to the application.
+     - false: There is no guarantee that the recipients receive the data stream within five seconds and no error message is reported for any delay or missing data stream.
+     @param ordered Sets whether or not the recipients receive the data stream in the sent order:
+     - true: The recipients receive the data stream in the sent order.
+     - false: The recipients do not receive the data stream in the sent order.
+
+     @return
+     - Returns 0: Success.
+     - < 0: Failure.
      */
     virtual int createDataStream(int* streamId, bool reliable, bool ordered) = 0;
 
-    /**
-     * Sends data through a specified data stream to all users in the channel.
-     * @note
-     * - Limited to 30 packets per second per channel, with each packet up to 1 kB in size.
-     * - Each client can send up to 6 kB of data per second.
-     * - Each user can have up to five data streams simultaneously.
-     * - Use createDataStream to obtain a stream ID before sending data.
-     * @param streamId The ID of the data stream for sending messages.
-     * @param data Pointer to the data to be sent.
-     * @param length The length of the data to be sent.
-     * @return
-     * - 0: Indicates success.
-     * - Negative value: Indicates failure.
+    /** Sends data stream messages to all users in a channel.
+
+     The SDK has the following restrictions on this method:
+     - Up to 30 packets can be sent per second in a channel with each packet having a maximum size of 1 kB.
+     - Each client can send up to 6 kB of data per second.
+     - Each user can have up to five data streams simultaneously.
+
+     A successful \ref bb::rtc::IRtcEngine::sendStreamMessage "sendStreamMessage" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onStreamMessage "onStreamMessage" callback on the remote client, from which the remote user gets the stream message.
+
+     A failed \ref bb::rtc::IRtcEngine::sendStreamMessage "sendStreamMessage" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onStreamMessageError "onStreamMessage" callback on the remote client.
+     @note This method applies only to the Communication profile or to the hosts in the Live-broadcast profile. If an audience in the Live-broadcast profile calls this method, the audience may be switched to a host.
+
+     @param  streamId  ID of the sent data stream, returned in the \ref IRtcEngine::createDataStream "createDataStream" method.
+     @param data Pointer to the sent data.
+     @param length Length of the sent data.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
     virtual int sendStreamMessage(int streamId, const char* data, size_t length) = 0;
 
-    /**
-     * Publishes the local stream to a specified CDN live RTMP address.
-     * @note
-     * - Call this method after joining the channel.
-     * - Ensure the RTMP Converter service is enabled.
-     * - Only one RTMP URL can be added per method call.
-     * - This method is only applicable for Live Broadcast profiles.
-     * @param url The RTMP URL to which the stream is published.
-     * @param transcodingEnabled true to enable transcoding of the published stream; false to disable it.
-     * @return
-     * - 0: Indicates success.
-     * - Negative value: Indicates failure, such as invalid arguments or uninitialized RTC engine.
+    /** Publishes the local stream to a specified CDN live RTMP address.  (CDN live only.)
+
+     The SDK returns the result of this method call in the \ref IRtcEngineEventHandler::onStreamPublished "onStreamPublished" callback.
+
+     The \ref bb::rtc::IRtcEngine::addPublishStreamUrl "addPublishStreamUrl" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onRtmpStreamingStateChanged "onRtmpStreamingStateChanged" callback on the local client to report the state of adding a local stream to the CDN.
+     @note
+     - Ensure that the user joins the channel before calling this method.
+     - Ensure that you enable the RTMP Converter service before using this function. See [Prerequisites](https://docs.bb.io/en/Interactive%20Broadcast/cdn_streaming_windows?platform=Windows#prerequisites).
+     - This method adds only one stream RTMP URL address each time it is called.
+     - This method applies to Live Broadcast only.
+
+     @param url The CDN streaming URL in the RTMP format. The maximum length of this parameter is 1024 bytes. The RTMP URL address must not contain special characters, such as Chinese language characters.
+     @param  transcodingEnabled Sets whether transcoding is enabled/disabled:
+     - true: Enable transcoding. 
+     - false: Disable transcoding.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+          - #ERR_INVALID_ARGUMENT (2): The RTMP URL address is NULL or has a string length of 0.
+          - #ERR_NOT_INITIALIZED (7): You have not initialized the RTC engine when publishing the stream.
      */
     virtual int addPublishStreamUrl(const char *url, bool transcodingEnabled) = 0;
 
-        /**
-     * Removes a specified RTMP streaming address from the ongoing CDN live broadcast.
-     *
-     * This function revokes an RTMP URL that was previously added through `addPublishStreamUrl`. The outcome of this operation is notified via the `onStreamUnpublished` callback. Additionally, invoking this method triggers the `onRtmpStreamingStateChanged` callback locally, providing updates on the status of the RTMP stream removal from the CDN.
-     *
-     * @note
-     * - Only a single RTMP URL is processed per method call.
-     * - The RTMP URL must be alphanumeric and should avoid special characters, excluding common punctuation.
-     * - This feature is exclusive to the Live Broadcast profile.
+    /** Removes an RTMP stream from the CDN. (CDN live only.)
 
-    * @param url The RTMP streaming URL to be revoked, with a maximum allowable length of 1024 bytes.
+     This method removes the RTMP URL address (added by the \ref IRtcEngine::addPublishStreamUrl "addPublishStreamUrl" method) from a CDN live stream. The SDK returns the result of this method call in the \ref IRtcEngineEventHandler::onStreamUnpublished "onStreamUnpublished" callback.
 
-    * @return
-    * - 0: The operation was successful.
-    * - < 0: An error occurred, refer to specific error codes for details.
-    */
+     The \ref bb::rtc::IRtcEngine::removePublishStreamUrl "removePublishStreamUrl" method call triggers the \ref bb::rtc::IRtcEngineEventHandler::onRtmpStreamingStateChanged "onRtmpStreamingStateChanged" callback on the local client to report the state of removing an RTMP stream from the CDN.
+     @note
+     - This method removes only one RTMP URL address each time it is called.
+     - The RTMP URL address must not contain special characters, such as Chinese language characters.
+     - This method applies to Live Broadcast only.
+
+     @param url The RTMP URL address to be removed. The maximum length of this parameter is 1024 bytes.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
     virtual int removePublishStreamUrl(const char *url) = 0;
 
-    /**
-     * Configures video layout and audio settings for CDN live streaming in Live Broadcast mode.
-     *
-     * Upon updating the transcoding configuration via `setLiveTranscoding`, the SDK initiates the `onTranscodingUpdated` callback to notify about the setting change.
-     *
-     * @note
-     * - This function is applicable solely within the Live Broadcast scenario.
-     * - Prior to utilizing this function, ensure the RTMP Converter service is activated. Refer to the [Prerequisites](https://docs.bb.io/en/Interactive%20Broadcast/cdn_streaming_windows?platform=Windows#prerequisites) for setup instructions.
-     * - The initial invocation of `setLiveTranscoding` to establish transcoding settings will not elicit the `onTranscodingUpdated` callback.
+    /** Sets the video layout and audio settings for CDN live. (CDN live only.)
 
-    * @param transcoding An instance of `LiveTranscoding` struct containing detailed configurations for audio and video transcoding tailored for CDN live streaming.
+     The SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onTranscodingUpdated "onTranscodingUpdated" callback when you call the `setLiveTranscoding` method to update the transcoding setting.
 
-    * @return
-    * - 0: The operation completed successfully.
-    * - < 0: An error was encountered, consult specific return values for more information.
-    */
+     @note
+     - This method applies to Live Broadcast only.
+     - Ensure that you enable the RTMP Converter service before using this function. See [Prerequisites](https://docs.bb.io/en/Interactive%20Broadcast/cdn_streaming_windows?platform=Windows#prerequisites).
+     - If you call the `setLiveTranscoding` method to update the transcoding setting for the first time, the SDK does not trigger the `onTranscodingUpdated` callback.
+
+     @param transcoding Sets the CDN live audio/video transcoding settings. See LiveTranscoding.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
     virtual int setLiveTranscoding(const LiveTranscoding &transcoding) = 0;
 
-    /**
-     * Configures the fallback strategy for the local publishing stream in case of network issues.
-     *
-     * This method sets the action to be taken when the local stream publication encounters network congestion or failure. The behavior is defined by the `STREAM_FALLBACK_OPTIONS` enum provided as the `option` parameter.
-     *
-     * @param option An enumeration value from `STREAM_FALLBACK_OPTIONS` specifying the fallback strategy for handling local stream publish disruptions.
-     *
-     * @return
-     * - 0: The fallback option was set successfully.
-     * - < 0: An error occurred during the setting process.
+    /** **DEPRECATED** Adds a watermark image to the local video or CDN live stream.
+
+     This method is deprecated from v2.9.1. Use \ref bb::rtc::IRtcEngine::addVideoWatermark(const char* watermarkUrl, const WatermarkOptions& options) "addVideoWatermark"2 instead.
+
+     This method adds a PNG watermark image to the local video stream for the recording device, channel audience, and CDN live audience to view and capture.
+
+     To add the PNG file to the CDN live publishing stream, see the \ref IRtcEngine::setLiveTranscoding "setLiveTranscoding" method.
+
+     @param watermark Pointer to the watermark image to be added to the local video stream. See RtcImage.
+
+     @note
+     - The URL descriptions are different for the local video and CDN live streams:
+        - In a local video stream, @p url in RtcImage refers to the absolute path of the added watermark image file in the local video stream.
+        - In a CDN live stream, @p url in RtcImage refers to the URL address of the added watermark image in the CDN live broadcast.
+     - The source file of the watermark image must be in the PNG file format. If the width and height of the PNG file differ from your settings in this method, the PNG file will be cropped to conform to your settings.
+     - The Aopa SDK supports adding only one watermark image onto a local video or CDN live stream. The newly added watermark image replaces the previous one.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
-    virtual int setLocalPublishFallbackOption(STREAM_FALLBACK_OPTIONS option) = 0;
+    virtual int addVideoWatermark(const RtcImage& watermark) = 0;
 
-    /**
-     * Specifies the fallback behavior for remote subscription in the event of network degradation.
-     *
-     * Determines how the system should react when the subscribed remote stream quality deteriorates due to network conditions. The reaction strategy is determined by the `STREAM_FALLBACK_OPTIONS` value passed as `option`.
-     *
-     * @param option A `STREAM_FALLBACK_OPTIONS` enum member indicating the fallback action to take when the remote stream subscription encounters network problems.
-     *
-     * @return
-     * - 0: The remote subscribe fallback option was configured successfully.
-     * - < 0: An error was encountered while setting the fallback option.
+    /** Adds a watermark image to the local video.
+
+     This method adds a PNG watermark image to the local video in a live broadcast. Once the watermark image is added, all the audience in the channel (CDN audience included),
+     and the recording device can see and capture it. Aopa supports adding only one watermark image onto the local video, and the newly watermark image replaces the previous one.
+
+     The watermark position depends on the settings in the \ref IRtcEngine::setVideoEncoderConfiguration "setVideoEncoderConfiguration" method:
+     - If the orientation mode of the encoding video is #ORIENTATION_MODE_FIXED_LANDSCAPE, or the landscape mode in #ORIENTATION_MODE_ADAPTIVE, the watermark uses the landscape orientation.
+     - If the orientation mode of the encoding video is #ORIENTATION_MODE_FIXED_PORTRAIT, or the portrait mode in #ORIENTATION_MODE_ADAPTIVE, the watermark uses the portrait orientation.
+     - When setting the watermark position, the region must be less than the dimensions set in the `setVideoEncoderConfiguration` method. Otherwise, the watermark image will be cropped.
+
+     @note
+     - Ensure that you have called the \ref bb::rtc::IRtcEngine::enableVideo "enableVideo" method to enable the video module before calling this method.
+     - If you only want to add a watermark image to the local video for the audience in the CDN live broadcast channel to see and capture, you can call this method or the \ref bb::rtc::IRtcEngine::setLiveTranscoding "setLiveTranscoding" method.
+     - This method supports adding a watermark image in the PNG file format only. Supported pixel formats of the PNG image are RGBA, RGB, Palette, Gray, and Alpha_gray.
+     - If the dimensions of the PNG image differ from your settings in this method, the image will be cropped or zoomed to conform to your settings.
+     - If you have enabled the local video preview by calling the \ref bb::rtc::IRtcEngine::startPreview "startPreview" method, you can use the `visibleInPreview` member in the WatermarkOptions class to set whether or not the watermark is visible in preview.
+     - If you have mirrored the local video by calling the \ref bb::rtc::IRtcEngine::setupLocalVideo "setupLocalVideo" or \ref bb::rtc::IRtcEngine::setLocalRenderMode(RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode) "setLocalRenderMode" method, the watermark image in preview is also mirrored.
+
+     @param watermarkUrl The local file path of the watermark image to be added. This method supports adding a watermark image from the local absolute or relative file path.
+     @param options Pointer to the watermark's options to be added. See WatermarkOptions for more infomation.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
      */
-    virtual int setRemoteSubscribeFallbackOption(STREAM_FALLBACK_OPTIONS option) = 0;
+    virtual int addVideoWatermark(const char* watermarkUrl, const WatermarkOptions& options) = 0;
 
+    /** Removes the watermark image from the video stream added by the \ref bb::rtc::IRtcEngine::addVideoWatermark(const char* watermarkUrl, const WatermarkOptions& options) "addVideoWatermark" method.
 
-    #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS)
-    virtual int switchCamera2(CAMERA_DIRECTION direction) = 0;
-    #endif
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int clearVideoWatermarks() = 0;
 
-        /**
-     * Adjusts image enhancement settings and toggles the feature on or off.
-     *
-     * @note
-     * - Invoke this function after enabling video functionality with `enableVideo`.
-     * - Currently unsupported on macOS platforms.
+    /** Enables/Disables image enhancement and sets the options.
 
-    * @param enabled A boolean flag to control image enhancement activation:
-    *   - `true`: Enables image enhancement features.
-    *   - `false`: Disables image enhancement features.
-    * @param options An instance of `BeautyOptions` struct to customize the image enhancement parameters.
-    *
-    * @return
-    * - 0: The operation was successful.
-    * - < 0: An error occurred, refer to error codes for specifics.
+    @note
+    - Call this method after calling the enableVideo method.
+    - Currently this method does not apply for macOS.
+
+    @param enabled Sets whether or not to enable image enhancement:
+    - true: enables image enhancement.
+    - false: disables image enhancement.
+    @param options Sets the image enhancement option. See BeautyOptions.
     */
     virtual int setBeautyEffectOptions(bool enabled, BeautyOptions options) = 0;
 
-    /**
-     * Incorporates an external voice or video stream into an ongoing live broadcast.
-     *
-     * Utilize this method to introduce online media streams into a live channel, enhancing audience engagement. The `onStreamPublished` callback signals the injection status. Upon success, the server fetches the stream and integrates it into the live session.
-     *
-     * Triggers the following callbacks:
-     * - Locally:
-     - `onStreamInjectedStatus`, reflecting the stream injection status.
-    - `onUserJoined` (with `uid: 666`), upon successful injection of the stream into the channel.
-    * - Remotely:
-    - `onUserJoined` (also with `uid: 666`), for other users when the stream is effectively integrated.
+    /** Adds a voice or video stream URL address to a live broadcast.
 
-    * @note
-    * - Ensure the RTMP Converter service is active prior to use. Refer to [Prerequisites](https://docs.bb.io/en/Interactive%20Broadcast/cdn_streaming_windows?platform=Windows#prerequisites).
-    * - Applicable for Native SDK versions 2.4.1 onwards.
+    The \ref IRtcEngineEventHandler::onStreamPublished "onStreamPublished" callback returns the inject status. If this method call is successful, the server pulls the voice or video stream and injects it into a live channel. This is applicable to scenarios where all audience members in the channel can watch a live show and interact with each other.
 
-    * @param url A pointer to the stream's URL (RTMP, HLS, or FLV format). 
-    - FLV supports AAC audio codec.
-    - FLV supports H264 (AVC) video codec.
-    * @param config A reference to an `InjectStreamConfig` object detailing the stream's configuration.
+     The \ref bb::rtc::IRtcEngine::addInjectStreamUrl "addInjectStreamUrl" method call triggers the following callbacks:
+    - The local client:
+      - \ref bb::rtc::IRtcEngineEventHandler::onStreamInjectedStatus "onStreamInjectedStatus" , with the state of the injecting the online stream.
+      - \ref bb::rtc::IRtcEngineEventHandler::onUserJoined "onUserJoined" (uid: 666), if the method call is successful and the online media stream is injected into the channel.
+    - The remote client:
+      - \ref bb::rtc::IRtcEngineEventHandler::onUserJoined "onUserJoined" (uid: 666), if the method call is successful and the online media stream is injected into the channel.
 
-    * @return
-    * - 0: The stream URL was successfully added.
-    * - < 0: An error occurred, including but not limited to:
-    - `ERR_INVALID_ARGUMENT` (2): Invalid URL. Retry with a valid URL.
-    - `ERR_NOT_READY` (3): The user is not in a channel.
-    - `ERR_NOT_SUPPORTED` (4): Incorrect channel profile. Set to live broadcast using `setChannelProfile` beforehand.
-    - `ERR_NOT_INITIALIZED` (7): The SDK is uninitialized. Initialize `IRtcEngine` first.
-    */
+     @note
+     - Ensure that you enable the RTMP Converter service before using this function. See [Prerequisites](https://docs.bb.io/en/Interactive%20Broadcast/cdn_streaming_windows?platform=Windows#prerequisites).
+     - This method applies to the Native SDK v2.4.1 and later.
+
+     @param url Pointer to the URL address to be added to the ongoing live broadcast. Valid protocols are RTMP, HLS, and FLV.
+     - Supported FLV audio codec type: AAC.
+     - Supported FLV video codec type: H264 (AVC).
+     @param config Pointer to the InjectStreamConfig object that contains the configuration of the added voice or video stream.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+        - #ERR_INVALID_ARGUMENT (2): The injected URL does not exist. Call this method again to inject the stream and ensure that the URL is valid.
+        - #ERR_NOT_READY (3): The user is not in the channel.
+        - #ERR_NOT_SUPPORTED (4): The channel profile is not live broadcast. Call the \ref bb::rtc::IRtcEngine::setChannelProfile "setChannelProfile" method and set the channel profile to live broadcast before calling this method.
+        - #ERR_NOT_INITIALIZED (7): The SDK is not initialized. Ensure that the IRtcEngine object is initialized before calling this method.
+     */
     virtual int addInjectStreamUrl(const char* url, const InjectStreamConfig& config) = 0;
-
-        /**
-     * Initiates real-time media stream relay across multiple channels.
+    /** Starts to relay media streams across channels.
      *
-     * Upon a successful invocation, the SDK triggers:
-     * - \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged "onChannelMediaRelayStateChanged": Reports the relay's state changes.
-     * - \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayEvent "onChannelMediaRelayEvent": Notifies about relay-related events.
-     * 
-     * **Callback Scenarios:**
-     * - If \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged "onChannelMediaRelayStateChanged" returns #RELAY_STATE_RUNNING (2) and #RELAY_OK (0),
-     and \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayEvent "onChannelMediaRelayEvent" returns #RELAY_EVENT_PACKET_SENT_TO_DEST_CHANNEL (4), 
-    the media relay has started, and the broadcaster is transmitting to the target channel.
-    * - If \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged "onChannelMediaRelayStateChanged" returns #RELAY_STATE_FAILURE (3), 
-    an error has occurred during the relay process.
-
-    * @note
-    * - Ensure to call this after successfully joining a channel via \ref joinChannel().
-    * - Applicable only when acting as a broadcaster in a live-broadcast channel.
-    * - For subsequent relay configurations, invoke \ref stopChannelMediaRelay() before calling this method again.
-    * - Consult with sales-us@bb.io prior to implementation.
-    * - Usernames as strings are not supported in this API.
-
-    * @param configuration The structure defining the relay configuration: ChannelMediaRelayConfiguration.
-
-    * @return
-    * - 0: Operation successful.
-    * - < 0: An error occurred.
-    */
-    virtual int startChannelMediaRelay(const ChannelMediaRelayConfiguration &configuration) = 0;
-
-    /**
-     * Modifies the destination channels for an ongoing media stream relay.
+     * After a successful method call, the SDK triggers the
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged
+     *  "onChannelMediaRelayStateChanged" and
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayEvent
+     * "onChannelMediaRelayEvent" callbacks, and these callbacks return the
+     * state and events of the media stream relay.
+     * - If the
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged
+     *  "onChannelMediaRelayStateChanged" callback returns
+     * #RELAY_STATE_RUNNING (2) and #RELAY_OK (0), and the
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayEvent
+     * "onChannelMediaRelayEvent" callback returns
+     * #RELAY_EVENT_PACKET_SENT_TO_DEST_CHANNEL (4), the broadcaster starts
+     * sending data to the destination channel.
+     * - If the
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged
+     *  "onChannelMediaRelayStateChanged" callback returns
+     * #RELAY_STATE_FAILURE (3), an exception occurs during the media stream
+     * relay.
      *
-     * Use this method post-\ref startChannelMediaRelay() to modify relay destinations:
-     * add new channels or abandon the current one.
-     * 
-     * Upon successful execution, the SDK triggers the
-     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayEvent "onChannelMediaRelayEvent" callback
-     * with the event code #RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL (7).
-
-    * @note
-    * Execute this after \ref startChannelMediaRelay() to alter the target channels.
-
-    * @param configuration The updated media stream relay configuration: ChannelMediaRelayConfiguration.
-
-    * @return
-    * - 0: Operation successful.
-    * - < 0: An error occurred.
-    */
-    virtual int updateChannelMediaRelay(const ChannelMediaRelayConfiguration &configuration) = 0;
-
-        /**
-     * Terminates the ongoing media stream relay process.
+     * @note
+     * - Call this method after the \ref joinChannel() "joinChannel" method.
+     * - This method takes effect only when you are a broadcaster in a
+     * Live-broadcast channel.
+     * - After a successful method call, if you want to call this method
+     * again, ensure that you call the
+     * \ref stopChannelMediaRelay() "stopChannelMediaRelay" method to quit the
+     * current relay.
+     * - Contact sales-us@bb.io before implementing this function.
+     * - We do not support string user accounts in this API.
      *
-     * Upon stopping, the broadcaster is disconnected from all destination channels.
-     *
-     * Post-execution, the \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged
-     *  "onChannelMediaRelayStateChanged" callback signifies the relay status change.
-     * A return of #RELAY_STATE_IDLE (0) and #RELAY_OK (0) confirms a successful relay halt.
-
-    * @note
-    * In case of failure, the SDK issues the
-    * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged
-    *  "onChannelMediaRelayStateChanged" callback with either
-    * #RELAY_ERROR_SERVER_NO_RESPONSE (2) or #RELAY_ERROR_SERVER_CONNECTION_LOST (8).
-    * Exiting the channel via \ref leaveChannel() also discontinues the relay.
-
-    * @return
-    * - 0: Operation completed successfully.
-    * - < 0: An error was encountered.
-    */
-    virtual int stopChannelMediaRelay() = 0;
-
-    /**
-     * Eliminates a previously injected voice or video stream URL from the live broadcast.
-     *
-     * This function revokes the integration of a stream URL (previously attached using
-     * \ref IRtcEngine::addInjectStreamUrl) from the ongoing live session.
-     *
-     * @note A successful execution prompts the \ref IRtcEngineEventHandler::onUserOffline
-     *  "onUserOffline" callback, indicating the disconnection of a stream with a UID of 666.
-
-    * @param url Pointer directing to the stream URL string scheduled for removal.
-
-    * @return
-    * - 0: The operation was successful.
-    * - < 0: An error transpired.
-    */
-    virtual int removeInjectStreamUrl(const char* url) = 0;
-
-        /**
-     * Registers a callback handler for real-time communication events.
-     *
-     * @param eventHandler Pointer to the event handler object.
-     *
-     * @return
-     * - `true`: Registration successful.
-     * - `false`: Registration failed.
-     */
-    virtual bool registerEventHandler(IRtcEngineEventHandler *eventHandler) = 0;
-
-    /**
-     * Unregisters a previously registered callback handler.
-     *
-     * @param eventHandler Pointer to the event handler object to unregister.
-     *
-     * @return
-     * - `true`: Unregistration successful.
-     * - `false`: Unregistration failed.
-     */
-    virtual bool unregisterEventHandler(IRtcEngineEventHandler *eventHandler) = 0;
-
-    /**
-     * Retrieves the current connectivity status of the SDK.
-     *
-     * @return The current #CONNECTION_STATE_TYPE.
-     */
-    virtual CONNECTION_STATE_TYPE getConnectionState() = 0;
-
-    /**
-     * Configures SDK behaviors and enables experimental features through JSON parameters.
-     *
-     * Note: These JSON options are currently non-public. Aopa is actively working towards exposing common options through standardized APIs.
-     *
-     * @param parameters A JSON-formatted string containing the desired configuration parameters.
-     *
-     * @return
-     * - 0: Configuration successful.
-     * - < 0: Configuration failed.
-     */
-    virtual int setParameters(const char* parameters) = 0;
-
-    // Added by bhb on 2020/06/09
-    /**
-     * Specifies the output directory for SDK dump files.
-     *
-     * @param dir Path to the designated directory.
+     * @param configuration The configuration of the media stream relay:
+     * ChannelMediaRelayConfiguration.
      *
      * @return
      * - 0: Success.
      * - < 0: Failure.
      */
-    virtual int setDumpOutputDirectory(const char* dir) = 0;
-
-    /**
-     * Enables or disables SDK dump file generation.
+    virtual int startChannelMediaRelay(const ChannelMediaRelayConfiguration &configuration) = 0;
+    /** Updates the channels for media stream relay. After a successful
+     * \ref startChannelMediaRelay() "startChannelMediaRelay" method call, if
+     * you want to relay the media stream to more channels, or leave the
+     * current relay channel, you can call the
+     * \ref updateChannelMediaRelay() "updateChannelMediaRelay" method.
      *
-     * @param enabled `true` to enable, `false` to disable.
+     * After a successful method call, the SDK triggers the
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayEvent
+     *  "onChannelMediaRelayEvent" callback with the
+     * #RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL (7) state code.
+     *
+     * @note
+     * Call this method after the
+     * \ref startChannelMediaRelay() "startChannelMediaRelay" method to update
+     * the destination channel.
+     *
+     * @param configuration The media stream relay configuration:
+     * ChannelMediaRelayConfiguration.
      *
      * @return
-     * - 0: Operation successful.
-     * - < 0: Operation failed.
+     * - 0: Success.
+     * - < 0: Failure.
      */
+    virtual int updateChannelMediaRelay(const ChannelMediaRelayConfiguration &configuration) = 0;
+    /** Stops the media stream relay.
+     *
+     * Once the relay stops, the broadcaster quits all the destination
+     * channels.
+     *
+     * After a successful method call, the SDK triggers the
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged
+     *  "onChannelMediaRelayStateChanged" callback. If the callback returns
+     * #RELAY_STATE_IDLE (0) and #RELAY_OK (0), the broadcaster successfully
+     * stops the relay.
+     *
+     * @note
+     * If the method call fails, the SDK triggers the
+     * \ref bb::rtc::IRtcEngineEventHandler::onChannelMediaRelayStateChanged
+     *  "onChannelMediaRelayStateChanged" callback with the
+     * #RELAY_ERROR_SERVER_NO_RESPONSE (2) or
+     * #RELAY_ERROR_SERVER_CONNECTION_LOST (8) state code. You can leave the
+     * channel by calling the \ref leaveChannel() "leaveChannel" method, and
+     * the media stream relay automatically stops.
+     *
+     * @return
+     * - 0: Success.
+     * - < 0: Failure.
+     */
+    virtual int stopChannelMediaRelay() = 0;
+
+    /** Removes the voice or video stream URL address from a live broadcast.
+
+     This method removes the URL address (added by the \ref IRtcEngine::addInjectStreamUrl "addInjectStreamUrl" method) from the live broadcast.
+
+     @note If this method is called successfully, the SDK triggers the \ref IRtcEngineEventHandler::onUserOffline "onUserOffline" callback and returns a stream uid of 666.
+
+     @param url Pointer to the URL address of the added stream to be removed.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int removeInjectStreamUrl(const char* url) = 0;
+    virtual bool registerEventHandler(IRtcEngineEventHandler *eventHandler) = 0;
+    virtual bool unregisterEventHandler(IRtcEngineEventHandler *eventHandler) = 0;
+    /** Gets the current connection state of the SDK.
+
+     @return #CONNECTION_STATE_TYPE.
+     */
+    virtual CONNECTION_STATE_TYPE getConnectionState() = 0;
+
+    /** Registers the metadata observer.
+
+     Registers the metadata observer. You need to implement the IMetadataObserver class and specify the metadata type in this method. A successful call of this method triggers the \ref bb::rtc::IMetadataObserver::getMaxMetadataSize "getMaxMetadataSize" callback.
+     This method enables you to add synchronized metadata in the video stream for more diversified live broadcast interactions, such as sending shopping links, digital coupons, and online quizzes.
+
+     @note
+     - Call this method before the joinChannel method.
+     - This method applies to the Live-broadcast channel profile.
+
+     @param observer The IMetadataObserver class. See the definition of IMetadataObserver for details.
+     @param type See \ref IMetadataObserver::METADATA_TYPE "METADATA_TYPE". The SDK supports VIDEO_METADATA (0) only for now.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int registerMediaMetadataObserver(IMetadataObserver *observer, IMetadataObserver::METADATA_TYPE type) = 0;
+    /** Provides technical preview functionalities or special customizations by configuring the SDK with JSON options.
+
+     The JSON options are not public by default. Aopa is working on making commonly used JSON options public in a standard way.
+
+     @param parameters Sets the parameter as a JSON string in the specified format.
+
+     @return
+     - 0: Success.
+     - < 0: Failure.
+     */
+    virtual int setParameters(const char* parameters) = 0;
+    //add by bhb, 2020/06/09
+    virtual int setDumpOutputDirectory(const char* dir) = 0;
     virtual int enableDump(bool enabled) = 0;
 
-    // Added by bhb on 2021/03/26
-    /**
-     * Applies a predefined audio effect preset.
-     *
-     * @param preset The selected #AUDIO_EFFECT_PRESET.
-     *
-     * @return
-     * - 0: Preset applied successfully.
-     * - < 0: Application failed.
-     */
+    //add by bhb, 2021/03/26
     virtual int setAudioEffectPreset(AUDIO_EFFECT_PRESET preset) = 0;
-
-    /**
-     * Selects a voice beautifier preset.
-     *
-     * @param preset The chosen #VOICE_BEAUTIFIER_PRESET.
-     *
-     * @return
-     * - 0: Preset set successfully.
-     * - < 0: Setting failed.
-     */
     virtual int setVoiceBeautifierPreset(VOICE_BEAUTIFIER_PRESET preset) = 0;
+    virtual int setVoiceConversionPreset(VOICE_CONVERSION_PRESET preset) = 0;
+    virtual int setAudioEffectParameters(AUDIO_EFFECT_PRESET preset, int param1, int param2) = 0;
+    virtual int setVoiceBeautifierParameters(VOICE_BEAUTIFIER_PRESET preset, int param1, int param2) = 0;
 
-    /**
-     * Adjusts low-light enhancement settings.
-     *
-     * @param enabled `true` to enable, `false` to disable.
-     * @param options Detailed enhancement options.
-     *
-     * @return
-     * - 0: Settings applied successfully.
-     * - < 0: Application failed.
-     */
+
     virtual int setLowlightEnhanceOptions(bool enabled, LowLightEnhanceOptions options) = 0;
+    virtual int setVideoDenoiserOptions(bool enabled, VideoDenoiserOptions options) = 0;
+    virtual int setColorEnhanceOptions(bool enabled, ColorEnhanceOptions options) = 0;
+    virtual int enableVirtualBackground(bool enabled, VirtualBackgroundSource backgroundSource) = 0;
 
-    /**
-     * Retrieves the duration of the captured voice in milliseconds.
-     *
-     * @return The duration of the voice in milliseconds, or an error code if failed.
-     */
     virtual int getVoiceDuration() = 0;
+
+    virtual int sendSEI(const char* data, int length) = 0;
 };
 
 
@@ -5788,6 +7883,15 @@ public:
     }
 };
 
+class AVideoDeviceManager : public bbrtc::util::AutoPtr<IVideoDeviceManager>
+{
+public:
+    AVideoDeviceManager(IRtcEngine* engine)
+    {
+        queryInterface(engine, BBRTC_IID_VIDEO_DEVICE_MANAGER);
+    }
+};
+
 class AParameter : public bbrtc::util::AutoPtr<IRtcEngineParameter>
 {
 public:
@@ -5803,10 +7907,524 @@ private:
         return p != NULL;
     }
 };
+/** **DEPRECATED** The RtcEngineParameters class is deprecated, use the IRtcEngine class instead.
+*/
+class RtcEngineParameters
+{
+public:
+    RtcEngineParameters(IRtcEngine& engine)
+        :m_parameter(&engine){}
+    RtcEngineParameters(IRtcEngine* engine)
+        :m_parameter(engine){}
+
+
+    int enableLocalVideo(bool enabled) {
+        return setParameters("{\"rtc.video.capture\":%s,\"che.video.local.capture\":%s,\"che.video.local.render\":%s,\"che.video.local.send\":%s}", enabled ? "true" : "false", enabled ? "true" : "false", enabled ? "true" : "false", enabled ? "true" : "false");
+    }
+
+
+
+    int muteLocalVideoStream(bool mute) {
+        return setParameters("{\"rtc.video.mute_me\":%s,\"che.video.local.send\":%s}", mute ? "true" : "false", mute ? "false" : "true");
+    }
+
+
+    int muteAllRemoteVideoStreams(bool mute) {
+        return m_parameter ? m_parameter->setBool("rtc.video.mute_peers", mute) : -ERR_NOT_INITIALIZED;
+    }
+
+
+
+    int setDefaultMuteAllRemoteVideoStreams(bool mute) {
+        return m_parameter ? m_parameter->setBool("rtc.video.set_default_mute_peers", mute) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int muteRemoteVideoStream(uid_t uid, bool mute) {
+        return setObject("rtc.video.mute_peer", "{\"uid\":%u,\"mute\":%s}", uid, mute ? "true" : "false");
+    }
+
+
+    int setPlaybackDeviceVolume(int volume) {// [0,255]
+        return m_parameter ? m_parameter->setInt("che.audio.output.volume", volume) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int startAudioRecording(const char* filePath, AUDIO_RECORDING_QUALITY_TYPE quality) {
+        return startAudioRecording(filePath, 32000, quality);
+    }
+
+    int startAudioRecording(const char* filePath, int sampleRate, AUDIO_RECORDING_QUALITY_TYPE quality) {
+        if (!m_parameter) return -ERR_NOT_INITIALIZED;
+#if defined(_WIN32)
+        util::AString path;
+        if (!m_parameter->convertPath(filePath, path))
+            filePath = path->c_str();
+        else
+            return -ERR_INVALID_ARGUMENT;
+#endif
+        return setObject("che.audio.start_recording", "{\"filePath\":\"%s\",\"sampleRate\":%d,\"quality\":%d}", filePath, sampleRate, quality);
+    }
+
+
+    int stopAudioRecording() {
+        return m_parameter ? m_parameter->setBool("che.audio.stop_recording", true) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int startAudioMixing(const char* filePath, bool loopback, bool replace, int cycle) {
+        if (!m_parameter) return -ERR_NOT_INITIALIZED;
+#if defined(_WIN32)
+        util::AString path;
+        if (!m_parameter->convertPath(filePath, path))
+            filePath = path->c_str();
+        else
+            return -ERR_INVALID_ARGUMENT;
+#endif
+        return setObject("che.audio.start_file_as_playout", "{\"filePath\":\"%s\",\"loopback\":%s,\"replace\":%s,\"cycle\":%d}",
+                         filePath,
+                         loopback?"true":"false",
+                         replace?"true":"false",
+                         cycle);
+    }
+
+
+    int stopAudioMixing() {
+        return m_parameter ? m_parameter->setBool("che.audio.stop_file_as_playout", true) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int pauseAudioMixing() {
+        return m_parameter ? m_parameter->setBool("che.audio.pause_file_as_playout", true) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int resumeAudioMixing() {
+        return m_parameter ? m_parameter->setBool("che.audio.pause_file_as_playout", false) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int adjustAudioMixingVolume(int volume) {
+        int ret = adjustAudioMixingPlayoutVolume(volume);
+        if (ret == 0) {
+            adjustAudioMixingPublishVolume(volume);
+        }
+        return ret;
+    }
+
+
+    int adjustAudioMixingPlayoutVolume(int volume) {
+        return m_parameter ? m_parameter->setInt("che.audio.set_file_as_playout_volume", volume) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int getAudioMixingPlayoutVolume() {
+        int volume = 0;
+        int r = m_parameter ? m_parameter->getInt("che.audio.get_file_as_playout_volume", volume) : -ERR_NOT_INITIALIZED;
+        if (r == 0)
+            r = volume;
+        return r;
+    }
+
+
+    int adjustAudioMixingPublishVolume(int volume) {
+        return m_parameter ? m_parameter->setInt("che.audio.set_file_as_playout_publish_volume", volume) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int getAudioMixingPublishVolume() {
+        int volume = 0;
+        int r = m_parameter ? m_parameter->getInt("che.audio.get_file_as_playout_publish_volume", volume) : -ERR_NOT_INITIALIZED;
+        if (r == 0)
+            r = volume;
+        return r;
+    }
+
+
+    int getAudioMixingDuration() {
+        int duration = 0;
+        int r = m_parameter ? m_parameter->getInt("che.audio.get_mixing_file_length_ms", duration) : -ERR_NOT_INITIALIZED;
+        if (r == 0)
+            r = duration;
+        return r;
+    }
+
+
+    int getAudioMixingCurrentPosition() {
+        if (!m_parameter) return -ERR_NOT_INITIALIZED;
+        int pos = 0;
+        int r = m_parameter->getInt("che.audio.get_mixing_file_played_ms", pos);
+        if (r == 0)
+            r = pos;
+        return r;
+    }
+
+    int setAudioMixingPosition(int pos /*in ms*/) {
+        return m_parameter ? m_parameter->setInt("che.audio.mixing.file.position", pos) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int getEffectsVolume() {
+        if (!m_parameter) return -ERR_NOT_INITIALIZED;
+        int volume = 0;
+        int r = m_parameter->getInt("che.audio.game_get_effects_volume", volume);
+        if (r == 0)
+            r = volume;
+        return r;
+    }
+
+
+    int setEffectsVolume(int volume) {
+        return m_parameter ? m_parameter->setInt("che.audio.game_set_effects_volume", volume) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setVolumeOfEffect(int soundId, int volume) {
+        return setObject(
+                         "che.audio.game_adjust_effect_volume",
+                         "{\"soundId\":%d,\"gain\":%d}",
+                         soundId, volume);
+    }
+
+
+    int playEffect(int soundId, const char* filePath, int loopCount, double pitch, double pan, int gain, bool publish = false) {
+#if defined(_WIN32)
+        util::AString path;
+        if (!m_parameter->convertPath(filePath, path))
+            filePath = path->c_str();
+        else if (!filePath)
+            filePath = "";
+#endif
+        return setObject(
+                         "che.audio.game_play_effect",
+                         "{\"soundId\":%d,\"filePath\":\"%s\",\"loopCount\":%d, \"pitch\":%lf,\"pan\":%lf,\"gain\":%d, \"send2far\":%d}",
+                         soundId, filePath, loopCount, pitch, pan, gain, publish);
+    }
+
+
+    int stopEffect(int soundId) {
+        return m_parameter ? m_parameter->setInt(
+                                                 "che.audio.game_stop_effect", soundId) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int stopAllEffects() {
+        return m_parameter ? m_parameter->setBool(
+                                                  "che.audio.game_stop_all_effects", true) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int preloadEffect(int soundId, char* filePath) {
+        return setObject(
+                         "che.audio.game_preload_effect",
+                         "{\"soundId\":%d,\"filePath\":\"%s\"}",
+                         soundId, filePath);
+    }
+
+
+    int unloadEffect(int soundId) {
+        return m_parameter ? m_parameter->setInt(
+                                                 "che.audio.game_unload_effect", soundId) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int pauseEffect(int soundId) {
+        return m_parameter ? m_parameter->setInt(
+                                                 "che.audio.game_pause_effect", soundId) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int pauseAllEffects() {
+        return m_parameter ? m_parameter->setBool(
+                                                  "che.audio.game_pause_all_effects", true) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int resumeEffect(int soundId) {
+        return m_parameter ? m_parameter->setInt(
+                                                 "che.audio.game_resume_effect", soundId) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int resumeAllEffects() {
+        return m_parameter ? m_parameter->setBool(
+                                                  "che.audio.game_resume_all_effects", true) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int enableSoundPositionIndication(bool enabled) {
+        return m_parameter ? m_parameter->setBool(
+                                                  "che.audio.enable_sound_position", enabled) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setRemoteVoicePosition(uid_t uid, double pan, double gain) {
+        return setObject("che.audio.game_place_sound_position", "{\"uid\":%u,\"pan\":%lf,\"gain\":%lf}", uid, pan, gain);
+    }
+
+
+    int setLocalVoicePitch(double pitch) {
+        return m_parameter ? m_parameter->setInt(
+                                                 "che.audio.morph.pitch_shift",
+                                                 static_cast<int>(pitch * 100)) : -ERR_NOT_INITIALIZED;
+    }
+
+    int setLocalVoiceEqualization(AUDIO_EQUALIZATION_BAND_FREQUENCY bandFrequency, int bandGain) {
+        return setObject(
+                         "che.audio.morph.equalization",
+                         "{\"index\":%d,\"gain\":%d}",
+                         static_cast<int>(bandFrequency), bandGain);
+    }
+
+    int setLocalVoiceReverb(AUDIO_REVERB_TYPE reverbKey, int value) {
+        return setObject(
+                         "che.audio.morph.reverb",
+                         "{\"key\":%d,\"value\":%d}",
+                         static_cast<int>(reverbKey), value);
+    }
+
+
+    int setLocalVoiceChanger(VOICE_CHANGER_PRESET voiceChanger) {
+        return m_parameter ? m_parameter->setInt("che.audio.morph.voice_changer", static_cast<int>(voiceChanger)) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setLocalVoiceReverbPreset(AUDIO_REVERB_PRESET reverbPreset) {
+        return m_parameter ? m_parameter->setInt("che.audio.morph.reverb_preset", static_cast<int>(reverbPreset)) : -ERR_NOT_INITIALIZED;
+    }
+
+
+
+    int pauseAudio() {
+        return m_parameter ? m_parameter->setBool("che.pause.audio", true) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int resumeAudio() {
+        return m_parameter ? m_parameter->setBool("che.pause.audio", false) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setHighQualityAudioParameters(bool fullband, bool stereo, bool fullBitrate) {
+        return setObject("che.audio.codec.hq", "{\"fullband\":%s,\"stereo\":%s,\"fullBitrate\":%s}", fullband ? "true" : "false", stereo ? "true" : "false", fullBitrate ? "true" : "false");
+    }
+
+
+    int adjustRecordingSignalVolume(int volume) {//[0, 400]: e.g. 50~0.5x 100~1x 400~4x
+        if (volume < 0)
+            volume = 0;
+        else if (volume > 400)
+            volume = 400;
+        return m_parameter ? m_parameter->setInt("che.audio.record.signal.volume", volume) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int adjustPlaybackSignalVolume(int volume) {//[0, 400]
+        if (volume < 0)
+            volume = 0;
+        else if (volume > 400)
+            volume = 400;
+        return m_parameter ? m_parameter->setInt("che.audio.playout.signal.volume", volume) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int enableAudioVolumeIndication(int interval, int smooth, bool report_vad) { // in ms: <= 0: disable, > 0: enable, interval in ms
+        if (interval < 0)
+            interval = 0;
+        return setObject("che.audio.volume_indication", "{\"interval\":%d,\"smooth\":%d,\"vad\":%d}", interval, smooth, report_vad);
+    }
+
+
+    int muteLocalAudioStream(bool mute) {
+        return setParameters("{\"rtc.audio.mute_me\":%s,\"che.audio.mute_me\":%s}", mute ? "true" : "false", mute ? "true" : "false");
+    }
+    // mute/unmute all peers. unmute will clear all muted peers specified mutePeer() interface
+
+
+    int muteRemoteAudioStream(uid_t uid, bool mute) {
+        return setObject("rtc.audio.mute_peer", "{\"uid\":%u,\"mute\":%s}", uid, mute?"true":"false");
+    }
+
+
+    int muteAllRemoteAudioStreams(bool mute) {
+        return m_parameter ? m_parameter->setBool("rtc.audio.mute_peers", mute) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setDefaultMuteAllRemoteAudioStreams(bool mute) {
+        return m_parameter ? m_parameter->setBool("rtc.audio.set_default_mute_peers", mute) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setExternalAudioSource(bool enabled, int sampleRate, int channels) {
+        if (enabled)
+            return setParameters("{\"che.audio.external_capture\":true,\"che.audio.external_capture.push\":true,\"che.audio.set_capture_raw_audio_format\":{\"sampleRate\":%d,\"channelCnt\":%d,\"mode\":%d}}", sampleRate, channels, RAW_AUDIO_FRAME_OP_MODE_TYPE::RAW_AUDIO_FRAME_OP_MODE_READ_WRITE);
+        else
+            return setParameters("{\"che.audio.external_capture\":false,\"che.audio.external_capture.push\":false}");
+    }
+
+
+    int setExternalAudioSink(bool enabled, int sampleRate, int channels) {
+        if (enabled)
+            return setParameters("{\"che.audio.external_render\":true,\"che.audio.external_render.pull\":true,\"che.audio.set_render_raw_audio_format\":{\"sampleRate\":%d,\"channelCnt\":%d,\"mode\":%d}}", sampleRate, channels, RAW_AUDIO_FRAME_OP_MODE_TYPE::RAW_AUDIO_FRAME_OP_MODE_READ_ONLY);
+        else
+            return setParameters("{\"che.audio.external_render\":false,\"che.audio.external_render.pull\":false}");
+    }
+
+
+    int setLogFile(const char* filePath) {
+        if (!m_parameter) return -ERR_NOT_INITIALIZED;
+#if defined(_WIN32)
+        util::AString path;
+        if (!m_parameter->convertPath(filePath, path))
+            filePath = path->c_str();
+        else if (!filePath)
+            filePath = "";
+#endif
+        return m_parameter->setString("rtc.log_file", filePath);
+    }
+
+
+    int setLogFilter(unsigned int filter) {
+        return m_parameter ? m_parameter->setUInt("rtc.log_filter", filter&LOG_FILTER_MASK) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setLogFileSize(unsigned int fileSizeInKBytes) {
+        return m_parameter ? m_parameter->setUInt("rtc.log_size", fileSizeInKBytes) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setLocalRenderMode(RENDER_MODE_TYPE renderMode) {
+        return setRemoteRenderMode(0, renderMode);
+    }
+
+
+    int setRemoteRenderMode(uid_t uid, RENDER_MODE_TYPE renderMode) {
+        return setObject("che.video.render_mode", "{\"uid\":%u,\"renderMode\":%d}", uid, renderMode);
+    }
+
+
+    int setCameraCapturerConfiguration(const CameraCapturerConfiguration& config) {
+        if (!m_parameter) return -ERR_NOT_INITIALIZED;
+        return m_parameter->setInt("che.video.camera_capture_mode", (int)config.preference);
+    }
+
+
+    int enableDualStreamMode(bool enabled) {
+        return setParameters("{\"rtc.dual_stream_mode\":%s,\"che.video.enableLowBitRateStream\":%d}", enabled ? "true" : "false", enabled ? 1 : 0);
+    }
+
+
+    int setRemoteVideoStreamType(uid_t uid, REMOTE_VIDEO_STREAM_TYPE streamType) {
+        return setParameters("{\"rtc.video.set_remote_video_stream\":{\"uid\":%u,\"stream\":%d}, \"che.video.setstream\":{\"uid\":%u,\"stream\":%d}}", uid, streamType, uid, streamType);
+//        return setObject("rtc.video.set_remote_video_stream", "{\"uid\":%u,\"stream\":%d}", uid, streamType);
+    }
+
+
+    int setRemoteDefaultVideoStreamType(REMOTE_VIDEO_STREAM_TYPE streamType) {
+        return m_parameter ? m_parameter->setInt("rtc.video.set_remote_default_video_stream_type", streamType) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setRecordingAudioFrameParameters(int sampleRate, int channel, RAW_AUDIO_FRAME_OP_MODE_TYPE mode, int samplesPerCall) {
+        return setObject("che.audio.set_capture_raw_audio_format", "{\"sampleRate\":%d,\"channelCnt\":%d,\"mode\":%d,\"samplesPerCall\":%d}", sampleRate, channel, mode, samplesPerCall);
+    }
+
+    int setPlaybackAudioFrameParameters(int sampleRate, int channel, RAW_AUDIO_FRAME_OP_MODE_TYPE mode, int samplesPerCall) {
+        return setObject("che.audio.set_render_raw_audio_format", "{\"sampleRate\":%d,\"channelCnt\":%d,\"mode\":%d,\"samplesPerCall\":%d}", sampleRate, channel, mode, samplesPerCall);
+    }
+
+    int setMixedAudioFrameParameters(int sampleRate, int samplesPerCall) {
+        return setObject("che.audio.set_mixed_raw_audio_format", "{\"sampleRate\":%d,\"samplesPerCall\":%d}", sampleRate, samplesPerCall);
+    }
+
+
+    int enableWebSdkInteroperability(bool enabled) {//enable interoperability with zero-plugin web sdk
+        return setParameters("{\"rtc.video.web_h264_interop_enable\":%s,\"che.video.web_h264_interop_enable\":%s}", enabled ? "true" : "false", enabled ? "true" : "false");
+    }
+
+    //only for live broadcast
+
+    int setVideoQualityParameters(bool preferFrameRateOverImageQuality) {
+        return setParameters("{\"rtc.video.prefer_frame_rate\":%s,\"che.video.prefer_frame_rate\":%s}", preferFrameRateOverImageQuality ? "true" : "false", preferFrameRateOverImageQuality ? "true" : "false");
+    }
+
+
+    int setLocalVideoMirrorMode(VIDEO_MIRROR_MODE_TYPE mirrorMode) {
+        if (!m_parameter) return -ERR_NOT_INITIALIZED;
+        const char *value;
+        switch (mirrorMode) {
+            case VIDEO_MIRROR_MODE_AUTO:
+                value = "default";
+                break;
+            case VIDEO_MIRROR_MODE_ENABLED:
+                value = "forceMirror";
+                break;
+            case VIDEO_MIRROR_MODE_DISABLED:
+                value = "disableMirror";
+                break;
+            default:
+                return -ERR_INVALID_ARGUMENT;
+        }
+        return m_parameter->setString("che.video.localViewMirrorSetting", value);
+    }
+
+
+    int setLocalPublishFallbackOption(STREAM_FALLBACK_OPTIONS option) {
+        return m_parameter ? m_parameter->setInt("rtc.local_publish_fallback_option", option) : -ERR_NOT_INITIALIZED;
+    }
+
+
+    int setRemoteSubscribeFallbackOption(STREAM_FALLBACK_OPTIONS option) {
+        return m_parameter ? m_parameter->setInt("rtc.remote_subscribe_fallback_option", option) : -ERR_NOT_INITIALIZED;
+    }
+
+#if (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || defined(_WIN32)
+
+    int enableLoopbackRecording(bool enabled, const char* deviceName = NULL) {
+        if (!deviceName) {
+            return setParameters("{\"che.audio.loopback.recording\":%s}", enabled ? "true" : "false");
+        }
+        else {
+            return setParameters("{\"che.audio.loopback.deviceName\":\"%s\",\"che.audio.loopback.recording\":%s}", deviceName, enabled ? "true" : "false");
+        }
+    }
+#endif
+
+
+    int setInEarMonitoringVolume(int volume) {
+        return m_parameter ? m_parameter->setInt("che.audio.headset.monitoring.parameter", volume) : -ERR_NOT_INITIALIZED;
+    }
+
+protected:
+    AParameter& parameter() {
+        return m_parameter;
+    }
+    int setParameters(const char* format, ...) {
+        char buf[512];
+        va_list args;
+        va_start(args, format);
+        vsnprintf(buf, sizeof(buf)-1, format, args);
+        va_end(args);
+        return m_parameter ? m_parameter->setParameters(buf) : -ERR_NOT_INITIALIZED;
+    }
+    int setObject(const char* key, const char* format, ...) {
+        char buf[512];
+        va_list args;
+        va_start(args, format);
+        vsnprintf(buf, sizeof(buf)-1, format, args);
+        va_end(args);
+        return m_parameter ? m_parameter->setObject(key, buf) : -ERR_NOT_INITIALIZED;
+    }
+    int stopAllRemoteVideo() {
+        return m_parameter ? m_parameter->setBool("che.video.peer.stop_render", true) : -ERR_NOT_INITIALIZED;
+    }
+private:
+    AParameter m_parameter;
+};
 
 } // namespace bbrtc
-
-
 
 ////////////////////////////////////////////////////////
 /** \addtogroup createBBRtcEngine

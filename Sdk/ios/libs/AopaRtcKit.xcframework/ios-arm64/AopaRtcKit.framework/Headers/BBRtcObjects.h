@@ -162,7 +162,7 @@ __attribute__((visibility("default"))) @interface BBRtcRemoteVideoStats : NSObje
 @property (assign, nonatomic) NSUInteger uid;
 /** Time delay (ms). **DEPRECATED**
  */
-@property (assign, nonatomic) NSUInteger __deprecated delay;
+@property (assign, nonatomic) NSUInteger  delay;
 /** Width (pixels) of the video stream.
  */
 @property (assign, nonatomic) NSUInteger width;
@@ -532,6 +532,39 @@ BBRtcDegradationPreference:
                              frameRate:(BBRtcVideoFrameRate)frameRate
                                bitrate:(NSInteger)bitrate
                        orientationMode:(BBRtcVideoOutputOrientationMode)orientationMode;
+@end
+
+/** Properties of the screen sharing encoding parameters.
+ */
+__attribute__((visibility("default"))) @interface BBRtcScreenCaptureParameters: NSObject
+/**  The maximum encoding dimensions for screen sharing.
+
+The default value is 1920 x 1080 pixels, that is, 2073600 pixels. BBRtc uses the value of this parameter to calculate the charges.
+
+If the aspect ratio is different between the encoding dimensions and screen dimensions, BBRtc applies the following algorithms for encoding. Suppose the encoding dimensions are 1920 x 1080:
+
+- If the value of the screen dimensions is lower than that of the encoding dimensions, for example, 1000 x 1000, the SDK uses 1000 x 1000 for encoding.
+- If the value of the screen dimensions is higher than that of the encoding dimensions, for example, 2000 x 1500, the SDK uses the maximum value under 1920 x 1080 with the aspect ratio of the screen dimension (4:3) for encoding, that is, 1440 x 1080.
+
+In either case, BBRtc uses the value of this parameter to calculate the charges.
+ */
+@property (assign, nonatomic) CGSize dimensions;
+
+/** The frame rate (fps) of the shared region. The default value is 5. We do not recommend setting this to a value greater than 15.
+ */
+@property (assign, nonatomic) NSInteger frameRate;
+
+/** The bitrate (Kbps) of the shared region. The default value is 0 (the SDK works out a bitrate according to the dimensions of the current screen).
+ */
+@property (assign, nonatomic) NSInteger bitrate;
+
+/** Sets whether or not to capture the mouse for screen sharing.
+
+- YES: (Default) Capture the mouse.
+- NO: Do not capture the mouse.
+ */
+@property (assign, nonatomic) BOOL captureMouseCursor;
+
 @end
 
 /** A class for providing user-specific CDN live audio/video transcoding settings.

@@ -542,6 +542,8 @@ typedef NS_ENUM(NSInteger, BBRtcChannelProfile) {
      <p>This profile uses a codec with a lower bitrate and consumes less power. Applies to the gaming scenario, where all game players can talk freely.</p>
      */
     BBRtcChannelProfileGame = 2,
+    /** 3: The Audio Player profile. */
+    BBRtcChannelProfileAudioPlayer = 3,
 };
 
 /** Client role in a live broadcast. */

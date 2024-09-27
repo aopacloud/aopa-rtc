@@ -26,14 +26,14 @@
  **Note**:
 
  - This callback applies to iOS only.
- - If you get the video data in RGBA color encoding format, Aopa does not
+ - If you get the video data in RGBA color encoding format, Agora does not
  support using this callback to send the processed data in RGBA color encoding
  format back to the SDK.
  - The video data obtained through this callback has not undergone
  preprocessing, such as watermarking, cropping content, rotating, or
  image enhancement.
 
- @param videoFrame The video frame. See AopaVideoDataFrame.
+ @param videoFrame The video frame. See AgoraVideoDataFrame.
 
  @return - YES: If the video frame processing fails, the video frame is not
  passed back to the SDK.
@@ -46,8 +46,8 @@
  @since v3.4.5
 
  After you successfully register the raw video frame protocol and use
- [getObservedFramePosition]([AopaVideoDataFrameProtocol getObservedFramePosition])
- to set the observation `AopaVideoFramePositionPreEncoder (1 << 2)`, the SDK
+ [getObservedFramePosition]([AgoraVideoDataFrameProtocol getObservedFramePosition])
+ to set the observation `AgoraVideoFramePositionPreEncoder (1 << 2)`, the SDK
  triggers this callback each time a video frame is received. You can get the
  local pre-encoded video data in `videoFrame` and then process the video data
  according to your scenario. After processing, you can use videoFrame to pass
@@ -56,14 +56,14 @@
  **Note**:
 
  - This callback applies to iOS only.
- - If you get the video data in RGBA color encoding format, Aopa does not
+ - If you get the video data in RGBA color encoding format, Agora does not
  support using this callback to send the processed data in RGBA color encoding
  format back to the SDK.
  - The video data obtained through this callback has not undergone
  preprocessing, such as watermarking, cropping content, rotating, or
  image enhancement.
 
- @param videoFrame The video frame. See AopaVideoDataFrame.
+ @param videoFrame The video frame. See AgoraVideoDataFrame.
 
  @return - YES: If the video frame processing fails, the video frame is not
  passed back to the SDK.
@@ -76,7 +76,7 @@
  @since v3.4.5
 
  After you successfully register the raw video frame and set the return value
- of [isMultipleChannelFrameWanted]([AopaVideoDataFrameProtocol isMultipleChannelFrameWanted])
+ of [isMultipleChannelFrameWanted]([AgoraVideoDataFrameProtocol isMultipleChannelFrameWanted])
  as `NO`, the SDK triggers this callback each time a video frame is received.
  You can get the incoming remote video data in `videoFrame` and then process
  the video data according to your scenario. After processing, you can use
@@ -85,11 +85,11 @@
  **Note**:
 
  - This callback applies to iOS only.
- - If you get the video data in RGBA color encoding format, Aopa does not
+ - If you get the video data in RGBA color encoding format, Agora does not
  support using this callback to send the processed data in RGBA color
  encoding format back to the SDK.
 
- @param videoFrame The video frame. See AopaVideoDataFrame.
+ @param videoFrame The video frame. See AgoraVideoDataFrame.
  @param uid The user ID of the remote user.
 
  @return - YES: If the video frame processing fails, the video frame is not
@@ -104,7 +104,7 @@
 
  If you want to get raw video data in a color encoding format other than YUV
  420, you need to implement the `getVideoFormatPreference` callback in
- AopaVideoDataFrameProtocol. After you successfully register the raw video
+ AgoraVideoDataFrameProtocol. After you successfully register the raw video
  frame protocol, the SDK triggers this callback each time a video frame is
  received. You need to set the desired color encoding format of the video
  data in the return value of this callback.
@@ -112,7 +112,7 @@
  @note This callback applies to iOS only.
 
  @return The color encoding format of the raw video data output by the SDK.
- See AopaVideoFrameType.
+ See AgoraVideoFrameType.
  */
 - (BBRtcVideoFrameType)getVideoFormatPreference;
 /** Sets whether to rotate the raw video data output by the SDK.
@@ -120,8 +120,8 @@
  @since v3.4.5
 
  If you want to get raw video data that has been rotated according to the
- value of `rotation` in AopaVideoDataFrame, you need to implement the
- `getRotationApplied` callback in AopaVideoDataFrameProtocol. After you
+ value of `rotation` in AgoraVideoDataFrame, you need to implement the
+ `getRotationApplied` callback in AgoraVideoDataFrameProtocol. After you
  successfully register the raw video frame protocol, the SDK triggers this
  callback each time a video frame is received. You need to set whether to
  rotate the observed raw video data in the return value of this callback.
@@ -143,7 +143,7 @@
  @since v3.4.5
 
  If you want to get the mirrored raw video data, you need to implement the
- `getMirrorApplied` callback in AopaVideoDataFrameProtocol. After you
+ `getMirrorApplied` callback in AgoraVideoDataFrameProtocol. After you
  successfully register the raw video frame observer, the SDK triggers this
  callback each time a video frame is received. You need to set whether to
  mirror the observed raw video data in the return value of this callback.
@@ -168,10 +168,10 @@
  the `getObservedFramePosition` callback to determine at each specific
  video-frame processing node whether to trigger the following callbacks:
 
- - [onCaptureVideoFrame]([AopaVideoDataFrameProtocol onCaptureVideoFrame:])
- - [onPreEncodeVideoFrame]([AopaVideoDataFrameProtocol onPreEncodeVideoFrame:])
- - [onRenderVideoFrame]([AopaVideoDataFrameProtocol onRenderVideoFrame:forUid:]) or
- [onRenderVideoFrameEx]([AopaVideoDataFrameProtocol onRenderVideoFrameEx:forUid:inChannel:])
+ - [onCaptureVideoFrame]([AgoraVideoDataFrameProtocol onCaptureVideoFrame:])
+ - [onPreEncodeVideoFrame]([AgoraVideoDataFrameProtocol onPreEncodeVideoFrame:])
+ - [onRenderVideoFrame]([AgoraVideoDataFrameProtocol onRenderVideoFrame:forUid:]) or
+ [onRenderVideoFrameEx]([AgoraVideoDataFrameProtocol onRenderVideoFrameEx:forUid:inChannel:])
 
  You can set the position or positions that you want to observe by modifying
  the return value of `getObservedFramePosition` according to your scenario.
@@ -181,12 +181,12 @@
  - This callback applies to iOS only.
  - To observe multiple positions, use `|` (the OR operator).
  - The default return value of this callback is
- `AopaVideoFramePositionPostCapture (1 << 0)` and
- `AopaVideoFramePositionPreRenderer (1 << 1)`.
+ `AgoraVideoFramePositionPostCapture (1 << 0)` and
+ `AgoraVideoFramePositionPreRenderer (1 << 1)`.
  - To conserve system resources of the device, you can reduce the number of
  observation positions appropriately according to your scenario.
 
- @return The bit mask of the observation positions. See AopaVideoFramePosition.
+ @return The bit mask of the observation positions. See AgoraVideoFramePosition.
  */
 - (BBRtcVideoFramePosition)getObservedFramePosition;
 
@@ -194,11 +194,11 @@
 
  @since v3.4.5
 
- In a multi-channel (AopaRtcChannel) scenario, if you want to get the remote
+ In a multi-channel (AgoraRtcChannel) scenario, if you want to get the remote
  video data received in multiple channels, you need to implement the
- `isMultipleChannelFrameWanted` callback in AopaVideoDataFrameProtocol and
+ `isMultipleChannelFrameWanted` callback in AgoraVideoDataFrameProtocol and
  set the return value of this callback to `YES`. The SDK triggers the
- [onRenderVideoFrameEx]([AopaVideoDataFrameProtocol onRenderVideoFrameEx:forUid:inChannel:])
+ [onRenderVideoFrameEx]([AgoraVideoDataFrameProtocol onRenderVideoFrameEx:forUid:inChannel:])
  callback each time a video frame is received, from which you can get the
  expected multi-channel video data.
 
@@ -206,10 +206,10 @@
 
  - This callback applies to iOS only.
  - The SDK chooses to trigger either the
- [onRenderVideoFrame]([AopaVideoDataFrameProtocol onRenderVideoFrame:forUid:]) or
- [onRenderVideoFrameEx]([AopaVideoDataFrameProtocol onRenderVideoFrameEx:forUid:inChannel:])
+ [onRenderVideoFrame]([AgoraVideoDataFrameProtocol onRenderVideoFrame:forUid:]) or
+ [onRenderVideoFrameEx]([AgoraVideoDataFrameProtocol onRenderVideoFrameEx:forUid:inChannel:])
  callback depending on the return value that you set in the
- `isMultipleChannelFrameWanted` callback. Aopa recommends that you set the
+ `isMultipleChannelFrameWanted` callback. Agora recommends that you set the
  return value as `YES` in a multi-channel scenario.
 
  @return Whether the SDK outputs remote video data received in multiple channels:
@@ -227,7 +227,7 @@
 
  After you successfully register the raw video frame protocol and set the
  return value of
- [isMultipleChannelFrameWanted]([AopaVideoDataFrameProtocol isMultipleChannelFrameWanted])
+ [isMultipleChannelFrameWanted]([AgoraVideoDataFrameProtocol isMultipleChannelFrameWanted])
  as `YES`, the SDK triggers this callback each time a video frame is received.
  You get the remote video data received in multiple channels in `videoFrame`
  and then process the video data according to your scenario. After processing,
@@ -236,11 +236,11 @@
  **Note**:
 
  - This callback applies to iOS only.
- - If you get the video data in RGBA color encoding format, Aopa does not
+ - If you get the video data in RGBA color encoding format, Agora does not
  support using this callback to send the processed data in RGBA color encoding
  format back to the SDK.
 
- @param videoFrame The video frame. See AopaVideoDataFrame.
+ @param videoFrame The video frame. See AgoraVideoDataFrame.
  @param uid The user ID of the remote user.
  @param channelId The channel name.
 

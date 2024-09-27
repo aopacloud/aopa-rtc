@@ -47,8 +47,8 @@
 		9AF012042B03681F00F7FEA7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012032B03681F00F7FEA7 /* SystemConfiguration.framework */; };
 		9AF012062B03683200F7FEA7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012052B03683200F7FEA7 /* CoreFoundation.framework */; };
 		9AF760992B50DA31009AA45C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012072B03689700F7FEA7 /* libz.tbd */; };
-		D8DC2EFA2C86F63E0046A0F1 /* AopaRtcKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DC2EF82C86F6240046A0F1 /* AopaRtcKit.xcframework */; };
-		D8DC2EFB2C86F63F0046A0F1 /* AopaRtcKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D8DC2EF82C86F6240046A0F1 /* AopaRtcKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D81800D92CA65CBE00F3505B /* AopaRtcKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */; };
+		D81800DA2CA65CBE00F3505B /* AopaRtcKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,7 +166,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D8DC2EFB2C86F63F0046A0F1 /* AopaRtcKit.xcframework in Embed Frameworks */,
+				D81800DA2CA65CBE00F3505B /* AopaRtcKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -230,7 +230,7 @@
 		9AF012032B03681F00F7FEA7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9AF012052B03683200F7FEA7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		9AF012072B03689700F7FEA7 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		D8DC2EF82C86F6240046A0F1 /* AopaRtcKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AopaRtcKit.xcframework; path = ../sdk/ios/libs/AopaRtcKit.xcframework; sourceTree = "<group>"; };
+		D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AopaRtcKit.xcframework; path = ../sdk/ios/libs/AopaRtcKit.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,7 +251,7 @@
 				9AA7A79928365C6400609135 /* CoreMedia.framework in Frameworks */,
 				9AA7A79728365C5F00609135 /* CoreGraphics.framework in Frameworks */,
 				9AA7A79528365C5A00609135 /* AVFoundation.framework in Frameworks */,
-				D8DC2EFA2C86F63E0046A0F1 /* AopaRtcKit.xcframework in Frameworks */,
+				D81800D92CA65CBE00F3505B /* AopaRtcKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,11 +283,11 @@
 		9A9E4D0C2836567F004D72B1 = {
 			isa = PBXGroup;
 			children = (
+				D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */,
 				9A1519902C184F2E008D9E55 /* products.xcodeproj */,
 				9AA7A7A228365D5200609135 /* resources */,
 				9A9E4D3128365703004D72B1 /* objc */,
 				9A9E4D162836567F004D72B1 /* Products */,
-				D8DC2EF82C86F6240046A0F1 /* AopaRtcKit.xcframework */,
 				9A9E4DFC283657F1004D72B1 /* Frameworks */,
 			);
 			sourceTree = "<group>";

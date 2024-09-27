@@ -1099,6 +1099,8 @@ The SDK triggers this callback once every two seconds. This callback reports the
 
 - (void)rtcEngineChorusStart:(BBRtcEngineKit * _Nonnull)engine;
 - (void)rtcEngineChorusStop:(BBRtcEngineKit * _Nonnull)engine;
+- (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine recvSEI:(NSUInteger)uid data:(NSData* _Nonnull)data;
+
 @end
 
 #pragma mark - BBRtcEngineKit
@@ -1187,6 +1189,10 @@ When a user switches user roles after joining a channel, a successful method cal
 
 - (int)getChorusPosition;
 
+- (int)clearCache;
+
+- (int)setMaxCacheSize:(NSInteger)maxCacheSize;
+
 /** Joins a channel with the user ID.
 
 Users in the same channel can talk to each other, and multiple users in the same channel can start a group chat. Users with different App IDs cannot call each other even if they join the same channel.
@@ -1262,7 +1268,7 @@ When the connection between the client and BBRtc's server is interrupted due to 
  if the user joining the channel is in the Communication profile, or is a
  host in the Live Broadcast profile.
 
- When the connection between the client and the Aopa server is interrupted
+ When the connection between the client and the Agora server is interrupted
  due to poor network conditions, the SDK tries reconnecting to the server.
  When the local client successfully rejoins the channel, the SDK triggers
  the [didRejoinChannel]([BBRtcEngineDelegate rtcEngine:didRejoinChannel:withUid:elapsed:])
@@ -1278,11 +1284,11 @@ When the connection between the client and BBRtc's server is interrupted due to 
  associated usage costs. To unsubscribe, set the `options` parameter or call
  the `mute` methods accordingly.
  - Ensure that the App ID used for generating the token is the same App ID used
- in the [sharedEngineWithAppId]([AopaRtcEngineKit sharedEngineWithAppId:delegate:])
- method for generating an `AopaRtcEngineKit` object.
+ in the [sharedEngineWithAppId]([AgoraRtcEngineKit sharedEngineWithAppId:delegate:])
+ method for generating an `AgoraRtcEngineKit` object.
 
  @param token The token generated at your server. For details, see [Generate a token].
- @param channelId The unique channel name for the Aopa RTC session in the string format. The string length must be less than 64 bytes.
+ @param channelId The unique channel name for the Agora RTC session in the string format. The string length must be less than 64 bytes.
  Supported character scopes are:
 
  * All lowercase English letters: a to z.
@@ -1316,6 +1322,164 @@ When the connection between the client and BBRtc's server is interrupted due to 
    - `-7`(`BBRtcErrorCodeNotInitialized`): The SDK is not initialized before calling this method.
 */
 - (int)joinChannelByToken:(NSString* _Nullable)token channelId:(NSString* _Nonnull)channelId info:(NSString* _Nullable)info uid:(NSUInteger)uid options:(BBRtcChannelMediaOptions* _Nonnull)options;
+
+/** Joins the channel with a user account.
+
+After the user successfully joins the channel, the SDK triggers the following callbacks:
+
+- On the local client: [didRegisteredLocalUser]([BBRtcEngineDelegate rtcEngine:didRegisteredLocalUser:withUid:]) and [didJoinChannel]([BBRtcEngineDelegate rtcEngine:didJoinChannel:withUid:elapsed:]).
+- On the remote client: [didJoinedOfUid]([BBRtcEngineDelegate rtcEngine:didJoinedOfUid:elapsed:]) and [didUpdatedUserInfo]([BBRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]), if the user joining the channel is in the Communication profile, or is a BROADCASTER in the Live Broadcast profile.
+
+@note To ensure smooth communication, use the same parameter type to identify the user. For example, if a user joins the channel with a user ID, then ensure all the other users use the user ID too. The same applies to the user account. If a user joins the channel with the BBRtc Web SDK, ensure that the uid of the user is set to the same parameter type.
+
+@param userAccount The user account. The maximum length of this parameter is 255 bytes. Ensure that you set this parameter and do not set it as null. Supported character scopes are:
+
+- The 26 lowercase English letters: a to z.
+- The 26 uppercase English letters: A to Z.
+- The 10 numbers: 0 to 9.
+- The space.
+- "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+@param token The token generated at your server:
+
+- For low-security requirements: You can use the temporary token generated at Console. For details, see [Get a temporary token](https://docs.BBRtc.io/en/Voice/token?platform=All%20Platforms#get-a-temporary-token).
+- For high-security requirements: Set it as the token generated at your server. For details, see [Get a token](https://docs.BBRtc.io/en/Voice/token?platform=All%20Platforms#get-a-token).
+@param channelId The channel name. The maximum length of this parameter is 64 bytes. Supported character scopes are:
+
+- The 26 lowercase English letters: a to z.
+- The 26 uppercase English letters: A to Z.
+- The 10 numbers: 0 to 9.
+- The space.
+- "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+@param joinSuccessBlock Returns that the user joins the specified channel. Same as [didJoinChannel]([BBRtcEngineDelegate rtcEngine:didJoinChannel:withUid:elapsed:]). If `joinSuccessBlock` is nil, the SDK triggers the [didJoinChannel]([BBRtcEngineDelegate rtcEngine:didJoinChannel:withUid:elapsed:]) callback.
+
+@return * 0: Success.
+* < 0: Failure.
+
+   - `BBRtcErrorCodeInvalidArgument`(-2)
+   - `BBRtcErrorCodeNotReady`(-3)
+   - `BBRtcErrorCodeRefused`(-5)
+*/
+- (int)joinChannelByUserAccount:(NSString * _Nonnull)userAccount
+                          token:(NSString * _Nullable)token
+                      channelId:(NSString * _Nonnull)channelId
+                    joinSuccess:(void(^ _Nullable)(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed))joinSuccessBlock;
+
+/** Joins the channel with a user account, and configures whether to
+ automatically subscribe to audio or video streams after joining the channel.
+
+ @since v3.3.0
+
+ After the user successfully joins the channel, the SDK triggers the following
+ callbacks:
+
+ - On the local client: [didRegisteredLocalUser]([BBRtcEngineDelegate rtcEngine:didRegisteredLocalUser:withUid:])
+ and [didJoinChannel]([AgoraRtcEngineDelegate rtcEngine:didJoinChannel:withUid:elapsed:]).
+ - On the remote client: [didJoinedOfUid]([AgoraRtcEngineDelegate rtcEngine:didJoinedOfUid:elapsed:])
+ and [didUpdatedUserInfo]([AgoraRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]),
+ if the user joining the channel is in the Communication profile, or is a host in the Live Broadcast profile.
+
+ **Note**
+
+ - Compared with [joinChannelByUserAccount]([BBRtcEngineKit joinChannelByUserAccount:token:channelId:joinSuccess:])1,
+ this method has the `options` parameter to configure whether the end user
+ automatically subscribes to all remote audio and video streams in a channel
+ when joining the channel. By default, the user subscribes to the audio and
+ video streams of all the other users in the channel, thus incurring all
+ associated usage costs. To unsubscribe, set the `options` parameter or call
+ the `mute` methods accordingly.
+ - To ensure smooth communication, use the same parameter type to identify the
+ user. For example, if a user joins the channel with a user ID, then ensure
+ all the other users use the user ID too. The same applies to the user
+ account. If a user joins the channel with the Agora Web SDK, ensure that
+ the user ID is set to the same parameter type.
+
+ @param userAccount The user account. The maximum length of this parameter is 255 bytes. Ensure that the user account is unique and do not set it as `nil`. Supported character scopes are:
+
+ - All lowercase English letters: a to z.
+ - All uppercase English letters: A to Z.
+ - All numeric characters: 0 to 9.
+ - The space character.
+ - Punctuation characters and other symbols, including: "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", "{", "}", "|", "~", ",".
+ @param token The token generated at your server. For details, see [Generate a token].
+ @param channelId The channel name. The maximum length of this parameter is 64 bytes. Supported character scopes are:
+
+ - All lowercase English letters: a to z.
+ - All uppercase English letters: A to Z.
+ - All numeric characters: 0 to 9.
+ - The space character.
+ - Punctuation characters and other symbols, including: "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", "{", "}", "|", "~", ",".
+ @param options The channel media options: BBRtcChannelMediaOptions.
+
+ @return * 0: Success.
+ * < 0: Failure.
+
+    - `BBRtcErrorCodeInvalidArgument`(-2)
+    - `BBRtcErrorCodeNotReady`(-3)
+    - `BBRtcErrorCodeRefused`(-5)
+    - `BBRtcErrorCodeSDKNotInitialized`(-7)
+*/
+- (int)joinChannelByUserAccount:(NSString* _Nonnull)userAccount token:(NSString* _Nullable)token channelId:(NSString* _Nonnull)channelId options:(BBRtcChannelMediaOptions* _Nonnull)options;
+
+
+/** Registers a user account.
+
+Once registered, the user account can be used to identify the local user when the user joins the channel. After the user successfully registers a user account,  the SDK triggers the [didRegisteredLocalUser]([BBRtcEngineDelegate rtcEngine:didRegisteredLocalUser:withUid:]) callback on the local client, reporting the user ID and user account of the local user.
+
+To join a channel with a user account, you can choose either of the following:
+
+- Call the [registerLocalUserAccount]([BBRtcEngineKit registerLocalUserAccount:appId:]) method to create a user account, and then the [joinChannelByUserAccount]([BBRtcEngineKit joinChannelByUserAccount:token:channelId:joinSuccess:]) method to join the channel.
+- Call the [joinChannelByUserAccount]([BBRtcEngineKit joinChannelByUserAccount:token:channelId:joinSuccess:]) method to join the channel.
+
+The difference between the two is that for the former, the time elapsed between calling the [joinChannelByUserAccount]([BBRtcEngineKit joinChannelByUserAccount:token:channelId:joinSuccess:]) method and joining the channel is shorter than the latter.
+
+**Note:**
+
+- Ensure that you set the `userAccount` parameter. Otherwise, this method does not take effect.
+- Ensure that the value of the `userAccount` parameter is unique in the channel.
+- To ensure smooth communication, use the same parameter type to identify the user. For example, if a user joins the channel with a user ID, then ensure that all the other users use the user ID too. The same applies to the user account. If a user joins the channel with the BBRtc Web SDK, ensure that the `uid` of the user is set to the same parameter type.
+
+@param userAccount The user account. The maximum length of this parameter is 255 bytes. Ensure that you set this parameter and do not set it as null. Supported character scopes are:
+
+- The 26 lowercase English letters: a to z.
+- The 26 uppercase English letters: A to Z.
+- The 10 numbers: 0 to 9.
+- The space.
+- "!", "#", "$", "%", "&", "(", ")", "+", "-", ":", ";", "<", "=", ".", ">", "?", "@", "[", "]", "^", "_", " {", "}", "|", "~", ",".
+@param appId The App ID of your project.
+
+@return * 0: Success.
+* < 0: Failure.
+*/
+- (int)registerLocalUserAccount:(NSString * _Nonnull)userAccount
+                          appId:(NSString * _Nonnull)appId;
+
+/** Gets the user information by passing in the user account.
+
+After a remote user joins the channel, the SDK gets the user ID and user account of the remote user, caches them in a mapping table object (`BBRtcUserInfo`), and triggers the [didUpdatedUserInfo]([BBRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]) callback on the local client.
+
+After receiving the [didUpdatedUserInfo]([BBRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]) callback, you can call this method to get the user ID of the remote user from the `userInfo` object by passing in the user account.
+
+@param userAccount The user account of the user. Ensure that you set this parameter.
+@param error The pointer to [BBRtcErrorCode](BBRtcErrorCode). It can be set as nil.
+
+@return An [BBRtcUserInfo](BBRtcUserInfo) object that contains the user account and user ID of the user.
+*/
+- (BBRtcUserInfo* _Nullable)getUserInfoByUserAccount:(NSString * _Nonnull)userAccount
+                                           withError:(BBRtcErrorCode * _Nullable)error;
+
+/** Gets the user information by passing in the user ID.
+
+After a user joins the channel, the SDK gets the user ID and user account of the remote user, caches them in a mapping table object (`BBRtcUserInfo`), and triggers the [didUpdatedUserInfo]([BBRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]) callback on the local client.
+
+After receiving the [didUpdatedUserInfo]([BBRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]) callback, you can call this method to get the user account of the user from the `userInfo` object by passing in the user ID.
+
+@param uid The user ID of the user. Ensure that you set this parameter.
+@param error The pointer to [BBRtcErrorCode](BBRtcErrorCode). It can be set as nil.
+
+@return An [BBRtcUserInfo](BBRtcUserInfo) object that contains the user account and user ID of the user.
+*/
+- (BBRtcUserInfo* _Nullable)getUserInfoByUid:(NSUInteger)uid
+                                   withError:(BBRtcErrorCode * _Nullable)error;
 
 /** Switches to a different channel.
 
@@ -2133,6 +2297,47 @@ Do not use this method together with [setLocalVoiceReverbPreset]([BBRtcEngineKit
  */
 - (int) setLocalVoiceReverbPreset:(BBRtcAudioReverbPreset)reverbPreset;
 
+/** Enables/Disables stereo panning for remote users.
+
+If you need to use the [setRemoteVoicePosition]([BBRtcEngineKit setRemoteVoicePosition:pan:gain:]) method, ensure that you call this method before joining a channel to enable stereo panning for remote users.
+
+ @param enabled Sets whether or not to enable stereo panning for remote users:
+
+ - `YES`: enables stereo panning.
+ - `NO`: disables stereo panning.
+
+@return * 0: Success.
+* -1: Failure.
+ */
+- (int) enableSoundPositionIndication:(BOOL)enabled;
+
+/** Sets the sound position and gain of a remote user.
+
+ When the local user calls this method to set the sound position of a remote user, the sound difference between the left and right channels allows the local user to track the real-time position of the remote user, creating a real sense of space. This method applies to massively multiplayer online games, such as Battle Royale games.
+
+**Note:**
+
+- For this method to work, enable stereo panning for remote users by calling [enableSoundPositionIndication]([BBRtcEngineKit enableSoundPositionIndication:]) before joining a channel.
+This method requires hardware support.
+- For the best effect, we recommend using the following audio output devices:
+  - (iOS) A stereo headset.
+  - (macOS) A stereo loudspeaker.
+ @param uid The ID of the remote user.
+ @param pan The sound position of the remote user. The value ranges from -1.0 to 1.0:
+
+ * 0.0: (default) the remote sound comes from the front.
+ * -1.0: the remote sound comes from the left.
+ * 1.0: the remote sound comes from the right.
+
+ @param gain Gain of the remote user. The value ranges from 0.0 to 100.0. The default value is 100.0 (the original gain of the remote user). The smaller the value, the less the gain.
+
+ @return * 0: Success.
+* -1: Failure.
+ */
+- (int) setRemoteVoicePosition:(NSUInteger) uid
+                           pan:(double) pan
+                          gain:(double) gain;
+
 
 #pragma mark Music File Playback and Mixing
 
@@ -2537,7 +2742,127 @@ When the audio effect file playback is finished, the SDK triggers the [rtcEngine
 
 
 #pragma mark Miscellaneous Audio Control
+
+/**-----------------------------------------------------------------------------
+ * @name Miscellaneous Audio Control
+ * -----------------------------------------------------------------------------
+ */
+
+#if TARGET_OS_IPHONE
+/** Sets the audio session's operational restriction. (iOS only.)
+
+ The SDK and the app can both configure the audio session by default. The app may occasionally use other apps or third-party components to manipulate the audio session and restrict the SDK from doing so. This method allows the app to restrict the SDK's manipulation of the audio session.
+
+ You can call this method at any time to return the control of the audio sessions to the SDK.
+
+ **Note:**
+
+ This method restricts the SDK's manipulation of the audio session. Any operation to the audio session relies solely on the app, other apps, or third-party components.
+
+ @param restriction The operational restriction (bit mask) of the SDK on the audio session. See [BBRtcAudioSessionOperationRestriction](BBRtcAudioSessionOperationRestriction).
+
+ */
+- (void)setAudioSessionOperationRestriction:(BBRtcAudioSessionOperationRestriction)restriction;
+#endif
+
+
 #pragma mark Network-related Test
+
+/**-----------------------------------------------------------------------------
+ * @name Network-related Test
+ * -----------------------------------------------------------------------------
+ */
+
+/** Starts an audio call test.
+
+This method starts an audio call test to determine whether the audio devices (for example, headset and speaker) and the network connection are working properly.
+
+In the audio call test, you record your voice. If the recording plays back within the set time interval, the audio devices and the network connection are working properly.
+
+**Note:**
+
+- Call this method before joining a channel.
+
+- After calling this method, call the stopEchoTest method to end the test. Otherwise, the app cannot run the next echo test, or join a channel.
+
+- In the Live-broadcast profile, only a host can call this method.
+
+@param interval The time interval (s) between when you speak and when the recording plays back.
+@param successBlock The SDK triggers the `successBlock` callback if this method call is successful.
+
+@return * 0: Success.
+* < 0: Failure.
+*/
+- (int)startEchoTestWithInterval:(NSInteger)interval
+                  successBlock:(void(^ _Nullable)(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed))successBlock;
+
+/** Stops the audio call test.
+
+ @return * 0: Success.
+* < 0: Failure. For example, BBRtcErrorCodeRefused(-5)：Failed to stop the echo test. The echo test may not be running.
+ */
+- (int)stopEchoTest;
+
+/** Enables the network connection quality test.
+
+  This method tests the quality of the user’s network connection and is disabled by default.
+
+ Before users join a channel or before an audience switches to a host, call this method to check the uplink network quality.
+
+ This method consumes additional network traffic, which may affect the communication quality. We do not recommend calling this method together with [startLastmileProbeTest]([BBRtcEngineKit startLastmileProbeTest:]).
+
+ Call the [disableLastmileTest](disableLastmileTest) method to disable this test after receiving the [lastmileQuality]([BBRtcEngineDelegate rtcEngine:lastmileQuality:]) callback, and before the user joins the channel or switches the user role.
+
+ **Note:**
+
+ - Do not call any other methods before receiving the [lastmileQuality]([BBRtcEngineDelegate rtcEngine:lastmileQuality:]) callback. Otherwise, the callback may be interrupted by other methods and may not execute.
+
+ - In the Live-broadcast profile, a host should not call this method after joining a channel.
+ - If you call this method to test the last-mile quality, the SDK consumes the bandwidth of a video stream, whose bitrate corresponds to the bitrate you set in the [setVideoEncoderConfiguration]([BBRtcEngineKit setVideoEncoderConfiguration:]) method. After you join the channel, whether you have called the `disableLastmileTest` method or not, the SDK automatically stops consuming the bandwidth.
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)enableLastmileTest;
+
+/** Disables the network connection quality test.
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)disableLastmileTest;
+
+/** Starts the last-mile network probe test.
+
+
+Starts the last-mile network probe test before joining a channel to get the uplink and downlink last-mile network statistics, including the bandwidth, packet loss, jitter, and round-trip time (RTT).
+
+Call this method to check the uplink network quality before users join a channel or before an audience switches to a host.
+
+Once this method is enabled, the SDK returns the following callbacks:
+
+- [lastmileQuality]([BBRtcEngineDelegate rtcEngine:lastmileQuality:]): the SDK triggers this callback within two seconds depending on the network conditions. This callback rates the network conditions and is more closely linked to the user experience.
+- [lastmileProbeResult]([BBRtcEngineDelegate rtcEngine:lastmileProbeTestResult:])the SDK triggers this callback within 30 seconds depending on the network conditions. This callback returns the real-time statistics of the network conditions and is more objective.
+
+**Note:**
+
+- This method consumes extra network traffic and may affect communication quality. We do not recommend calling this method together with [enableLastmileTest]([BBRtcEngineKit enableLastmileTest]).
+- Do not call other methods before receiving the [lastmileQuality]([BBRtcEngineDelegate rtcEngine:lastmileQuality:]) and [lastmileProbeResult]([BBRtcEngineDelegate rtcEngine:lastmileProbeTestResult:]) callbacks. Otherwise, the callbacks may be interrupted.
+- In the Live-broadcast profile, a host should not call this method after joining a channel.
+
+@param config The configurations of the last-mile network probe test, see [BBRtcLastmileProbeConfig](BBRtcLastmileProbeConfig).
+
+@return * 0: Success.
+* < 0: Failure.
+*/
+- (int)startLastmileProbeTest:(BBRtcLastmileProbeConfig *_Nullable)config;
+
+/** Stops the last-mile network probe test.
+
+@return * 0: Success.
+* < 0: Failure.
+*/
+- (int)stopLastmileProbeTest;
 
 #pragma mark Custom Video Module
 
@@ -2729,6 +3054,49 @@ In real-time communications, the SDK uses the default video renderer to render t
 
 
 #pragma mark External Video Data
+
+/**-----------------------------------------------------------------------------
+ * @name External Video Data (push-mode only)
+ * -----------------------------------------------------------------------------
+ */
+
+/** Configures the external video source.
+
+ If an external video source is used, call this method before the [enableVideo](enableVideo) or [startPreview](startPreview)method.
+
+ @param enable Sets whether or not to use an external video source:
+
+ * YES: Use an external video source.
+ * NO: (Default) Do not use an external video source.
+
+ @param useTexture Sets whether or not to use texture as an input:
+
+ * YES: Use texture as an input.
+ * NO: Do not use texture as an input.
+
+ @param pushMode Sets whether or not the external video source needs to call the [pushExternalVideoFrame](pushExternalVideoFrame:) method to send the video frame to the SDK:
+
+ * YES: Use the push mode.
+ * NO: Use the pull mode (not supported yet).
+ */
+- (void)setExternalVideoSource:(BOOL)enable useTexture:(BOOL)useTexture pushMode:(BOOL)pushMode;
+
+/** Pushes the external video frame.
+
+This method pushes the video frame using the BBRtcVideoFrame class and passes the video frame to the SDK with the `format` parameter found in BBRtcVideoFrame.
+Call the [setExternalVideoSource](setExternalVideoSource:useTexture:pushMode:) method and set the `pushMode` parameter as `YES` before calling this method. Otherwise, a failure returns after calling this method.
+
+**Note:**
+
+ In the Communication profile, this method does not support pushing textured video frames.
+
+ @param frame Video frame containing the SDK's encoded video data to be pushed. See BBRtcVideoFrame.
+ @return * YES: The frame is pushed successfully.
+ * NO: Fails to push the frame.
+ */
+- (BOOL)pushExternalVideoFrame:(BBRtcVideoFrame * _Nonnull)frame;
+
+
 #pragma mark Raw Audio Data
 
 /**-----------------------------------------------------------------------------
@@ -2821,6 +3189,47 @@ See [Raw Audio Data](https://docs.BBRtc.io/en/Interactive%20Broadcast/raw_data_a
  */
 - (BOOL)setAudioDataFrame:(id<BBRtcAudioDataFrameProtocol> _Nullable)delegate;
 #pragma mark Watermark
+
+/**-----------------------------------------------------------------------------
+ * @name Watermark
+ * -----------------------------------------------------------------------------
+ */
+
+/** Adds a watermark image to the local video.
+
+ This method adds a PNG watermark image to the local video in a live broadcast. Once the watermark image is added, all the audience in the channel (CDN audience included), and the recording device can see and capture it. BBRtc supports adding only one watermark image onto the local video, and the newly watermark image replaces the previous one.
+
+ The watermark position depends on the settings in the [setVideoEncoderConfiguration]([BBRtcEngineKit setVideoEncoderConfiguration:]) method:
+
+ - If the orientation mode of the encoding video is BBRtcVideoOutputOrientationModeFixedLandscape, or the landscape mode in BBRtcVideoOutputOrientationModeAdaptative, the watermark uses the landscape orientation.
+ - If the orientation mode of the encoding video is BBRtcVideoOutputOrientationModeFixedPortrait, or the portrait mode in BBRtcVideoOutputOrientationModeAdaptative, the watermark uses the portrait orientation.
+ - When setting the watermark position, the region must be less than the dimensions set in the [setVideoEncoderConfiguration]([BBRtcEngineKit setVideoEncoderConfiguration:]) method. Otherwise, the watermark image will be cropped.
+
+ **Note**
+
+ - Ensure that you have called the [enableVideo]([BBRtcEngineKit enableVideo]) method to enable the video module before calling this method.
+ - If you only want to add a watermark image to the local video for the audience in the CDN live broadcast channel to see and capture, you can call this method or the [setLiveTranscoding]([BBRtcEngineKit setLiveTranscoding:]) method.
+ - This method supports adding a watermark image in the PNG file format only. Supported pixel formats of the PNG image are RGBA, RGB, Palette, Gray, and Alpha_gray.
+ - If the dimensions of the PNG image differ from your settings in this method, the image will be cropped or zoomed to conform to your settings.
+ - If you have enabled the local video preview by calling the [startPreview]([BBRtcEngineKit startPreview]) method, you can use the `visibleInPreview` member in the WatermarkOptions class to set whether or not the watermark is visible in preview.
+ - If you have mirrored the local video by calling the [setupLocalVideo]([BBRtcEngineKit setupLocalVideo:]) or [setLocalRenderMode]([BBRtcEngineKit setLocalRenderMode:mirrorMode:]) method, the watermark image in preview is also mirrored.
+
+ @param url The local file path of the watermark image to be added. This method supports adding a watermark image from the local file path. If the watermark image to be added is in the project file, you need to change the image's Type from PNG image to Data in the Xcode property, otherwise, the BBRtc Native SDK cannot recognize the image.
+ @param options The options of the watermark image to be added. See WatermarkOptions.
+
+ @return * 0: Success.
+ * < 0: Failure.
+ */
+- (int)addVideoWatermark:(NSURL * _Nonnull)url
+                 options:(BBRtcWatermarkOptions * _Nonnull)options;
+
+/** Removes the watermark image from the video stream added by [addVideoWatermark]([BBRtcEngineKit addVideoWatermark:options:]).
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)clearVideoWatermarks;
+
 
 #pragma mark Stream Fallback
 
@@ -3307,6 +3716,110 @@ A successful setCameraExposurePosition method call triggers the [cameraExposureD
 
 
 #if (!(TARGET_OS_IPHONE) && (TARGET_OS_MAC))
+#pragma mark Screen Sharing
+
+/**-----------------------------------------------------------------------------
+ * @name Screen Sharing
+ * -----------------------------------------------------------------------------
+ */
+
+/** Shares the whole or part of a screen by specifying the display ID.  (macOS only.)
+
+@param displayId The display ID of the screen to be shared. This parameter specifies which screen you want to share. For information on how to get the displayId, see [Share the Screen](../../../screensharing_mac).
+@param rectangle (Optional) The relative location of the region to the screen. nil means sharing the whole screen. This parameter contains the following properties:
+
+- x: the horizontal offset from the top-left corner.
+- y: the vertical offset from the top-left corner.
+- width: the width of the region.
+- height: the height of the region.
+
+If the specified region overruns the screen, the SDK shares only the region within it; if you set width or height as 0, the SDK shares the whole screen.
+@param captureParams The screen sharing encoding parameters, see [BBRtcScreenCaptureParameters](BBRtcScreenCaptureParameters).
+
+@return * 0: Success.
+* < 0: Failure.
+
+    - `ERR_INVALID_STATE`: the screen sharing state is invalid, probably because another screen or window is being shared. Call [stopScreenCapture]([BBRtcEngineKit stopScreenCapture]) to stop the current screen sharing.
+    - `ERR_INVALID_ARGUMENT`: the argument is invalid.
+ */
+- (int)startScreenCaptureByDisplayId:(NSUInteger)displayId
+                           rectangle:(CGRect)rectangle
+                          parameters:(BBRtcScreenCaptureParameters * _Nonnull)captureParams;
+
+/** Shares the whole or part of a window by specifying the window ID. (macOS only.)
+
+@param windowId The ID of the window to be shared. This parameter specifies which window you want to share. For information on how to get the windowId, see [Share the Screen](../../../screensharing_mac).
+@param rectangle (Optional) The relative location of the region to the window. nil means sharing the whole window. This parameter contains the following properties:
+
+- x: the horizontal offset from the top-left corner.
+- y: the vertical offset from the top-left corner.
+- width: the width of the region.
+- height: the height of the region.
+
+If the specified region overruns the window, the SDK shares only the region within it; if you set width or height as 0, the SDK shares the whole window.
+@param captureParams The window sharing encoding parameters, see [BBRtcScreenCaptureParameters](BBRtcScreenCaptureParameters).
+
+@return * 0: Success.
+* < 0: Failure.
+
+    - `ERR_INVALID_STATE`: the window sharing state is invalid, probably because another screen or window is being shared. Call [stopScreenCapture]([BBRtcEngineKit stopScreenCapture]) to stop sharing the current window.
+    - `ERR_INVALID_ARGUMENT`: the argument is invalid.
+ */
+- (int)startScreenCaptureByWindowId:(NSUInteger)windowId
+                          rectangle:(CGRect)rectangle
+                         parameters:(BBRtcScreenCaptureParameters * _Nonnull)captureParams;
+
+/** Sets the content hint for screen sharing. (macOS only.)
+
+A content hint suggests the type of the content being shared, so that the SDK applies different optimization algorithm to different types of content.
+
+@param contentHint The content hint for screen sharing, see [BBRtcVideoContentHint](BBRtcVideoContentHint).
+
+@return * 0: Success.
+* < 0: Failure.
+*/
+- (int)setScreenCaptureContentHint:(BBRtcVideoContentHint)contentHint;
+
+/** Updates the screen sharing parameters. (macOS only.)
+
+@param captureParams The screen sharing encoding parameters, see [BBRtcScreenCaptureParameters](BBRtcScreenCaptureParameters).
+
+@return * 0: Success.
+* < 0: Failure.
+
+    - `ERR_NOT_READY`: no screen or windows is being shared.
+ */
+- (int)updateScreenCaptureParameters:(BBRtcScreenCaptureParameters * _Nonnull)captureParams;
+
+/** Updates the screen-sharing region. (macOS only.)
+
+ @param rect The relative location of the region to the screen or window. nil means sharing the whole screen or window. This parameter contains the following properties:
+
+- x: the horizontal offset from the top-left corner.
+- y: the vertical offset from the top-left corner.
+- width: the width of the region.
+- height: the height of the region.
+
+If the specified region overruns the screen or window, the SDK shares only the region within it; if you set width or height as 0, the SDK shares the whole screen or window.
+
+@return * 0: Success.
+* < 0: Failure.
+
+    - `ERR_NOT_READY`: no screen or windows is being shared.
+*/
+- (int)updateScreenCaptureRegion:(CGRect)rect;
+
+/** Stops screen sharing. (macOS only.)
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)stopScreenCapture;
+
+#endif
+
+
+#if (!(TARGET_OS_IPHONE) && (TARGET_OS_MAC))
 #pragma mark Device Manager (macOS)
 /**-----------------------------------------------------------------------------
  * @name Device Manager (macOS only)
@@ -3505,6 +4018,48 @@ Ensure that you call this method to stop the loopback test after calling the [st
 
 #pragma mark Miscellaneous Methods
 
+/**-----------------------------------------------------------------------------
+ * @name Miscellaneous Methods
+ * -----------------------------------------------------------------------------
+ */
+
+/** Retrieves the current call ID.
+
+ When a user joins a channel on a client, a `callId` is generated to identify the call from the client. Feedback methods, such as the [rate](rate:rating:description:) and [complain](complain:description:) methods, must be called after the call ends to submit feedback to the SDK.
+
+ The [rate](rate:rating:description:) and [complain](complain:description:) methods require the `callId` parameter retrieved from the `getCallId` method during a call. *callId* is passed as an argument into the [rate](rate:rating:description:) and [complain](complain:description:) methods after the call ends.
+
+ @return callId The current call ID.
+ */
+- (NSString * _Nullable)getCallId;
+
+/** Allows a user to rate a call after the call ends.
+
+ @param callId      Call ID retrieved from the [getCallId]([BBRtcEngineKit getCallId]) method.
+ @param rating      Rating of the call. The value is between 1 (lowest score) and 5 (highest score). If you set a value out of this range, the BBRtcErrorCodeInvalidArgument(-2) error occurs.
+ @param description (Optional) Description of the rating. The string length must be less than 800 bytes.
+
+ @return * 0: Success.
+ * < 0: Failure.
+
+     * Return BBRtcErrorCodeInvalidArgument(-2)：The passed argument is invalid. For example, `callId` is invalid.
+     * Return BBRtcErrorCodeNotReady(-3)：The SDK status is incorrect. For example, initialization fails.
+ */
+- (int)rate:(NSString * _Nonnull)callId
+     rating:(NSInteger)rating
+description:(NSString * _Nullable)description;
+
+/** Allows a user to complain about the call quality after a call ends.
+
+ @param callId      Call ID retrieved from the getCallId method.
+ @param description (Optional) Description of the complaint. The string length must be less than 800 bytes.
+
+ @return * 0: Success.
+ * < 0: Failure.
+ */
+- (int)complain:(NSString * _Nonnull)callId
+    description:(NSString * _Nullable)description;
+
 /** Enables/Disables dispatching delegate methods to the main queue.
 
  If disabled, the app should dispatch UI operations to the main queue.
@@ -3526,6 +4081,14 @@ Ensure that you call this method to stop the loopback test after calling the [st
  @return The version of the current SDK in the string format. For example, 2.3.0
  */
 + (NSString * _Nonnull)getSdkVersion;
+
+/** Retrieves the description of a warning or error code.
+
+ @param code The warning or error code that the [didOccurWarning]([BBRtcEngineDelegate rtcEngine:didOccurWarning:]) or [didOccurError]([BBRtcEngineDelegate rtcEngine:didOccurError:]) callback returns.
+
+ @return BBRtcWarningCode or BBRtcErrorCode.
+ */
++ (NSString * _Nullable)getErrorDescription:(NSInteger)code;
 
 /** Specifies an SDK output log file.
 
@@ -3647,6 +4210,19 @@ The SDK has two log files, each with a default size of 512 KB. If you set fileSi
 - (int)setRemoteRenderMode:(NSUInteger)uid
                       mode:(BBRtcVideoRenderMode)mode;
 
+/** Sets the local video mirror mode.
+
+ **DEPRECATED** from v3.0.0, use the [setupLocalVideo]([BBRtcEngineKit setupLocalVideo:]) or [setLocalRenderMode]([BBRtcEngineKit setLocalRenderMode:mirrorMode:]) method instead.
+
+ Use this method before calling the startPreview method, or the mirror mode does not take effect until you re-enable startPreview.
+
+ @param mode Sets the local video mirror mode. See BBRtcVideoMirrorMode.
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)setLocalVideoMirrorMode:(BBRtcVideoMirrorMode)mode;
+
 /** Enables interoperability with the BBRtc Web SDK.
  
  **DEPRECATED** from v3.0.0. As of v3.0.0, the Native SDK automatically enables interoperability with the Web SDK, so you no longer need to call this method.
@@ -3663,6 +4239,93 @@ The SDK has two log files, each with a default size of 512 KB. If you set fileSi
 * < 0: Failure.
  */
 - (int)enableWebSdkInteroperability:(BOOL)enabled;
+
+/** Adds a watermark image to the local video or CDN live stream.
+
+ **DEPRECATED** from v2.9.1. Use the new [addVideoWatermark]([BBRtcEngineKit addVideoWatermark:options:]) method.
+ 
+ This method adds a PNG watermark to the local video stream for the recording device, channel audience, or CDN live audience to see and capture.
+
+ To add the PNG file onto a CDN live publishing stream only, see the [setLiveTranscoding]([BBRtcEngineKit setLiveTranscoding:]) method.
+
+**Note:**
+
+* The URL descriptions are different for the local video and CDN live streams:
+  * In a local video stream, `url` in BBRtcImage refers to the local file path of the added watermark image file in the local video stream.
+  * In a CDN live stream, `url` in BBRtcImage refers to the URL address of the added watermark image in the CDN live broadcast.
+* The source file of the watermark image must be in the PNG file format. If the width and height of the PNG file differ from your settings in this method, the PNG file is cropped to conform to your settings.
+* The SDK supports adding only one watermark image onto a local video or CDN live stream. The newly added watermark image replaces the previous one.
+* If you set `orientationMode` as `Adaptive` in the [setVideoEncoderConfiguration](setVideoEncoderConfiguration:) method, the watermark image rotates with the video frame and rotates around the upper left corner of the watermark image.
+
+@param watermark Watermark image to be added to the local video stream. See BBRtcImage.
+
+@return * 0: Success.
+* < 0: Failure.
+ */
+- (int)addVideoWatermark:(BBRtcImage * _Nonnull)watermark NS_SWIFT_NAME(addVideoWatermark(_:)) __deprecated_msg("use addVideoWatermark:url options instead.");
+
+/** Starts an audio recording.
+
+ **DEPRECATED** from v2.9.1. Use the new [startAudioRecording]([BBRtcEngineKit startAudioRecording:sampleRate:quality:]) method instead.
+
+ This method has a fixed sample rate of 32 kHz.
+
+ The SDK allows recording during a call. Supported formats:
+
+ * .wav: Large file size with high fidelity.
+ * .aac: Small file size with low fidelity.
+
+ Ensure that the directory to save the recording file exists and is writable. You can call this method after calling the [joinChannelByToken]([BBRtcEngineKit joinChannelByToken:channelId:info:uid:joinSuccess:]) method. The recording automatically stops when you call the [leaveChannel]([BBRtcEngineKit leaveChannel:]) method.
+
+ @param filePath Absolute file path of the recording file. The string of the file name is in UTF-8.
+ @param quality  Sets the audio recording quality. See BBRtcAudioRecordingQuality.
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)startAudioRecording:(NSString * _Nonnull)filePath
+                   quality:(BBRtcAudioRecordingQuality)quality;
+
+
+/** Starts an audio call test.
+
+**DEPRECATED** from v2.4.
+
+This method launches an audio call test to determine whether the audio devices (for example, headset and speaker) and the network connection are working properly.
+
+To conduct the test:
+
+- The user speaks and the recording is played back within 10 seconds.
+- If the user can hear the recording within 10 seconds, the audio devices and network connection are working properly.
+
+ **Note:**
+
+ * After calling this method, always call the stopEchoTest method to end the test. Otherwise, the app cannot run the next echo test, nor can it call the [joinChannelByToken]([BBRtcEngineKit joinChannelByToken:channelId:info:uid:joinSuccess:]) method to start a new call.
+ * In the Live-broadcast profile, only the hosts can call this method. If the user switches from the Communication to Live-broadcast profile, the user must call the [setClientRole](setClientRole:) method to change the user role from an audience (default) to a host before calling this method.
+ @see [startEchoTestWithInterval]([BBRtcEngineKit startEchoTestWithInterval:successBlock:])
+ @param successBlock The SDK triggers the `successBlock` callback if this method call is successful.
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)startEchoTest:(void(^ _Nullable)(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed))successBlock __deprecated_msg("use startEchoTestWithInterval instead.");
+
+/** Sets the preferences for the video quality. (Live broadcast only).
+
+**DEPRECATED** from v2.4.
+
+Under unreliable network connections or the device's CPU is overloaded, the video quality may be affected. You can use this method to choose the video smoothness (frame rate) over the image quality or vice versa.
+
+ @param preferFrameRateOverImageQuality Sets the video quality preference:
+
+ * YES: Frame rate over image quality.
+ * NO: (Default) Image quality over frame rate.
+
+ @return * 0: Success.
+* < 0: Failure.
+ */
+- (int)setVideoQualityParameters:(BOOL)preferFrameRateOverImageQuality __deprecated_msg("use BBRtcDegradationPreference instead.");
+
 /** Initializes the BBRtcEngineKit object.
 
  **DEPRECATED** from v2.3.
@@ -4142,6 +4805,13 @@ Last mile refers to the connection between the local device and BBRtc's edge ser
 - (int) setAudioEffectPreset:(BBRtcAudioEffectPreset)preset;
 
 - (int) setVoiceBeautifierPreset:(BBRtcVoiceBeautifierPreset)preset;
+- (int) setVoiceConversionPreset:(BBRtcVoiceConversionPreset)preset;
+- (int) setVoiceBeautifierParameters:(BBRtcVoiceBeautifierPreset)preset
+                             param1:(int)param1
+                             param2:(int)param2;
+- (int) setAudioEffectParameters:(BBRtcAudioEffectPreset)preset
+                             param1:(int)param1
+                             param2:(int)param2;
 
 - (id<BBRtcAudioDataFrameProtocol> _Nullable) getAudioDelegate;
 - (id<BBRtcVideoDataFrameProtocol> _Nullable) getVideoDelegate;
@@ -4149,7 +4819,11 @@ Last mile refers to the connection between the local device and BBRtc's edge ser
 
 - (void) destoryVideoSourceDelegate;
 
+- (int)setVideoDenoiserOptions:(BOOL)enable options:(BBRtcVideoDenoiserOptions* _Nullable)options;
 - (int)setLowlightEnhanceOptions:(BOOL)enable options:(BBRtcLowlightEnhanceOptions* _Nullable)options;
+- (int)setColorEnhanceOptions:(BOOL)enable options:(BBRtcColorEnhanceOptions* _Nullable)options;
+- (int)enableVirtualBackground:(BOOL)enable backData:(BBRtcVirtualBackgroundSource* _Nullable)backData;
 
 - (int)getVoiceDuration;
+- (int)sendSEI:(NSData* _Nullable)data;
 @end
