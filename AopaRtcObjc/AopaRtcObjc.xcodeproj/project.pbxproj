@@ -51,114 +51,6 @@
 		D81800DA2CA65CBE00F3505B /* AopaRtcKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		9A1519A32C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4542F05DF6F92502C184AA99;
-			remoteInfo = sources;
-		};
-		9A1519A52C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7C44CC6EC5BB091547A8A66A;
-			remoteInfo = AopaRtcKit_signed_bundle;
-		};
-		9A1519A72C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8BF02857CDF33669415C05CD;
-			remoteInfo = AppBBRtcIOS;
-		};
-		9A1519A92C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 726DEA308308AEC707A5EBD2;
-			remoteInfo = AopaAecExtension_signed_bundle;
-		};
-		9A1519AB2C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = AF27018E1DC9B63C656C9EE4;
-			remoteInfo = framework_objc_signed_bundle;
-		};
-		9A1519AD2C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B33A8DBF807F2DE3C6571836;
-			remoteInfo = absl_tests;
-		};
-		9A1519AF2C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3DCDF89E66CC75E7DFD50F19;
-			remoteInfo = histogram_unittests;
-		};
-		9A1519B12C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2FC4B21969AB7C11FAA8F562;
-			remoteInfo = crc32c_benchmark;
-		};
-		9A1519B32C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 372FAC7D42C835DB2DCE6CAF;
-			remoteInfo = crc32c_tests;
-		};
-		9A1519B52C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 71927F86E3E903F6E578AEA8;
-			remoteInfo = libyuv_unittest;
-		};
-		9A1519B72C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1157076642E8B17B17146094;
-			remoteInfo = test_opus_api;
-		};
-		9A1519B92C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 974AF22AFFC117037F2A26A0;
-			remoteInfo = test_opus_decode;
-		};
-		9A1519BB2C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DB3197F8DB6ECC48D2488377;
-			remoteInfo = test_opus_encode;
-		};
-		9A1519BD2C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F6025942AFEF52522BDCF9B;
-			remoteInfo = test_opus_padding;
-		};
-		9A1519BF2C184F2F008D9E55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 003B25AE2BFC6E4B4FB9E08C;
-			remoteInfo = pffft_unittest;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		D81FA2932C296AE00076901B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -174,7 +66,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9A1519902C184F2E008D9E55 /* products.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = products.xcodeproj; path = ../../../out/ios/arm64/products.xcodeproj; sourceTree = "<group>"; };
 		9A9E4D152836567F004D72B1 /* AopaRtcObjc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AopaRtcObjc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A9E4D3228365703004D72B1 /* FUViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FUViewController.mm; sourceTree = "<group>"; };
 		9A9E4D3328365703004D72B1 /* NADCheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NADCheckBox.h; sourceTree = "<group>"; };
@@ -258,33 +149,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9A1519912C184F2E008D9E55 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9A1519A42C184F2F008D9E55 /* sources */,
-				9A1519A62C184F2F008D9E55 /* AopaRtcKit.framework */,
-				9A1519A82C184F2F008D9E55 /* AppBBRtcIOS.app */,
-				9A1519AA2C184F2F008D9E55 /* AopaAecExtension.framework */,
-				9A1519AC2C184F2F008D9E55 /* WebRTC.framework */,
-				9A1519AE2C184F2F008D9E55 /* absl_tests.app */,
-				9A1519B02C184F2F008D9E55 /* histogram_unittests.app */,
-				9A1519B22C184F2F008D9E55 /* crc32c_benchmark.app */,
-				9A1519B42C184F2F008D9E55 /* crc32c_tests.app */,
-				9A1519B62C184F2F008D9E55 /* libyuv_unittest.app */,
-				9A1519B82C184F2F008D9E55 /* test_opus_api.app */,
-				9A1519BA2C184F2F008D9E55 /* test_opus_decode.app */,
-				9A1519BC2C184F2F008D9E55 /* test_opus_encode.app */,
-				9A1519BE2C184F2F008D9E55 /* test_opus_padding.app */,
-				9A1519C02C184F2F008D9E55 /* pffft_unittest.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		9A9E4D0C2836567F004D72B1 = {
 			isa = PBXGroup;
 			children = (
 				D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */,
-				9A1519902C184F2E008D9E55 /* products.xcodeproj */,
 				9AA7A7A228365D5200609135 /* resources */,
 				9A9E4D3128365703004D72B1 /* objc */,
 				9A9E4D162836567F004D72B1 /* Products */,
@@ -429,126 +297,12 @@
 			mainGroup = 9A9E4D0C2836567F004D72B1;
 			productRefGroup = 9A9E4D162836567F004D72B1 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9A1519912C184F2E008D9E55 /* Products */;
-					ProjectRef = 9A1519902C184F2E008D9E55 /* products.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9A9E4D142836567F004D72B1 /* AopaRtcObjc */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		9A1519A42C184F2F008D9E55 /* sources */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = sources;
-			remoteRef = 9A1519A32C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519A62C184F2F008D9E55 /* AopaRtcKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AopaRtcKit.framework;
-			remoteRef = 9A1519A52C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519A82C184F2F008D9E55 /* AppBBRtcIOS.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = AppBBRtcIOS.app;
-			remoteRef = 9A1519A72C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519AA2C184F2F008D9E55 /* AopaAecExtension.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AopaAecExtension.framework;
-			remoteRef = 9A1519A92C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519AC2C184F2F008D9E55 /* WebRTC.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = WebRTC.framework;
-			remoteRef = 9A1519AB2C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519AE2C184F2F008D9E55 /* absl_tests.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = absl_tests.app;
-			remoteRef = 9A1519AD2C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519B02C184F2F008D9E55 /* histogram_unittests.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = histogram_unittests.app;
-			remoteRef = 9A1519AF2C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519B22C184F2F008D9E55 /* crc32c_benchmark.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = crc32c_benchmark.app;
-			remoteRef = 9A1519B12C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519B42C184F2F008D9E55 /* crc32c_tests.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = crc32c_tests.app;
-			remoteRef = 9A1519B32C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519B62C184F2F008D9E55 /* libyuv_unittest.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = libyuv_unittest.app;
-			remoteRef = 9A1519B52C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519B82C184F2F008D9E55 /* test_opus_api.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = test_opus_api.app;
-			remoteRef = 9A1519B72C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519BA2C184F2F008D9E55 /* test_opus_decode.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = test_opus_decode.app;
-			remoteRef = 9A1519B92C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519BC2C184F2F008D9E55 /* test_opus_encode.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = test_opus_encode.app;
-			remoteRef = 9A1519BB2C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519BE2C184F2F008D9E55 /* test_opus_padding.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = test_opus_padding.app;
-			remoteRef = 9A1519BD2C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9A1519C02C184F2F008D9E55 /* pffft_unittest.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = pffft_unittest.app;
-			remoteRef = 9A1519BF2C184F2F008D9E55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9A9E4D132836567F004D72B1 /* Resources */ = {
