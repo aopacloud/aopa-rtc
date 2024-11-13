@@ -46,7 +46,7 @@
                     android:gravity="left"
                     android:paddingLeft="5dp"
                     android:paddingTop="4dp"
-                    android:text="连接。。。"
+                    android:text="Connecting ..."
                     android:textColor="#FFA06000"
                     android:textSize="12dp" />
 
@@ -282,142 +282,81 @@
 
                 <Button
                     android:id="@+id/roleSwitchButton"
-                    android:layout_width="80dp"
+                    android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:onClick="onRoleSwitchClick"
-                    android:text="Audience"
+                    android:text="up"
                     android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
                     android:id="@+id/audioSwitchButton"
-                    android:layout_width="80dp"
+                    android:layout_width="match_parent"
                     android:layout_height="34dp"
-                    android:layout_below="@+id/roleSwitchButton"
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/roleSwitchButton"
                     android:layout_marginTop="-6dp"
                     android:onClick="onAudioSwitchClick"
-                    android:text="CloseMic"
+                    android:text="voice off"
                     android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
                     android:id="@+id/videoSwitchButton"
-                    android:layout_width="80dp"
+                    android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_below="@+id/audioSwitchButton"
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="-6dp"
                     android:onClick="onVideoSwitchClick"
-                    android:text="OpenCam"
-                    android:textAllCaps="false"
-                    android:textSize="12dp" />
-
-                <Button
-                    android:id="@+id/exitButton"
-                    android:layout_width="80dp"
-                    android:layout_height="34dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
-                    android:onClick="onExitRoomClick"
-                    android:text="Exit"
+                    android:text="video off"
                     android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
                     android:id="@+id/cameraSwitchButton"
-                    android:layout_width="80dp"
+                    android:layout_width="match_parent"
                     android:layout_height="34dp"
-                    android:layout_below="@+id/exitButton"
+                    android:layout_below="@+id/videoSwitchButton"
                     android:layout_alignParentRight="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="-6dp"
                     android:onClick="onCameraSwitchClick"
-                    android:text="Camera"
+                    android:text="camera switch"
                     android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
                     android:id="@+id/relaySwitchButton"
-                    android:layout_width="80dp"
+                    android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_below="@+id/cameraSwitchButton"
                     android:layout_alignParentRight="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="-6dp"
                     android:onClick="onRelaySwitchClick"
-                    android:text="StartRelay"
+                    android:text="start relay"
                     android:textAllCaps="false"
                     android:textSize="12dp" />
 
                 <Button
-                    android:id="@+id/audioSubscribeButton"
-                    android:layout_width="80dp"
-                    android:layout_height="34dp"
-                    android:layout_below="@+id/videoSwitchButton"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-6dp"
-                    android:onClick="onAudioSubscribeClick"
-                    android:text="CcancelSubA"
-                    android:textAllCaps="false"
-                    android:textSize="10dp" />
-
-                <Button
-                    android:id="@+id/videoSubscribeButton"
-                    android:layout_width="80dp"
+                    android:id="@+id/exitButton"
+                    android:layout_width="match_parent"
                     android:layout_height="34dp"
                     android:layout_below="@+id/relaySwitchButton"
                     android:layout_alignParentRight="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="-6dp"
-                    android:onClick="onVideoSubscribeClick"
-                    android:text="CancelSubV"
-                    android:textAllCaps="false"
-                    android:textSize="10dp" />
-
-
-                <Button
-                    android:id="@+id/netSettingsButton"
-                    android:layout_width="160dp"
-                    android:layout_height="34dp"
-                    android:layout_below="@+id/audioSubscribeButton"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-6dp"
-                    android:onClick="onNetSettings"
-                    android:text="NetSetting"
+                    android:onClick="onExitRoomClick"
+                    android:text="leave"
                     android:textAllCaps="false"
                     android:textSize="12dp" />
 
-                <TextView
-                    android:id="@+id/ChorusTextView"
-                    android:layout_width="50dp"
-                    android:layout_height="30dp"
-                    android:layout_below="@+id/netSettingsButton"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="Chronos"
-                    android:textColor="@android:color/black"
-                    android:textSize="12dp" />
-
-                <Spinner
-                    android:id="@+id/ChorusRoleSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_alignTop="@+id/ChorusTextView"
-                    android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@+id/ChorusTextView"
-                    android:gravity="center"
-                    android:textSize="12dp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -459,25 +398,25 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="2dp"
                 android:onClick="onMusicSelectClick"
-                android:text="Choose"
+                android:text="local"
                 android:textAllCaps="false"
                 android:textSize="12dp" />
 
 
             <Button
                 android:id="@+id/MusicPauseButton"
-                android:layout_width="55dp"
+                android:layout_width="75dp"
                 android:layout_height="36dp"
                 android:layout_alignTop="@+id/MusicPlayButton"
                 android:layout_toLeftOf="@+id/MusicPlayButton"
                 android:onClick="onMusicPauseClick"
-                android:text="Pasue"
+                android:text="pasue"
                 android:textAllCaps="false"
                 android:textSize="12dp" />
 
             <Button
                 android:id="@+id/MusicPlayButton"
-                android:layout_width="55dp"
+                android:layout_width="65dp"
                 android:layout_height="36dp"
                 android:layout_below="@+id/MusicSelectButton"
                 android:layout_alignRight="@+id/MusicSelectButton"

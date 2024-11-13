@@ -1,9 +1,3 @@
 <resources>
-    <string name="app_name">AopaRtcDemo</string>
-    <!-- FU Effects -->
-    <string name="home_function_name_beauty">Beautification</string>
-    <string name="home_function_name_makeup">Makeup</string>
-    <string name="home_function_name_sticker">Sticker</string>
-    <string name="home_function_name_beauty_body">Body</string>
-    <string name="fu_base_is_tracking_text">No Face Tracking</string>
+    <string name="app_name">AopaRtcAndroid</string>
 </resources>

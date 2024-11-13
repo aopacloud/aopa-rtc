@@ -1268,7 +1268,7 @@ When the connection between the client and BBRtc's server is interrupted due to 
  if the user joining the channel is in the Communication profile, or is a
  host in the Live Broadcast profile.
 
- When the connection between the client and the Agora server is interrupted
+ When the connection between the client and the aopa server is interrupted
  due to poor network conditions, the SDK tries reconnecting to the server.
  When the local client successfully rejoins the channel, the SDK triggers
  the [didRejoinChannel]([BBRtcEngineDelegate rtcEngine:didRejoinChannel:withUid:elapsed:])
@@ -1284,11 +1284,11 @@ When the connection between the client and BBRtc's server is interrupted due to 
  associated usage costs. To unsubscribe, set the `options` parameter or call
  the `mute` methods accordingly.
  - Ensure that the App ID used for generating the token is the same App ID used
- in the [sharedEngineWithAppId]([AgoraRtcEngineKit sharedEngineWithAppId:delegate:])
- method for generating an `AgoraRtcEngineKit` object.
+ in the [sharedEngineWithAppId]([BBRtcRtcEngineKit sharedEngineWithAppId:delegate:])
+ method for generating an `BBRtcRtcEngineKit` object.
 
  @param token The token generated at your server. For details, see [Generate a token].
- @param channelId The unique channel name for the Agora RTC session in the string format. The string length must be less than 64 bytes.
+ @param channelId The unique channel name for the BBRtc RTC session in the string format. The string length must be less than 64 bytes.
  Supported character scopes are:
 
  * All lowercase English letters: a to z.
@@ -1373,9 +1373,9 @@ After the user successfully joins the channel, the SDK triggers the following ca
  callbacks:
 
  - On the local client: [didRegisteredLocalUser]([BBRtcEngineDelegate rtcEngine:didRegisteredLocalUser:withUid:])
- and [didJoinChannel]([AgoraRtcEngineDelegate rtcEngine:didJoinChannel:withUid:elapsed:]).
- - On the remote client: [didJoinedOfUid]([AgoraRtcEngineDelegate rtcEngine:didJoinedOfUid:elapsed:])
- and [didUpdatedUserInfo]([AgoraRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]),
+ and [didJoinChannel]([BBRtcRtcEngineDelegate rtcEngine:didJoinChannel:withUid:elapsed:]).
+ - On the remote client: [didJoinedOfUid]([BBRtcRtcEngineDelegate rtcEngine:didJoinedOfUid:elapsed:])
+ and [didUpdatedUserInfo]([BBRtcRtcEngineDelegate rtcEngine:didUpdatedUserInfo:withUid:]),
  if the user joining the channel is in the Communication profile, or is a host in the Live Broadcast profile.
 
  **Note**
@@ -1390,7 +1390,7 @@ After the user successfully joins the channel, the SDK triggers the following ca
  - To ensure smooth communication, use the same parameter type to identify the
  user. For example, if a user joins the channel with a user ID, then ensure
  all the other users use the user ID too. The same applies to the user
- account. If a user joins the channel with the Agora Web SDK, ensure that
+ account. If a user joins the channel with the BBRtc Web SDK, ensure that
  the user ID is set to the same parameter type.
 
  @param userAccount The user account. The maximum length of this parameter is 255 bytes. Ensure that the user account is unique and do not set it as `nil`. Supported character scopes are:
@@ -1689,6 +1689,13 @@ The `token` expires after a period of time once the token schema is enabled when
  */
 - (int)adjustRecordingSignalVolume:(NSInteger)volume;
 
+/** Get the recording volume.
+
+ @return >= 0: Success.
+ * < 0: Failure.
+ */
+- (int)getRecordingSignalVolume;
+
 /** Adjusts the playback volume of all remote users.
  
  **Note**
@@ -1706,6 +1713,13 @@ The `token` expires after a period of time once the token schema is enabled when
  * < 0: Failure.
  */
 - (int)adjustPlaybackSignalVolume:(NSInteger)volume;
+
+/** Get the playback volume of all remote users.
+
+ @return >= 0: Success.
+ * < 0: Failure.
+ */
+- (int)getPlaybackSignalVolume;
 
 /** Enables the SDK to regularly report to the app on which users are speaking and the speakers' volume.
 

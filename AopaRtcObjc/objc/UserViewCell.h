@@ -10,20 +10,20 @@
 NS_ASSUME_NONNULL_BEGIN
 @protocol UserViewDelegate <NSObject>
 @optional
--(void) onMuteClick:(int)uid mute:(BOOL)mute;
--(void) onVolumeChange:(int)uid volume:(int)volume;
--(void) onVideoStreamChange:(int)uid type:(int)type;
+-(void) onMuteClick:(NSUInteger)uid mute:(BOOL)mute;
+-(void) onVolumeChange:(NSUInteger)uid volume:(int)volume;
+-(void) onVideoStreamChange:(NSUInteger)uid type:(int)type;
 @end
 
 @interface UserViewCell : UICollectionViewCell
 - (instancetype)initWithFrame:(CGRect)frame;
-- (id)initWithUser:(CGRect)frame delegate:(id<UserViewDelegate> _Nullable)delegate uid:(uint32_t)uid;
+- (id)initWithUser:(CGRect)frame delegate:(id<UserViewDelegate> _Nullable)delegate uid:(NSUInteger)uid;
 - (void)setMuteEnable:(BOOL)mute;
 - (void)setRealTimeVolume:(int)volume;
 - (void)setRemoteMute:(BOOL)mute;
 - (void)setStreamType:(int)type;
-- (void)setUserId:(uint32_t)userId;
-- (uint32_t)getUserId;
+- (void)setUserId:(NSUInteger)userId;
+- (NSUInteger)getUserId;
 - (UIView*)getVideoView;
 - (void)setIndex:(int)idx;
 - (int)getIndex;

@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9A9E4D4A28365703004D72B1 /* FUViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9A9E4D3228365703004D72B1 /* FUViewController.mm */; };
+		9A7004732CDB451B009DBDAE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A79428365C5A00609135 /* AVFoundation.framework */; };
+		9A7004742CDB4563009DBDAE /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A7A028365C8000609135 /* MediaPlayer.framework */; };
 		9A9E4D4B28365703004D72B1 /* NADVolumeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A9E4D3628365703004D72B1 /* NADVolumeView.m */; };
 		9A9E4D4C28365703004D72B1 /* LMJDropdownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A9E4D3728365703004D72B1 /* LMJDropdownMenu.m */; };
 		9A9E4D4D28365703004D72B1 /* NADCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A9E4D3A28365703004D72B1 /* NADCheckBox.m */; };
@@ -17,13 +18,6 @@
 		9A9E4D5128365703004D72B1 /* NADAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A9E4D3F28365703004D72B1 /* NADAppDelegate.m */; };
 		9A9E4D5228365703004D72B1 /* NADLoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A9E4D4028365703004D72B1 /* NADLoginController.m */; };
 		9A9E4D5328365703004D72B1 /* UserViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A9E4D4928365703004D72B1 /* UserViewCell.m */; };
-		9AA7A79528365C5A00609135 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A79428365C5A00609135 /* AVFoundation.framework */; };
-		9AA7A79728365C5F00609135 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A79628365C5F00609135 /* CoreGraphics.framework */; };
-		9AA7A79928365C6400609135 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A79828365C6400609135 /* CoreMedia.framework */; };
-		9AA7A79B28365C6800609135 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A79A28365C6800609135 /* GLKit.framework */; };
-		9AA7A79D28365C6E00609135 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A79C28365C6E00609135 /* CoreLocation.framework */; };
-		9AA7A79F28365C7300609135 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A79E28365C7300609135 /* CoreTelephony.framework */; };
-		9AA7A7A128365C8000609135 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA7A7A028365C8000609135 /* MediaPlayer.framework */; };
 		9AA7A7B328365D5200609135 /* icon_check_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7A7A328365D5200609135 /* icon_check_s@2x.png */; };
 		9AA7A7B428365D5200609135 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7A7A428365D5200609135 /* Icon.png */; };
 		9AA7A7B528365D5200609135 /* Icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7A7A528365D5200609135 /* Icon-120.png */; };
@@ -40,13 +34,13 @@
 		9AA7A7C028365D5200609135 /* icon_check_n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7A7B028365D5200609135 /* icon_check_n@2x.png */; };
 		9AA7A7C128365D5200609135 /* slider_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7A7B128365D5200609135 /* slider_normal.png */; };
 		9AA7A7C228365D5200609135 /* iPhone6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7A7B228365D5200609135 /* iPhone6@2x.png */; };
+		9AC731122CE339BF00E157B4 /* AopaAecExtension.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC7310F2CE339BF00E157B4 /* AopaAecExtension.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9AC731162CE33AB900E157B4 /* AopaAecExtension.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC731142CE33AB900E157B4 /* AopaAecExtension.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9AC731192CE4619500E157B4 /* AopaNSExtension.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC731182CE4619500E157B4 /* AopaNSExtension.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9AC7311A2CE4619500E157B4 /* AopaNSExtension.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC731182CE4619500E157B4 /* AopaNSExtension.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9AE43BC62B2ABBD700EFCEAE /* NetworkLinkView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9AE43BC52B2ABBD700EFCEAE /* NetworkLinkView.mm */; };
 		9AF011FE2B0367C600F7FEA7 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF011FD2B0367C600F7FEA7 /* CFNetwork.framework */; };
-		9AF012002B0367D600F7FEA7 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF011FF2B0367D600F7FEA7 /* Network.framework */; };
 		9AF012022B03681A00F7FEA7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012012B03681A00F7FEA7 /* Foundation.framework */; };
-		9AF012042B03681F00F7FEA7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012032B03681F00F7FEA7 /* SystemConfiguration.framework */; };
-		9AF012062B03683200F7FEA7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012052B03683200F7FEA7 /* CoreFoundation.framework */; };
-		9AF760992B50DA31009AA45C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF012072B03689700F7FEA7 /* libz.tbd */; };
 		D81800D92CA65CBE00F3505B /* AopaRtcKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */; };
 		D81800DA2CA65CBE00F3505B /* AopaRtcKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -58,7 +52,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9AC731162CE33AB900E157B4 /* AopaAecExtension.xcframework in Embed Frameworks */,
 				D81800DA2CA65CBE00F3505B /* AopaRtcKit.xcframework in Embed Frameworks */,
+				9AC7311A2CE4619500E157B4 /* AopaNSExtension.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,7 +63,6 @@
 
 /* Begin PBXFileReference section */
 		9A9E4D152836567F004D72B1 /* AopaRtcObjc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AopaRtcObjc.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9A9E4D3228365703004D72B1 /* FUViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FUViewController.mm; sourceTree = "<group>"; };
 		9A9E4D3328365703004D72B1 /* NADCheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NADCheckBox.h; sourceTree = "<group>"; };
 		9A9E4D3428365703004D72B1 /* NADAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NADAppDelegate.h; sourceTree = "<group>"; };
 		9A9E4D3528365703004D72B1 /* VideoFileParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFileParser.h; sourceTree = "<group>"; };
@@ -84,11 +79,6 @@
 		9A9E4D4028365703004D72B1 /* NADLoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NADLoginController.m; sourceTree = "<group>"; };
 		9A9E4D4128365703004D72B1 /* LMJDropdownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMJDropdownMenu.h; sourceTree = "<group>"; };
 		9A9E4D4228365703004D72B1 /* NADViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NADViewController.h; sourceTree = "<group>"; };
-		9A9E4D4328365703004D72B1 /* FUViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FUViewController.h; sourceTree = "<group>"; };
-		9A9E4D4528365703004D72B1 /* StatsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsManager.h; sourceTree = "<group>"; };
-		9A9E4D4628365703004D72B1 /* LocalStatsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStatsData.h; sourceTree = "<group>"; };
-		9A9E4D4728365703004D72B1 /* RemoteStatsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemoteStatsData.h; sourceTree = "<group>"; };
-		9A9E4D4828365703004D72B1 /* StatsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsData.h; sourceTree = "<group>"; };
 		9A9E4D4928365703004D72B1 /* UserViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserViewCell.m; sourceTree = "<group>"; };
 		9AA7A79428365C5A00609135 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		9AA7A79628365C5F00609135 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -113,6 +103,10 @@
 		9AA7A7B028365D5200609135 /* icon_check_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_check_n@2x.png"; sourceTree = "<group>"; };
 		9AA7A7B128365D5200609135 /* slider_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = slider_normal.png; sourceTree = "<group>"; };
 		9AA7A7B228365D5200609135 /* iPhone6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iPhone6@2x.png"; sourceTree = "<group>"; };
+		9AC7310E2CE339BE00E157B4 /* AopaNSExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AopaNSExtension.framework; path = ../Sdk/ios/libs/AopaNSExtension.framework; sourceTree = "<group>"; };
+		9AC7310F2CE339BF00E157B4 /* AopaAecExtension.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AopaAecExtension.xcframework; path = ../Sdk/ios/libs/AopaAecExtension.xcframework; sourceTree = "<group>"; };
+		9AC731142CE33AB900E157B4 /* AopaAecExtension.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AopaAecExtension.xcframework; path = ../Sdk/ios/libs/AopaAecExtension.xcframework; sourceTree = "<group>"; };
+		9AC731182CE4619500E157B4 /* AopaNSExtension.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AopaNSExtension.xcframework; path = ../sdk/ios/libs/AopaNSExtension.xcframework; sourceTree = "<group>"; };
 		9AE43BC42B2ABBD700EFCEAE /* NetworkLinkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkLinkView.h; sourceTree = "<group>"; };
 		9AE43BC52B2ABBD700EFCEAE /* NetworkLinkView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NetworkLinkView.mm; sourceTree = "<group>"; };
 		9AF011FD2B0367C600F7FEA7 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -129,19 +123,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9AF760992B50DA31009AA45C /* libz.tbd in Frameworks */,
+				9A7004742CDB4563009DBDAE /* MediaPlayer.framework in Frameworks */,
+				9A7004732CDB451B009DBDAE /* AVFoundation.framework in Frameworks */,
 				9AF011FE2B0367C600F7FEA7 /* CFNetwork.framework in Frameworks */,
-				9AF012062B03683200F7FEA7 /* CoreFoundation.framework in Frameworks */,
-				9AF012042B03681F00F7FEA7 /* SystemConfiguration.framework in Frameworks */,
 				9AF012022B03681A00F7FEA7 /* Foundation.framework in Frameworks */,
-				9AF012002B0367D600F7FEA7 /* Network.framework in Frameworks */,
-				9AA7A7A128365C8000609135 /* MediaPlayer.framework in Frameworks */,
-				9AA7A79F28365C7300609135 /* CoreTelephony.framework in Frameworks */,
-				9AA7A79D28365C6E00609135 /* CoreLocation.framework in Frameworks */,
-				9AA7A79B28365C6800609135 /* GLKit.framework in Frameworks */,
-				9AA7A79928365C6400609135 /* CoreMedia.framework in Frameworks */,
-				9AA7A79728365C5F00609135 /* CoreGraphics.framework in Frameworks */,
-				9AA7A79528365C5A00609135 /* AVFoundation.framework in Frameworks */,
+				9AC731122CE339BF00E157B4 /* AopaAecExtension.xcframework in Frameworks */,
+				9AC731192CE4619500E157B4 /* AopaNSExtension.xcframework in Frameworks */,
 				D81800D92CA65CBE00F3505B /* AopaRtcKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,6 +139,7 @@
 		9A9E4D0C2836567F004D72B1 = {
 			isa = PBXGroup;
 			children = (
+				9AC731142CE33AB900E157B4 /* AopaAecExtension.xcframework */,
 				D81800D72CA65C2300F3505B /* AopaRtcKit.xcframework */,
 				9AA7A7A228365D5200609135 /* resources */,
 				9A9E4D3128365703004D72B1 /* objc */,
@@ -171,46 +159,35 @@
 		9A9E4D3128365703004D72B1 /* objc */ = {
 			isa = PBXGroup;
 			children = (
-				9AE43BC42B2ABBD700EFCEAE /* NetworkLinkView.h */,
-				9AE43BC52B2ABBD700EFCEAE /* NetworkLinkView.mm */,
-				9A9E4D3228365703004D72B1 /* FUViewController.mm */,
 				9A9E4D3328365703004D72B1 /* NADCheckBox.h */,
-				9A9E4D3428365703004D72B1 /* NADAppDelegate.h */,
-				9A9E4D3528365703004D72B1 /* VideoFileParser.h */,
-				9A9E4D3628365703004D72B1 /* NADVolumeView.m */,
-				9A9E4D3728365703004D72B1 /* LMJDropdownMenu.m */,
-				9A9E4D3828365703004D72B1 /* NADLoginController.h */,
-				9A9E4D3928365703004D72B1 /* UserViewCell.h */,
 				9A9E4D3A28365703004D72B1 /* NADCheckBox.m */,
-				9A9E4D3B28365703004D72B1 /* NADViewController.mm */,
+				9A9E4D3528365703004D72B1 /* VideoFileParser.h */,
+				9A9E4D3E28365703004D72B1 /* VideoFileParser.m */,
+				9A9E4D3928365703004D72B1 /* UserViewCell.h */,
 				9A9E4D3C28365703004D72B1 /* main.m */,
 				9A9E4D3D28365703004D72B1 /* NADVolumeView.h */,
-				9A9E4D3E28365703004D72B1 /* VideoFileParser.m */,
+				9A9E4D3628365703004D72B1 /* NADVolumeView.m */,
+				9A9E4D3428365703004D72B1 /* NADAppDelegate.h */,
 				9A9E4D3F28365703004D72B1 /* NADAppDelegate.m */,
+				9A9E4D3828365703004D72B1 /* NADLoginController.h */,
 				9A9E4D4028365703004D72B1 /* NADLoginController.m */,
-				9A9E4D4128365703004D72B1 /* LMJDropdownMenu.h */,
 				9A9E4D4228365703004D72B1 /* NADViewController.h */,
-				9A9E4D4328365703004D72B1 /* FUViewController.h */,
-				9A9E4D4428365703004D72B1 /* stats */,
+				9A9E4D3B28365703004D72B1 /* NADViewController.mm */,
+				9A9E4D4128365703004D72B1 /* LMJDropdownMenu.h */,
+				9A9E4D3728365703004D72B1 /* LMJDropdownMenu.m */,
+				9AE43BC42B2ABBD700EFCEAE /* NetworkLinkView.h */,
+				9AE43BC52B2ABBD700EFCEAE /* NetworkLinkView.mm */,
 				9A9E4D4928365703004D72B1 /* UserViewCell.m */,
 			);
 			path = objc;
 			sourceTree = "<group>";
 		};
-		9A9E4D4428365703004D72B1 /* stats */ = {
-			isa = PBXGroup;
-			children = (
-				9A9E4D4528365703004D72B1 /* StatsManager.h */,
-				9A9E4D4628365703004D72B1 /* LocalStatsData.h */,
-				9A9E4D4728365703004D72B1 /* RemoteStatsData.h */,
-				9A9E4D4828365703004D72B1 /* StatsData.h */,
-			);
-			path = stats;
-			sourceTree = "<group>";
-		};
 		9A9E4DFC283657F1004D72B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9AC731182CE4619500E157B4 /* AopaNSExtension.xcframework */,
+				9AC7310F2CE339BF00E157B4 /* AopaAecExtension.xcframework */,
+				9AC7310E2CE339BE00E157B4 /* AopaNSExtension.framework */,
 				9AF012072B03689700F7FEA7 /* libz.tbd */,
 				9AF012052B03683200F7FEA7 /* CoreFoundation.framework */,
 				9AF012032B03681F00F7FEA7 /* SystemConfiguration.framework */,
@@ -279,7 +256,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					9A9E4D142836567F004D72B1 = {
 						CreatedOnToolsVersion = 13.3.1;
@@ -345,7 +322,6 @@
 				9A9E4D5028365703004D72B1 /* VideoFileParser.m in Sources */,
 				9A9E4D5328365703004D72B1 /* UserViewCell.m in Sources */,
 				9A9E4D5228365703004D72B1 /* NADLoginController.m in Sources */,
-				9A9E4D4A28365703004D72B1 /* FUViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +364,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -446,6 +423,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -470,9 +448,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = XZ885H7XJ9;
+				DEVELOPMENT_TEAM = D2J55WZU7T;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				EXCLUDED_ARCHS = "";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../sdk/ios/libs\"";
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../..\"",
@@ -495,13 +474,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rtc.AppBBRtcIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rtc.AppBBRtcIOS2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -518,9 +497,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = XZ885H7XJ9;
+				DEVELOPMENT_TEAM = D2J55WZU7T;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				EXCLUDED_ARCHS = "";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../sdk/ios/libs\"";
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../..\"",
@@ -543,14 +523,14 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rtc.AppBBRtcIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rtc.AppBBRtcIOS2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -20,7 +20,7 @@
 @end
 
 @implementation UserViewCell{
-    uint32_t uid_;
+    NSUInteger uid_;
     int index_;
 }
 
@@ -31,11 +31,11 @@
     return self;
 }
 
-- (id) initWithUser:(CGRect)frame delegate:(id<UserViewDelegate> _Nullable)delegate uid:(uint32_t)uid{
+- (id) initWithUser:(CGRect)frame delegate:(id<UserViewDelegate> _Nullable)delegate uid:(NSUInteger)uid{
     [self loadview];
     self.delegate = delegate;
     uid_ = uid;
-    [_titleLabel setText:[NSString stringWithFormat:@"%d", uid]];
+    [_titleLabel setText:[NSString stringWithFormat:@"%u", (uint32_t)uid]];
     return self;
 }
 
@@ -215,11 +215,11 @@
     [self setRealTimeVolume:0];
 }
 
-- (void) setUserId:(uint32_t)userId {
+- (void) setUserId:(NSUInteger)userId {
     uid_ = userId;
 }
 
-- (uint32_t) getUserId{
+- (NSUInteger) getUserId{
     return uid_;
 }
 

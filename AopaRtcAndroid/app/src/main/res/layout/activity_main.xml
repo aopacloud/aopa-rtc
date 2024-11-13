@@ -8,10 +8,10 @@
 
     <TextView
         android:id="@+id/RoomIDTextView"
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="100dp"
         android:text="RoomID"
         android:textColor="@android:color/black" />
 
@@ -21,7 +21,7 @@
         android:layout_height="40dp"
         android:layout_alignTop="@+id/RoomIDTextView"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
+        android:layout_marginTop="-8dp"
         android:layout_marginRight="50dp"
         android:layout_toRightOf="@+id/RoomIDTextView"
         android:gravity="left"
@@ -32,34 +32,12 @@
         android:textSize="15dp" />
 
     <TextView
-        android:id="@+id/AppIDTextView"
-        android:layout_width="60dp"
+        android:id="@+id/UserIdTextView"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_below="@+id/RoomIDTextView"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="4dp"
-        android:text="APP ID"
-        android:textColor="@android:color/black" />
-
-    <Spinner
-        android:id="@+id/AppIdSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/AppIDTextView"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
-        android:layout_marginRight="50dp"
-        android:layout_toRightOf="@+id/AppIDTextView"
-        android:gravity="center"
-        android:textSize="15dp" />
-
-    <TextView
-        android:id="@+id/UserIdTextView"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/AppIDTextView"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="15dp"
         android:text="UserID"
         android:textColor="@android:color/black" />
 
@@ -69,7 +47,7 @@
         android:layout_height="40dp"
         android:layout_alignTop="@+id/UserIdTextView"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
+        android:layout_marginTop="-8dp"
         android:layout_marginRight="50dp"
         android:layout_toRightOf="@+id/UserIdTextView"
         android:gravity="left"
@@ -79,40 +57,15 @@
         android:textColor="@android:color/black"
         android:textSize="15dp" />
 
-    <TextView
-        android:id="@+id/ServerAddrTextView"
-        android:layout_width="65dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/UserIdTextView"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="4dp"
-        android:text="SerrEnv"
-        android:textColor="@android:color/black"
-        android:visibility="visible"
-        tools:visibility="visible" />
-
-
-    <Spinner
-        android:id="@+id/ServerSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/ServerAddrTextView"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
-        android:layout_marginRight="50dp"
-        android:layout_toRightOf="@+id/ServerAddrTextView"
-        android:gravity="center"
-        android:textSize="15dp"
-        android:visibility="visible" />
 
     <TextView
         android:id="@+id/AudioQualityTextView"
         android:layout_width="80dp"
         android:layout_height="30dp"
-        android:layout_below="@+id/ServerAddrTextView"
+        android:layout_below="@+id/UserIdEditText"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="4dp"
-        android:text="AudQuality"
+        android:layout_marginTop="15dp"
+        android:text="Quality"
         android:textColor="@android:color/black" />
 
     <Spinner
@@ -121,19 +74,19 @@
         android:layout_height="30dp"
         android:layout_alignTop="@+id/AudioQualityTextView"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
+        android:layout_marginTop="-8dp"
         android:layout_marginRight="50dp"
         android:layout_toRightOf="@+id/AudioQualityTextView"
-        android:gravity="center"
+        android:gravity="left"
         android:textSize="15dp" />
 
     <TextView
         android:id="@+id/ScenarioTextView"
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_below="@+id/AudioQualityTextView"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="15dp"
         android:text="Scene"
         android:textColor="@android:color/black" />
 
@@ -145,13 +98,13 @@
         android:layout_alignTop="@+id/ScenarioTextView"
         android:layout_alignParentRight="true"
         android:layout_marginRight="50dp"
-        android:layout_marginTop="-6dp"
+        android:layout_marginTop="-8dp"
         android:textSize="15dp"
         android:gravity="center" />
 
     <TextView
         android:id="@+id/RoleTextView"
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_below="@+id/ScenarioTextView"
         android:layout_marginLeft="50dp"
@@ -165,7 +118,7 @@
         android:layout_height="40dp"
         android:layout_alignTop="@+id/RoleTextView"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
+        android:layout_marginTop="-8dp"
         android:layout_marginRight="50dp"
         android:layout_toRightOf="@+id/RoleTextView"
         android:gravity="center"
@@ -173,12 +126,12 @@
 
     <TextView
         android:id="@+id/ResolutionTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_below="@+id/RoleTextView"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="4dp"
-        android:text="VCapReso"
+        android:layout_marginTop="15dp"
+        android:text="Resolution"
         android:textColor="@android:color/black" />
 
     <Spinner
@@ -187,166 +140,42 @@
         android:layout_height="40dp"
         android:layout_alignTop="@+id/ResolutionTextView"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
+        android:layout_marginTop="-8dp"
         android:layout_marginRight="50dp"
         android:layout_toRightOf="@+id/ResolutionTextView"
         android:gravity="center"
         android:textSize="15dp" />
 
-    <TextView
-        android:id="@+id/CustomServerTextView"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/ResolutionSpinner"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="4dp"
-        android:text="CustomIp"
-        android:textColor="@android:color/black"
-        android:visibility="invisible"
-        tools:visibility="invisible" />
-
-    <EditText
-        android:id="@+id/CustomServerEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/CustomServerTextView"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="-6dp"
-        android:layout_marginRight="50dp"
-        android:layout_toRightOf="@+id/CustomServerTextView"
-        android:gravity="left"
-        android:inputType="text"
-        android:singleLine="true"
-        android:text=""
-        android:textColor="@android:color/black"
-        android:textSize="15dp"
-        android:tooltipText="输入服务器IP"
-        android:visibility="invisible"
-        tools:visibility="visible" />
-
-    <CheckBox
-        android:id="@+id/TokenCheckBox"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/CustomServerTextView"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp"
-        android:text="TokenCheck" />
-
-    <CheckBox
-        android:id="@+id/StatsCheckBox"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
-        android:layout_alignTop="@+id/TokenCheckBox"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_toRightOf="@+id/TokenCheckBox"
-        android:text="ShowStatistic" />
-
     <CheckBox
         android:id="@+id/SpeakerCheckBox"
         android:layout_width="125dp"
         android:layout_height="30dp"
-        android:layout_below="@+id/TokenCheckBox"
+        android:layout_below="@+id/ResolutionSpinner"
         android:layout_marginLeft="55dp"
-        android:layout_marginTop="10dp"
-        android:text="AudioOutput" />
+        android:layout_marginTop="35dp"
+        android:text="SpeakerOut" />
 
-    <CheckBox
-        android:id="@+id/QuicCheckBox"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_alignTop="@+id/SpeakerCheckBox"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_toRightOf="@+id/InearCheckBox"
-        android:text="QUIC" />
-
-    <CheckBox
-        android:id="@+id/InearCheckBox"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/SpeakerCheckBox"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp"
-        android:text="Inear" />
-
-    <CheckBox
-        android:id="@+id/ReverbCheckBox"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_alignTop="@+id/InearCheckBox"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_toRightOf="@+id/InearCheckBox"
-        android:text="Reverb" />
-
-    <CheckBox
-        android:id="@+id/AAACheckBox"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/InearCheckBox"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="5dp"
-        android:text="3A" />
 
     <CheckBox
         android:id="@+id/VideoCheckBox"
         android:layout_width="120dp"
         android:layout_height="30dp"
-        android:layout_below="@+id/InearCheckBox"
-        android:layout_alignLeft="@+id/ReverbCheckBox"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="35dp"
+        android:layout_toRightOf="@+id/SpeakerCheckBox"
+        android:layout_alignTop="@+id/SpeakerCheckBox"
         android:text="OpenVideo" />
 
-    <CheckBox
-        android:id="@+id/MulticastCheckBox"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/AAACheckBox"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="5dp"
-        android:text="Simucast" />
-
-    <CheckBox
-        android:id="@+id/DetachCheckBox"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/VideoCheckBox"
-        android:layout_alignLeft="@+id/VideoCheckBox"
-        android:layout_marginTop="5dp"
-        android:text="StreamDetach" />
 
     <Button
         android:id="@+id/RoomBnt"
-        android:layout_width="120dp"
-        android:layout_height="48dp"
-        android:layout_below="@id/MulticastCheckBox"
+        android:layout_width="140dp"
+        android:layout_height="52dp"
+        android:layout_below="@id/VideoCheckBox"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="120dp"
         android:onClick="onJoinClick"
-        android:text="Multi video"
+        android:text="JOIN"
         android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/SingleBnt"
-        android:layout_width="120dp"
-        android:layout_height="48dp"
-        android:layout_below="@id/RoomBnt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:onClick="onSingleClick"
-        android:text="Single video"
-        android:textAllCaps="false" />
-
-    <TextView
-        android:id="@+id/VersionText"
-        android:layout_width="60dp"
-        android:layout_height="20dp"
-        android:singleLine="true"
-        android:text=""
-        android:textSize="14dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

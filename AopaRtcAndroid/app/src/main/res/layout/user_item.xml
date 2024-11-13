@@ -46,7 +46,7 @@
         android:textColor="@android:color/white"
         android:textSize="12dp" />
 
-    <org.banban.demo.VolumeView
+    <com.aopa.aopartcandroid.VolumeView
         android:id="@+id/liveVolumeView"
         android:layout_width="24dp"
         android:layout_height="match_parent"

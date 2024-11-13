@@ -7,14 +7,13 @@
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
  */
-
+#include <vector>
+#include <map>
 #import "NADViewController.h"
 #import "NADAppDelegate.h"
 #import "UserViewCell.h"
-#import <AVFoundation/AVFoundation.h> 
+#import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#include <vector>
-#include <map>
 #import "LMJDropdownMenu.h"
 #import "VideoFileParser.h"
 #import "NetworkLinkView.h"
@@ -22,12 +21,12 @@
 #define VIDEO_VIEW_HEIGHT 200
 
 @interface NADViewController ()<BBRtcEngineDelegate, UserViewDelegate,
-    MPMediaPickerControllerDelegate, UICollectionViewDataSource,
-    UICollectionViewDelegate, UICollectionViewDelegateFlowLayout,
-    LMJDropdownMenuDataSource, LMJDropdownMenuDelegate,
-    BBRtcAudioDataFrameProtocol,
-    BBRtcVideoSourceProtocol, BBRtcVideoDataFrameProtocol,
-    ReadVideoFrameDelegate>
+MPMediaPickerControllerDelegate, UICollectionViewDataSource,
+UICollectionViewDelegate, UICollectionViewDelegateFlowLayout,
+LMJDropdownMenuDataSource, LMJDropdownMenuDelegate,
+BBRtcAudioDataFrameProtocol,
+BBRtcVideoSourceProtocol, BBRtcVideoDataFrameProtocol,
+ReadVideoFrameDelegate>
 @property(nonatomic) UIView *videoView;
 @property(nonatomic) UIView *stateView;
 @property(nonatomic) UIView *vadStateView;
@@ -87,8 +86,6 @@
 @implementation NADViewController {
     UIView* view_;
     BOOL refresh_;
-    std::vector<uint32_t> userList_;
-    std::map<int, UserViewCell*> allCellMap_;
     uint32_t userId_;
     BOOL videoOpen_;
     BOOL voiceOpen_;
@@ -100,7 +97,8 @@
     BBRtcEngineKit* sharedEngine_;
     NSArray* audioOptionTitles_;
     NSArray* chorusRoleTitles_;
-    NSInteger streamId_;
+    std::vector<NSUInteger> userList_;
+    std::map<NSUInteger, UserViewCell*> allCellMap_;
 }
 
 @synthesize hangUpButton = _hangUpButton;
@@ -183,7 +181,7 @@
     
     _hangUpButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _hangUpButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [_hangUpButton setTitle:@"Hang up" forState:UIControlStateNormal];
+    [_hangUpButton setTitle:@"leave" forState:UIControlStateNormal];
     [_hangUpButton addTarget:self action:@selector(hangUp:)
             forControlEvents:UIControlEventTouchUpInside];
     [_rightView addSubview:_hangUpButton];
@@ -331,13 +329,13 @@
     _musicNameLabel.layer.borderColor  = [UIColor colorWithRed:150/255.f green:150/255.f blue:150/255.f alpha:1].CGColor;
     _musicNameLabel.layer.borderWidth  = 1;
     _musicNameLabel.layer.cornerRadius = 3;
-    NSArray<NSString *> *musics= @[@"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%80%92%E6%95%B0.mp3", 
-    @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%8F%A5%E5%8F%B7.mp3",
-    @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
-    @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%96%9C%E6%AC%A2%E4%BD%A0.mp3",
-    @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E6%99%B4%E5%A4%A9.mp3",
-    @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E7%94%BB.mp3",
-    @"https://xs-voice.oss-cn-hangzhou.aliyuncs.com/upload/music/de29ca47f33a997ac6ecf8bdcff1a095.mp3"];
+    NSArray<NSString *> *musics= @[@"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%80%92%E6%95%B0.mp3",
+                                   @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%8F%A5%E5%8F%B7.mp3",
+                                   @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3",
+                                   @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E5%96%9C%E6%AC%A2%E4%BD%A0.mp3",
+                                   @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E6%99%B4%E5%A4%A9.mp3",
+                                   @"https://rtc-resouce.oss-ap-southeast-1.aliyuncs.com/music/%E7%94%BB.mp3",
+                                   @"https://xs-voice.oss-cn-hangzhou.aliyuncs.com/upload/music/de29ca47f33a997ac6ecf8bdcff1a095.mp3"];
     int index = arc4random() % [musics count];
     _musicNameLabel.text = musics[index];
     [_musicView addSubview:_musicNameLabel];
@@ -346,7 +344,7 @@
     
     _musicSelectButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _musicSelectButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [_musicSelectButton setTitle:@"select" forState:UIControlStateNormal];
+    [_musicSelectButton setTitle:@"local" forState:UIControlStateNormal];
     [_musicSelectButton addTarget:self action:@selector(onMusicSelectClick:)
                  forControlEvents:UIControlEventTouchUpInside];
     [_musicView addSubview:_musicSelectButton];
@@ -431,7 +429,6 @@
     _chorusRoleMenu.titleAlignment  = NSTextAlignmentLeft;
     _chorusRoleMenu.titleEdgeInsets = UIEdgeInsetsMake(3, 5, 0, 0);
     
-    UILayoutGuide *margin = view_.layoutMarginsGuide;
     
     [_videoView.leftAnchor constraintEqualToAnchor:view_.leftAnchor constant:1].active = YES;
     [_videoView.topAnchor constraintEqualToAnchor:view_.topAnchor].active = YES;
@@ -715,104 +712,55 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     refresh_ = NO;
-    streamId_ = -1;
     [self joinRoom];
     [_collectionView reloadData];
     [self addNetworkLinkView];
 }
 
 - (void)joinRoom{
-    NSString* servers[] = {
-        @"{\"signaling\":\"wss://rtc-gateway-oversea.aopacloud.net:6080/rtc/channel\",\"rtconfig\":\"https://rtc-gateway-oversea.aopacloud.net:6080/rtc/get_rtc_config\",\"log\":\"https://rtc-gateway-oversea.aopacloud.net:6080/ali/v1/get_upload_url\",\"quic\":\"rtc-gateway-oversea-quic.aopacloud.net:16081\",\"report\":\"https://rtc-gateway-oversea.aopacloud.net:6080/rtc/rtc_event_report\"}",
-    };
-    NSString* serverAddr = nil;
-    if (self.serverType == 5) {
-        serverAddr = servers[4];
-        serverAddr = [serverAddr stringByReplacingOccurrencesOfString:@"192.168.11.47" withString:self.customAddr];
-    } else {
-        serverAddr = servers[self.serverType];
-    }
-    NSError *error = nil;
-    NSData *jsonData = [serverAddr dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
-    
-    [jsonDictionary setObject:@(self.userId) forKey:@"uid"];
-    NSData *updatedJsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:NSJSONWritingPrettyPrinted error:&error];
-    serverAddr = [[NSString alloc] initWithData:updatedJsonData encoding:NSUTF8StringEncoding];
-
-    [BBRtcEngineKit setRtcServerAddress:serverAddr];
-    sharedEngine_ = [BBRtcEngineKit sharedEngineWithAppId:self.appId delegate:nil];
-    if(!sharedEngine_)
-        return;
-    userId_ = self.userId;
-    
-    BBRtcVideoEncoderConfiguration* videoConfig = [[BBRtcVideoEncoderConfiguration alloc] init];
-    if(_videoProfile == 0){
-        videoConfig.dimensions = CGSizeMake(360, 640);
-    }else if(_videoProfile == 1){
-        videoConfig.dimensions = CGSizeMake(480, 640);
-    }else if(_videoProfile == 2){
-        videoConfig.dimensions = CGSizeMake(540, 960);
-    }else if(_videoProfile == 3){
-        videoConfig.dimensions = CGSizeMake(720, 1280);
-    }else if(_videoProfile == 4){
-        videoConfig.dimensions = CGSizeMake(1080, 1920);
-    }
-    videoConfig.frameRate = 15;
-    videoConfig.minFrameRate = 5;
-    videoConfig.orientationMode = BBRtcVideoOutputOrientationModeFixedPortrait;
-    videoConfig.mirrorMode = BBRtcVideoMirrorModeAuto;
-    videoConfig.degradationPreference = BBRtcDegradationMaintainFramerate;
-    [sharedEngine_ setVideoEncoderConfiguration:videoConfig];
-    
+    NSString* testAppId = @"6MHg9hZqMMcKjNyiauSyU8H5b3eTr4qM"; //Test appid
+    sharedEngine_ = [BBRtcEngineKit sharedEngineWithAppId:testAppId delegate:nil];
     sharedEngine_.delegate = self;
     [sharedEngine_ setLogFilter:BBRtcLogFilterDebug];
     [sharedEngine_ enableMainQueueDispatch:YES];
     [sharedEngine_ enableAudio];
-    if(_videoEnabled)
+    if(_videoEnabled){
         [sharedEngine_ enableVideo];
-    else
+        BBRtcVideoEncoderConfiguration* videoConfig = [[BBRtcVideoEncoderConfiguration alloc] init];
+        if(_videoProfile == 0){
+            videoConfig.dimensions = CGSizeMake(360, 640);
+        }else if(_videoProfile == 1){
+            videoConfig.dimensions = CGSizeMake(480, 640);
+        }else if(_videoProfile == 2){
+            videoConfig.dimensions = CGSizeMake(540, 960);
+        }else if(_videoProfile == 3){
+            videoConfig.dimensions = CGSizeMake(720, 1280);
+        }else if(_videoProfile == 4){
+            videoConfig.dimensions = CGSizeMake(1080, 1920);
+        }
+        videoConfig.frameRate = 15;
+        videoConfig.minFrameRate = 5;
+        videoConfig.orientationMode = BBRtcVideoOutputOrientationModeFixedPortrait;
+        videoConfig.mirrorMode = BBRtcVideoMirrorModeAuto;
+        videoConfig.degradationPreference = BBRtcDegradationMaintainFramerate;
+        [sharedEngine_ setVideoEncoderConfiguration:videoConfig];
+        if(_videoSourceEnabled){
+            [sharedEngine_ setVideoSource:self];
+        }
+    }
+    else{
         [sharedEngine_ disableVideo];
-    
-    
-    [sharedEngine_ setDefaultMuteAllRemoteVideoStreams:NO];
+    }
     [sharedEngine_ setClientRole:(BBRtcClientRole)_userRole];
     [sharedEngine_ setChannelProfile:BBRtcChannelProfileLiveBroadcasting];
     [sharedEngine_ setAudioProfile:(BBRtcAudioProfile)_audioType scenario:(BBRtcAudioScenario)_scenarioType];
-    [sharedEngine_ enableLocalAudio:YES];
-    [sharedEngine_ enableLocalVideo:_videoEnabled];
-    if(_userRole == BBRtcClientRoleBroadcaster){
-        //   [sharedEngine_ startPreview];
-        [sharedEngine_ enableInEarMonitoring:YES];
-    }
-    if(_videoSourceEnabled)
-        [sharedEngine_ setVideoSource:self];
-    // [sharedEngine_ muteLocalAudioStream:YES];
     [sharedEngine_ setEnableSpeakerphone:_speakerEnabled];
-   // [sharedEngine_ setLocalVoiceReverbPreset:(BBRtcAudioReverbPreset)6];
-    //[sharedEngine_ setAudioEffectPreset:BBRtcVoiceChangerEffectPigKing];
-    //[sharedEngine_ setLocalVoicePitch:0.52];
-    [sharedEngine_ enableDualStreamMode:_simulcastStreamEnabled];
-    //[sharedEngine_ setParameters:@"{\"che.audio.enable.headset.mode\":true}"];
-    [sharedEngine_ setParameters:@"{\"che.audio.keep.audiosession\":true}"];
-    //[sharedEngine_ setParameters:@"{\"che.audio.enable.3a\":true}"];
-    if(_quicEnabled)
-        [sharedEngine_ setParameters:@"{\"che.network.enable.quic\":true}"];
-    else
-        [sharedEngine_ setParameters:@"{\"che.network.enable.quic\":false}"];
-    if(_detachStreamEnabled)
-        [sharedEngine_ setParameters:@"{\"che.media.detach\":true}"];
-    else
-        [sharedEngine_ setParameters:@"{\"che.media.detach\":false}"];
-    if(self.serverType == 6){
-        [sharedEngine_ setParameters:@"{\"che.p2p.enable\":true}"];
-    }
     if([sharedEngine_ joinChannelByToken:_token channelId:self.channelId info:@"" uid:userId_ joinSuccess:nil] != BBRtcErrorCodeNoError){
         [self dismissViewControllerAnimated:YES completion:nil];
         return;
     }
     [sharedEngine_ enableAudioVolumeIndication:500 smooth:3 report_vad:YES];
-    if(_userRole == 1){
+    if(_userRole == BBRtcClientRoleBroadcaster){
         isAnchor_ = YES;
         [_roleSwitchBnt setTitle:@"down" forState:UIControlStateNormal];
     }
@@ -820,22 +768,18 @@
         isAnchor_ = NO;
         [_roleSwitchBnt setTitle:@"up" forState:UIControlStateNormal];
     }
-    //[sharedEngine_ createDataStream:&streamId_ reliable:true ordered:true];
-    //[sharedEngine_ setParameters:@"{\"che.audio.enable.low.latency\":true}"];
-//    [sharedEngine_ setDumpOutputDirectory:@"/Users/baohaibo/Desktop/dump"];
-//    [sharedEngine_ enableDump:YES];
+    userId_ = self.userId;
     [self addUserView:userId_];
     voiceOpen_ = YES;
     musicPause_ = NO;
     musicPlay_ = NO;
     videoOpen_ = _videoEnabled;
     relayMedia_ = NO;
-    
     self.vadTimer = [NSTimer scheduledTimerWithTimeInterval:10.0
-                                                        target:self
-                                                      selector:@selector(timerFired)
-                                                      userInfo:nil
-                                                       repeats:YES];
+                                                     target:self
+                                                   selector:@selector(timerFired)
+                                                   userInfo:nil
+                                                    repeats:YES];
 }
 - (void)dealloc{
 }
@@ -853,8 +797,7 @@
     [sharedEngine_ getVoiceDuration];
 }
 
--(void) addUserView:(int)uid {
-    NSLog(@"addUserView %d\n", uid);
+-(void) addUserView:(NSUInteger)uid {
     auto ite = std::find(userList_.begin(), userList_.end(), uid);
     if (ite == userList_.end()) {
         if (uid == (int)userId_) {
@@ -862,13 +805,11 @@
         } else {
             userList_.push_back(uid);
         }
-        refresh_ = YES;
         [self.collectionView reloadData];
     }
 }
 
--(void) removeUserView:(int)uid {
-    NSLog(@"removeUserView %d\n", uid);
+-(void) removeUserView:(NSUInteger)uid {
     auto ite = std::find(userList_.begin(), userList_.end(), uid);
     if (ite != userList_.end()) {
         userList_.erase(ite);
@@ -880,9 +821,9 @@
     int size = (int)userList_.size();
     auto it = allCellMap_.begin();
     for (int i = 0; i < size && it != allCellMap_.end(); i++, it++) {
-        uint32_t uid = userList_[i];
+        NSUInteger uid = userList_[i];
         UserViewCell* cell = it->second;
-        uint32_t cellUid = [cell getUserId];
+        NSUInteger cellUid = [cell getUserId];
         if (cellUid != uid) {
             cell = [cell initWithUser:CGRectZero delegate:self uid:uid];
             BBRtcVideoCanvas* canvas = [[BBRtcVideoCanvas alloc] init];
@@ -899,18 +840,17 @@
         }
         [cell setHidden:NO];
     }
-    refresh_ = NO;
 }
 
 -(void) viewClean {
     allCellMap_.clear();
 }
 
--(void) onMuteClick:(int)uid mute:(BOOL)mute{
+-(void) onMuteClick:(NSUInteger)uid mute:(BOOL)mute{
     [sharedEngine_ muteRemoteAudioStream:uid mute:mute];
 }
 
--(void) onVolumeChange:(int)uid volume:(int)volume{
+-(void) onVolumeChange:(NSUInteger)uid volume:(int)volume{
     [sharedEngine_ adjustUserPlaybackSignalVolume:uid volume:volume];
 }
 
@@ -918,7 +858,7 @@
     [_stateLabel setText:text];
 }
 
--(void) onVideoStreamChange:(int)uid type:(int)type{
+-(void) onVideoStreamChange:(NSUInteger)uid type:(int)type{
     if(sharedEngine_){
         [sharedEngine_ setRemoteVideoStream:uid type:(BBRtcVideoStreamType)type];
     }
@@ -1019,9 +959,9 @@
             info.token = @"";
             info.uid = 0;
             [configs setDestinationInfo:info forChannelName:name];
-            if([sharedEngine_ startChannelMediaRelay:configs] == 0){
-                [_relayMediaButton setTitle:@"stop relay" forState:UIControlStateNormal];
-                relayMedia_ = YES;
+            if([self->sharedEngine_ startChannelMediaRelay:configs] == 0){
+                [self->_relayMediaButton setTitle:@"stop relay" forState:UIControlStateNormal];
+                self->relayMedia_ = YES;
             }
         }
     }];
@@ -1134,9 +1074,6 @@
     for (MPMediaItem *song in itemsFromGenericQuery) {
         [self resolverMediaItem:song];
     }
-}
-- (void) viewWillUnload{
-    [super viewWillUnload];
 }
 
 #pragma mark -解析iTune音乐数据
@@ -1284,14 +1221,10 @@
     UserViewCell* cell = (UserViewCell *)[collectionView
                                           dequeueReusableCellWithReuseIdentifier:@"cellId"
                                           forIndexPath:indexPath];
-    int index = (int)indexPath.row;
-    int users = (int)userList_.size();
-    [cell setIndex:index];
+    NSInteger index = indexPath.row;
+    [cell setIndex:(int)index];
     allCellMap_[index] = cell;
-    if (index + 1 == users) {
-        if (refresh_ == YES) {
-            [cell setUserId:-1];
-        }
+    if (index + 1 == userList_.size()) {
         [self updateUserView];
     }
     return cell;
@@ -1336,14 +1269,10 @@
 
 #pragma mark -RtcSDK代理方法
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine didOccurWarning:(BBRtcWarningCode)warningCode{
-    
 }
-
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine didOccurError:(BBRtcErrorCode)errorCode{
-    //  [ToastView showText:[NSS]];
 }
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine didApiCallExecute:(NSInteger)error api:(NSString * _Nonnull)api result:(NSString * _Nonnull)result{
-
 }
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine didJoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed{
     NSLog(@"Join channel ok");
@@ -1353,8 +1282,6 @@
 }
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine didLeaveChannelWithStats:(BBRtcChannelStats * _Nonnull)stats{
     NSLog(@"Leave channel ok");
-    //[sharedEngine_ setDelegate:nil];
-    //[self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine didRegisteredLocalUser:(NSString * _Nonnull)userAccount withUid:(NSUInteger)uid{
     
@@ -1378,19 +1305,19 @@
         {
             switch (reason) {
                 case BBRtcConnectionChangedInterrupted:
-                    [self setStatus:@"disconnect, net error"];
+                    [self setStatus:@"disconnect, network error"];
                     break;
                 case BBRtcConnectionChangedJoinFailed:
-                    [self setStatus:@"disconnect, join room fail"];
+                    [self setStatus:@"disconnect, failed to join the room"];
                     break;
                 case BBRtcConnectionChangedLeaveChannel:
-                    [self setStatus:@"disconnect, exit room"];
+                    [self setStatus:@"disconnect, leave room "];
                     break;
                 case BBRtcConnectionChangedInvalidChannelName:
                     [self setStatus:@"disconnect, invalid roomid"];
                     break;
                 case BBRtcConnectionChangedBannedByServer:
-                    [self setStatus:@"disconnect, be kicked"];
+                    [self setStatus:@"disconnect, kicked out"];
                     break;
                 case BBRtcConnectionChangedKeepAliveTimeout:
                     [self setStatus:@"disconnect, heartbeat timeout"];
@@ -1403,7 +1330,7 @@
         case BBRtcConnectionStateConnecting:
             switch (reason) {
                 case BBRtcConnectionChangedJoinSuccess:
-                    [self setStatus:@"connecting join room suc"];
+                    [self setStatus:@"connecting ice"];
                     break;
                 default:
                     [self setStatus:@"connencting..."];
@@ -1412,17 +1339,14 @@
             break;
         case BBRtcConnectionStateConnected:
         {
-            [self setStatus:@"connect suc"];
-//             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(),^{
-//               [self hangUp:nil];
-//             });
+            [self setStatus:@"join success"];
             break;
         }
         case BBRtcConnectionStateReconnecting:
             [self setStatus:@"connecting..."];
             break;
         case BBRtcConnectionStateFailed:
-            [self setStatus:@"connect fail"];
+            [self setStatus:@"connect failed"];
             [sharedEngine_ leaveChannel:nil];
             break;
     }
@@ -1453,7 +1377,6 @@
     }
 }
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine reportLocalAudioVolumeIndication:(BBRtcAudioVolumeInfo * _Nonnull)speaker {
-    //NSLog(@"reportLocalAudioVolumeIndication volume:%tu", speaker.volume);
 }
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine activeSpeaker:(NSUInteger)speakerUid{
     
@@ -1599,7 +1522,7 @@
         [self stopRelayMedia];
     }
     else{
-      [self setStatus:[NSString stringWithFormat:@"relay event, event:%td", event]];
+        [self setStatus:[NSString stringWithFormat:@"relay event, event:%td", event]];
     }
 }
 
@@ -1637,10 +1560,10 @@
 }
 
 - (void)rtcEngineChorusStart:(BBRtcEngineKit * _Nonnull)engine{
-  [self setStatus:@"chorus start"];
+    [self setStatus:@"chorus start"];
 }
 - (void)rtcEngineChorusStop:(BBRtcEngineKit * _Nonnull)engine{
-  [self setStatus:@"chorus stop"];
+    [self setStatus:@"chorus stop"];
 }
 #pragma mark - LMJDropdownMenu DataSource
 - (NSUInteger)numberOfOptionsInDropdownMenu:(LMJDropdownMenu *)menu{
@@ -1679,94 +1602,57 @@
     }
 }
 
-- (void)dropdownMenuWillShow:(LMJDropdownMenu *)menu{
-    
-}
-- (void)dropdownMenuDidShow:(LMJDropdownMenu *)menu{
-    
-}
-
-- (void)dropdownMenuWillHidden:(LMJDropdownMenu *)menu{
-    
-}
-- (void)dropdownMenuDidHidden:(LMJDropdownMenu *)menu{
-    
-}
-
-
-// audio callback
-- (BOOL)onRecordAudioFrame:(BBRtcAudioFrame* _Nonnull)frame{
-    return NO;
-}
-
-- (BOOL)onPlaybackAudioFrame:(BBRtcAudioFrame* _Nonnull)frame{
-    return NO;
-}
-
-- (BOOL)onMixedAudioFrame:(BBRtcAudioFrame* _Nonnull)frame{
-    return NO;
-}
-
-- (BOOL)onPlaybackAudioFrameBeforeMixing:(BBRtcAudioFrame* _Nonnull)frame uid:(NSUInteger)uid{
-    return NO;
-}
-
-- (BOOL)isMultipleChannelFrameWanted{
-    return NO;
-}
-
-- (BOOL)onPlaybackAudioFrameBeforeMixingEx:(BBRtcAudioFrame* _Nonnull)frame channelId:(NSString* _Nonnull)channelId uid:(NSUInteger)uid{
-   return NO;
-}
-
 - (BBRtcAudioFramePosition)getObservedAudioFramePosition{
     return BBRtcAudioFramePositionRecord;
 }
 
-- (BBRtcAudioParam* _Nonnull)getMixedAudioParams{
+- (BBRtcAudioParam * _Nonnull)getMixedAudioParams {
     return nil;
 }
 
-- (BBRtcAudioParam* _Nonnull)getRecordAudioParams{
+
+- (BBRtcAudioParam * _Nonnull)getPlaybackAudioParams {
     return nil;
 }
 
-- (BBRtcAudioParam* _Nonnull)getPlaybackAudioParams{
+
+- (BBRtcAudioParam * _Nonnull)getRecordAudioParams {
     return nil;
 }
 
-// video callback
-- (BOOL)onCaptureVideoFrame:(BBRtcVideoFrame*)frame {
-    //NSLog(@"onCaptureVideoFrame size:%d", frame.strideInPixels);
-    //static FILE* fp = NULL;
-    //if (!fp) {
-    //    fp = fopen("/Users/arevenge/Data/output.yuv", "wb");
-    //}
-    //if (fp){
-    //    NSData* data = frame.dataBuf;
-    //    fwrite(data.bytes, 1, data.length, fp);
-    //}
-    return YES;
+
+- (BOOL)isMultipleChannelFrameWanted {
+    return NO;
 }
 
-- (BOOL)onPreEncodeVideoFrame:(BBRtcVideoFrame*)frame {
-    return YES;
+
+- (BOOL)onMixedAudioFrame:(BBRtcAudioFrame * _Nonnull)frame {
+    return NO;
 }
 
-- (BOOL)onRenderVideoFrame:(BBRtcVideoFrame*)frame forUid:(unsigned int)uid {
-    return YES;
+
+- (BOOL)onPlaybackAudioFrame:(BBRtcAudioFrame * _Nonnull)frame {
+    return NO;
 }
+
+
+- (BOOL)onPlaybackAudioFrameBeforeMixing:(BBRtcAudioFrame * _Nonnull)frame uid:(NSUInteger)uid {
+    return NO;
+}
+
+
+- (BOOL)onPlaybackAudioFrameBeforeMixingEx:(BBRtcAudioFrame * _Nonnull)frame channelId:(NSString * _Nonnull)channelId uid:(NSUInteger)uid {
+    return NO;
+}
+
+
+- (BOOL)onRecordAudioFrame:(BBRtcAudioFrame * _Nonnull)frame {
+    return NO;
+}
+
 
 - (BBRtcVideoFrameType)getVideoFormatPreference {
     return BBRtcVideoFrameTypeYUV420;
-}
-
-- (BOOL)getRotationApplied {
-    return YES;
-}
-
-- (BOOL)getMirrorApplied {
-    return YES;
 }
 
 - (BBRtcVideoFramePosition)getObservedFramePosition {
@@ -1777,6 +1663,31 @@
     return YES;
 }
 
+- (BOOL)getMirrorApplied {
+    return NO;
+}
+
+
+- (BOOL)getRotationApplied {
+    return NO;
+}
+
+
+- (BOOL)onCaptureVideoFrame:(BBRtcVideoFrame *)frame {
+    return NO;
+}
+
+
+- (BOOL)onPreEncodeVideoFrame:(BBRtcVideoFrame *)frame {
+    return NO;
+}
+
+
+- (BOOL)onRenderVideoFrame:(BBRtcVideoFrame *)frame forUid:(unsigned int)uid {
+    return NO;
+}
+
+
 - (BOOL)shouldInitialize {
     NSLog(@"Custom video source shouldInitialize");
     return YES;
@@ -1784,34 +1695,6 @@
 
 - (void)shouldStart {
     NSLog(@"Custom video source shouldStart enter");
-    /*dispatch_queue_t queue;
-    queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        const int kWidth = 256;
-        const int kHeight = 256;
-        int size = kWidth * kHeight * 3 / 2;
-        CGSize csize;
-        csize.width = kWidth;
-        csize.height = kHeight;
-        
-        char filename[64];
-        uint8_t* buffer = new uint8_t[size];
-        sprintf(filename, "/Users/arevenge/Data/yuv/lena.yuv");
-        FILE* fp = fopen(filename, "rb");
-        fread(buffer, 1, size, fp);
-        fclose(fp);
-        
-        CMTime timestamp = CMTimeMake(0, 0);
-        uint8_t rotation = 0;
-        while (_consumer != nil) {
-            rotation = (rotation + 1) % 4;
-            [_consumer consumeRawData:(void * _Nonnull)buffer withTimestamp:timestamp format:BBRtcVideoPixelFormatI420 size:csize rotation:(BBRtcVideoRotation)rotation];
-            usleep(200000);
-        }
-        
-        delete [] buffer;
-    });
-    */
     if(!self.videoFileParser){
         NSString *path = [[NSBundle mainBundle] pathForResource:@"22" ofType:@"h264"];
         if(path == nil)
@@ -1834,7 +1717,7 @@
 - (void)shouldDispose {
     NSLog(@"Custom video source shouldDispose");
 }
- 
+
 - (BBRtcVideoBufferType)bufferType {
     return BBRtcVideoBufferTypeRawData;
 }
@@ -1846,6 +1729,41 @@
         [_consumer consumePixelBuffer:pixelbuffer withTimestamp:timestamp rotation:(BBRtcVideoRotation)0];
         timesmaple += 1000;
     }
+}
+
+- (void)encodeWithCoder:(nonnull NSCoder *)coder {
+}
+
+- (void)traitCollectionDidChange:(nullable UITraitCollection *)previousTraitCollection {
+}
+
+- (void)preferredContentSizeDidChangeForChildContentContainer:(nonnull id<UIContentContainer>)container {
+}
+
+- (CGSize)sizeForChildContentContainer:(nonnull id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize {
+    return parentSize;
+}
+
+- (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(nonnull id<UIContentContainer>)container {
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(nonnull id<UIViewControllerTransitionCoordinator>)coordinator {
+}
+
+- (void)willTransitionToTraitCollection:(nonnull UITraitCollection *)newCollection withTransitionCoordinator:(nonnull id<UIViewControllerTransitionCoordinator>)coordinator{
+}
+
+- (void)didUpdateFocusInContext:(nonnull UIFocusUpdateContext *)context withAnimationCoordinator:(nonnull UIFocusAnimationCoordinator *)coordinator {
+}
+
+- (void)setNeedsFocusUpdate {
+}
+
+- (BOOL)shouldUpdateFocusInContext:(nonnull UIFocusUpdateContext *)context {
+    return NO;;
+}
+
+- (void)updateFocusIfNeeded {
 }
 
 @end
