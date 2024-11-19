@@ -637,6 +637,16 @@ enum ERROR_CODE_TYPE {
   ERR_INVITE_PEER_OFFLINE = 473,
   ERR_INVITE_TIMEOUT = 474,
   ERR_INVITE_CANT_RECV = 475,
+  
+  /** Users are banned from joining rooms
+   */
+  ERR_FORBIDDEN_JOIN = 500,
+  /** Disable audio streaming
+   */
+  ERR_FORBIDDEN_AUDIO = 501,
+  /** Disable video streaming
+   */
+  ERR_FORBIDDEN_VIDEO = 502,
 
   // 1001~2000
   /** 1001: Fails to load the media engine.

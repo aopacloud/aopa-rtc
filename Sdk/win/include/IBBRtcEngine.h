@@ -11,7 +11,7 @@
 #include "BBRtcBase.h"
 #include "IBBMediaEngine.h"
 namespace bbrtc {
-const long RTCVERSION = 241102;
+const long RTCVERSION = 243100;
 typedef unsigned int uid_t;
 typedef void* view_t;
 /** Maximum length of the device ID.
@@ -6814,6 +6814,20 @@ public:
      - < 0: Failure.
      */
     virtual int adjustPlaybackSignalVolume(int volume) = 0;
+
+    /** Get the playback volume of all remote users.
+
+    @return >= 0: Success.
+    * < 0: Failure.
+    */
+    virtual int getPlaybackSignalVolume() = 0;
+
+    /** Get the recording volume.
+
+    @return >= 0: Success.
+    * < 0: Failure.
+    */
+    virtual int getRecordingSignalVolume() = 0;
 
     virtual int adjustLoopbackRecordingSignalVolume(int volume) = 0;
     /**
