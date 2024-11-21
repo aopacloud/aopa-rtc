@@ -11,7 +11,7 @@
 #include "BBRtcBase.h"
 #include "IBBMediaEngine.h"
 namespace bbrtc {
-const long RTCVERSION = 243100;
+const long RTCVERSION = 243101;
 typedef unsigned int uid_t;
 typedef void* view_t;
 /** Maximum length of the device ID.
