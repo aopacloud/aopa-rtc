@@ -11,7 +11,7 @@
 #include "BBRtcBase.h"
 #include "IBBMediaEngine.h"
 namespace bbrtc {
-const long RTCVERSION = 243101;
+const long RTCVERSION = 246101;
 typedef unsigned int uid_t;
 typedef void* view_t;
 /** Maximum length of the device ID.
@@ -1519,6 +1519,14 @@ enum CONNECTION_STATE_TYPE
    If the SDK is banned from joining the channel by Aopa's edge server (through the RESTful API), the SDK triggers the \ref bb::rtc::IRtcEngineEventHandler::onConnectionBanned "onConnectionBanned" (deprecated) and \ref bb::rtc::IRtcEngineEventHandler::onConnectionStateChanged "onConnectionStateChanged" callbacks.
    */
   CONNECTION_STATE_FAILED = 5,
+
+  /** 6：Reconnect successfully
+   */
+  CONNECTION_STATE_RECONNECTED = 6,
+  /** 7:The media subscriber service is connected and starts playing.
+   * Used for direct pull stream
+   */
+  CONNECTION_STATE_SUBSCRIBER_CONNECTED = 7,
 };
 
 /** Reasons for a connection state change. */
@@ -3016,6 +3024,27 @@ struct VirtualBackgroundSource {
   VirtualBackgroundSource() : color(0xffffff), source(NULL), background_source_type(BACKGROUND_COLOR), blur_degree(BLUR_DEGREE_HIGH) {}
 };
 
+struct ChannelStats{
+   enum ERR_CODE{
+     CONNECT_OK = 0,   //连接成功
+     CONNECT_JOINING = 1, //连接中
+     CONNECT_SIGNAL_FAILED = 2, //信令连接失败
+     CONNECT_MEDIA_FAILED = 3,  //媒体连接失败
+   };
+   uid_t uid = 0;
+   char rid[128];
+   int errorCode = 0;
+   int serverErrCode = 0;
+   int joinElapsedMs = 0; //加入房间耗时
+   int64_t startTimeMs = 0;  //开始加入房间时间
+   int64_t leaveTimeMs = 0;    //退出房间时间
+   int audioFirstFrameElapsedMs = 0; //音频首帧耗时， 0表示加入房间时没有主播或者mute状态，需要排除
+   int anchorCount = 0;   //主播数
+   int pullStreamCount = 0;  //拉流数
+   ChannelStats(){
+      memset(rid, 0, sizeof(rid));
+   }
+};
 
 /** Definition of IPacketObserver.
 */
@@ -4394,6 +4423,8 @@ public:
     @param length SEI content length
     */
     virtual void onRecvSEI(uid_t uid, const char* data, int length){}
+
+    virtual void onChannelStats(const ChannelStats& stats){}
 };
 
 /**
@@ -7711,6 +7742,8 @@ public:
     virtual int getVoiceDuration() = 0;
 
     virtual int sendSEI(const char* data, int length) = 0;
+
+    virtual ChannelStats getChannelStats() = 0;
 };
 
 
@@ -7878,7 +7911,7 @@ public:
      @param merge Sets whether to merge the profile data with the original value:
      - true: Merge the profile data with the original value.
      - false: Do not merge the profile data with the original value.
-
+ 
      @return
      - 0: Success.
      - < 0: Failure.

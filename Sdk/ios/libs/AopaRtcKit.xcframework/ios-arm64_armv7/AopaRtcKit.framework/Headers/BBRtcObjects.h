@@ -1336,3 +1336,17 @@ __attribute__((visibility("default"))) @interface BBRtcVirtualBackgroundSource :
 @property(nonatomic, assign) BBRtcBlurDegree blur_degree;
 
 @end
+
+__attribute__((visibility("default"))) @interface BBRtcChannelStats2 : NSObject
+@property(nonatomic, assign) NSUInteger uid;
+@property (copy, nonatomic) NSString * _Nullable rid;
+@property(nonatomic, assign) NSUInteger errorCode;
+@property(nonatomic, assign) NSUInteger serverErrCode;
+@property(nonatomic, assign) NSUInteger joinElapsedMs;
+@property(nonatomic, assign) NSUInteger startTimeMs;
+@property(nonatomic, assign) NSUInteger leaveTimeMs;
+@property(nonatomic, assign) NSUInteger audioFirstFrameElapsedMs;
+@property(nonatomic, assign) NSUInteger anchorCount;
+@property(nonatomic, assign) NSUInteger pullStreamCount;
+@end
+

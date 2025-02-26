@@ -1214,6 +1214,14 @@ You must call [leaveChannel]([BBRtcEngineKit leaveChannel:]) to leave this state
 If the SDK is banned from joining the channel by BBRtc's edge server (through the RESTful API), the SDK triggers the [rtcEngineConnectionDidBanned]([BBRtcEngineDelegate rtcEngineConnectionDidBanned:])(deprecated) and [connectionChangedToState]([BBRtcEngineDelegate rtcEngine:connectionChangedToState:reason:]) callbacks.
     */
     BBRtcConnectionStateFailed = 5,
+
+    /** 6：Reconnect successfully
+     */
+    BBRtcConnectionStateReConnected = 6,
+    /** 7:The media subscriber service is connected and starts playing.
+    * Used for direct pull stream
+    */
+    BBRtcConnectionStateSubscriberConnected = 7,
 };
 
 /** Reasons for the connection state change. */

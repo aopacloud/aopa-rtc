@@ -7,7 +7,7 @@
 //
 #import <Foundation/Foundation.h>
 
-@interface BBRtcCurlProbo : NSObject
+__attribute__((visibility("default"))) @interface BBRtcCurlProbo : NSObject
 
 @property(nonatomic, assign) double namelookup_time;
 @property(nonatomic, assign) double connect_time;

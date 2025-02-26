@@ -1100,7 +1100,7 @@ The SDK triggers this callback once every two seconds. This callback reports the
 - (void)rtcEngineChorusStart:(BBRtcEngineKit * _Nonnull)engine;
 - (void)rtcEngineChorusStop:(BBRtcEngineKit * _Nonnull)engine;
 - (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine recvSEI:(NSUInteger)uid data:(NSData* _Nonnull)data;
-
+- (void)rtcEngine:(BBRtcEngineKit * _Nonnull)engine channelStats:(BBRtcChannelStats2* _Nonnull)stats;
 @end
 
 #pragma mark - BBRtcEngineKit
@@ -4840,4 +4840,6 @@ Last mile refers to the connection between the local device and BBRtc's edge ser
 
 - (int)getVoiceDuration;
 - (int)sendSEI:(NSData* _Nullable)data;
+
+- (BBRtcChannelStats2* _Nullable) getChannelStats;
 @end
