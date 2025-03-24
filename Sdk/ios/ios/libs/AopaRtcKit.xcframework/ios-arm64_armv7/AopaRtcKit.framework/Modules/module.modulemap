@@ -1,0 +1,6 @@
+framework module AopaRtcKit {
+  umbrella header "AopaRtcKit.h"
+
+  export *
+  module * { export * }
+}
